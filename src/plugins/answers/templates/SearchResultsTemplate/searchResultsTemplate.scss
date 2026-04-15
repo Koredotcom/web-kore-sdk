@@ -253,11 +253,15 @@
 
 .chat-actions-bottom-wraper.search-all-results-slider {
     top: 68px;
-    height: 88%;
+    height: calc(100% - 69px);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 
     .popup-window-block {
-        max-height: 98% !important;
-        height: 98% !important;
+        max-height: calc(100% - 13px) !important;
+        height: calc(100% - 13px) !important;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
 }
 

@@ -100,7 +100,7 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
                         <article className="result-content">
                             <header className="result-title-row">
                                 <span className="result-type-icon" aria-hidden="true">
-                                    <RenderFileIcons type={result.source.type} />
+                                    <RenderFileIcons type={result.source.type} hostInstance={hostInstance} />
                                 </span>
                                 <div
                                     className="result-title-link"

@@ -79,7 +79,22 @@ export const getResultsWebsocket = {
         }
       ],
       "doc_count": 1
-    }
+    },
+    "azureStorage": {
+                "data": [
+                    {
+                        "docId": "fc-73406234-5331-59ee-a64e-c36caa8d5d24",
+                        "recordTitle": "Cisco.pdf",
+                        "recordUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+                        "chunkResults": [
+                            "chk-810e8436-1752-4ddd-b2de-060a684a943b",
+                            "chk-88ed182f-71f2-4aff-aabd-107cc8b58a50",
+                            "chk-d2bea853-f7ba-47f9-b192-d22034088b8d"
+                        ]
+                    }
+                ],
+                "doc_count": 1
+            }
   },
   "facets": [
     {
@@ -88,6 +103,7 @@ export const getResultsWebsocket = {
       "name": "Sys File Type",
       "subtype": "value",
       "buckets": [
+
         {
           "key": "html",
           "chunk_count": 16,
@@ -120,6 +136,12 @@ export const getResultsWebsocket = {
     "fieldName": "sourceType",
     "buckets": [
       {
+        "key": "azureStorage",
+        "name": "Azure Storage",
+        "chunk_count": 104,
+        "doc_count": 2
+    },
+      {
         "key": "file",
         "name": "Files",
         "chunk_count": 26,
@@ -147,6 +169,12 @@ export const getResultsWebsocket = {
         "key": "csv",
         "name": "CSV Documents",
         "chunk_count": 16,
+        "doc_count": 1
+      },
+      {
+        "key": "json",
+        "name": "JSON Connector",
+        "chunk_count": 1,
         "doc_count": 1
       }
     ]
@@ -712,6 +740,21 @@ export const getRelevantResultsOld = {
 export const getRelevantResults ={
   "template": {
     "results": {
+      "azureStorage": {
+        "data": [
+          {
+            "docId": "fc-73406234-5331-59ee-a64e-c36caa8d5d24",
+            "recordTitle": "Cisco.pdf",
+            "recordUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+            "chunkResults": [
+              "chk-810e8436-1752-4ddd-b2de-060a684a943b",
+              "chk-88ed182f-71f2-4aff-aabd-107cc8b58a50",
+              "chk-d2bea853-f7ba-47f9-b192-d22034088b8d"
+            ]
+          }
+        ],
+        "doc_count": 1
+      },
       "web": {
         "data": [
           {
@@ -823,138 +866,178 @@ export const getRelevantResults ={
       "searchRequestId": "fsh-3a7df8c0-f451-5eff-bb11-b8eff80bd667",
       "queryPipelineId": "fqp-4aa193e6-a5fa-51be-9556-f434eebc3b81"
     },
-    "facets": [
-      {
-        "fieldName": "fileType",
-        "name": "File Type",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "doc_created_by_name",
-        "name": "Doc Created By Name",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "doc_updated_by_name",
-        "name": "Doc Updated By Name",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "status",
-        "name": "Status",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "priority",
-        "name": "Priority",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "assignee",
-        "name": "Assignee",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "assignee_name",
-        "name": "Assignee Name",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "project_name",
-        "name": "Project Name",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "issueType",
-        "name": "Issue Type",
-        "buckets": [],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      },
-      {
-        "fieldName": "sys_file_type",
-        "name": "Sys File Type",
-        "buckets": [
-          {
-            "key": "html",
-            "chunk_count": 5,
-            "doc_count": 0
-          },
-          {
-            "key": "pdf",
-            "chunk_count": 1,
-            "doc_count": 0
-          },
-          {
-            "key": "json",
-            "chunk_count": 1,
-            "doc_count": 1
-          }
-        ],
-        "multiselect": false,
-        "subtype": "value",
-        "sortedBy": "count",
-        "fieldDataType": "string"
-      }
-    ],
-    "tabFacet": {
-      "fieldName": "sourceType",
-      "buckets": [
-        {
-          "key": "web",
-          "name": "Web Results",
-          "chunk_count": 90,
-          "doc_count": 5
-        },
-        {
-          "key": "file",
-          "name": "Files",
-          "chunk_count": 1,
-          "doc_count": 1
-        },
-        {
-          "key": "json",
-          "name": "JSON Connector",
-          "chunk_count": 1,
-          "doc_count": 1
-        },
-      ]
-    },
+      "facets": getResultsWebsocket.facets,
+    "tabFacet": getResultsWebsocket.tabFacet,
     "chunk_result": [
+      {
+        "_index": "answer_index",
+        "_type": "_doc",
+        "_id": "zsW6D5YBT7vuFgT7FeS4",
+        "_score": 0.7157965,
+        "_ignored": [
+            "chunkText.keyword"
+        ],
+        "_source": {
+            "sourceId": "fs-ac8f5c0b-3123-5461-863c-5836807b74a9",
+            "nextChunkIds": [
+                "chk-54ed0678-f74c-47f6-b6c3-c0019eb90b01",
+                "chk-5b637c88-07a9-4724-b2b0-e3debc1a41b9",
+                "chk-aadf4305-237a-4171-861a-ae5ec68fbb0e"
+            ],
+            "pageNumber": 6,
+            "docId": "fc-73406234-5331-59ee-a64e-c36caa8d5d24",
+            "lastSyncAt": "2025-04-07T06:04:46.470Z",
+            "searchIndexId": "sidx-46f8691c-4b08-570e-b8e7-32dc1e6219e6",
+            "chunkId": "chk-810e8436-1752-4ddd-b2de-060a684a943b",
+            "createdOn": "2025-04-07T06:04:58.518Z",
+            "sourceUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+            "chunkText": "Page\t6    cloud is a positive for the Cisco as customers will invest in  related equipment and subscription purchases.       Figure 6    Source: Statista    Competitors  in the networking equipment  industry must  be  able  to  manage  the  complicated  multicloud  environment to supply efficient and secure cloud products  and services. One way to do this  is with Hyperconverged  Infrastructure  (HCI),  which  helps  companies  manage  hybrid  cloud  environments  by  combining  compute,  virtualization,  storage,  and  networking  into  a  single  platform  to manage data centers. This  lowers costs and  reduces  complexity  of  hybrid  cloud management.  Cisco  provides their HyperFlex solution for hyperconvergence.1    INDUSTRY TRENDS    Businesses  in  all  industries  are  undergoing  rapid  transformations  to  their  networking  and  digital  infrastructures. These transformations began well before  the Covid­19 pandemic but have only accelerated due to  work  from  home  trends  driven  by  the  virus.  As  the  economy  recovers  and  businesses  re­open,  enterprises  will continue to invest more in cloud technologies, security  software,  and  Software­as­a­Service  (SaaS)  because  of  digital  transformations  to  their  operations.  Devices  and  applications are becoming more  interconnected  through  multicloud environments, and customers are demanding  efficient and secure technology solutions from networking  equipment providers.    We  also  anticipate  businesses  will  upgrade  on­premise  Information  Technology  equipment  as more  employees  return to work in the latter half of 2021, which will drive  growth  for  hardware  infrastructure  like  routers  and  switches.     Growth in Number of Connected Devices    The  Covid­19  outbreak  has  accelerated  businesses’  reliance  on  technology  services.  This  trend  is  likely  to  outlast the pandemic as companies continue spending on  software applications and connecting more devices to  IP  networks. Cisco expects global  IP  traffic  to  increase at a  26%  CAGR  globally  between  2017  and  2022,  and  they  expect the number of devices connected to IP networks to  be more than three times the size of the global population  by  2023.14  Figure  7  shows  there will  be  3.6  networked  devices per capita by 2023, up from 2.4 in 2018.14 Many of  these connected devices are now on the edge; employees  take  connected  devices  like  laptops  home and  connect  personal  devices  like  cellphones  to  corporate  networks  through  the cloud. We predict  the growth  in number of  devices will drive revenues for networking infrastructure,  applications, and network security.    Average Number of Devices Per Capita      Figure 7    Source: Cisco Annual Internet Report14    Network Security is Critical    As customers add more connections to their enterprises,  and  as  applications move  to  a multicloud  environment,  network security will be a top priority. Customers need to  protect ",
+            "pageChunks": [
+                "chk-810e8436-1752-4ddd-b2de-060a684a943b",
+                "chk-54ed0678-f74c-47f6-b6c3-c0019eb90b01"
+            ],
+            "extractionMethodType": "token",
+            "doc_created_on": "2024-05-16T06:57:48.000Z",
+            "extractionStrategy": "Default Strategy",
+            "recordTitle": "Cisco.pdf",
+            "sys_content_type": "azureStorage",
+            "sys_source_name": "Sample",
+            "recordUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+            "updatedOn": "2025-04-07T06:04:58.518Z",
+            "sourceAcl": [
+                "azure1"
+            ],
+            "chunkType": "Text",
+            "doc_updated_on": "2024-05-16T06:57:48.000Z",
+            "sys_file_type": "pdf",
+            "createdBy": "u-06744d54-2c3b-5fb8-aafc-6a9b1074bf89",
+            "sourceType": "azureStorage",
+            "extractionMethod": "text",
+            "sourceName": "Sample",
+            "doc_source_type": "pdf",
+            "previousChunkIds": [
+                "chk-6cb2d67e-6fd8-4c32-b7ce-295ed1061a30",
+                "chk-714323f3-8893-4e96-b037-0620838d2d77",
+                "chk-e4c3f7c3-db4c-436b-b213-4c180cc01136"
+            ],
+            "chunkQualified": true
+        },
+        "vector_search_score": 0.7157965,
+        "keyword_search_score": 2.4371696,
+        "positional_score": 0.016530054644808743
+    }, {
+      "_index": "answer_index",
+      "_type": "_doc",
+      "_id": "3cW6D5YBT7vuFgT7FeS4",
+      "_score": 0.7157965,
+      "_ignored": [
+          "chunkText.keyword"
+      ],
+      "_source": {
+          "sourceId": "fs-ac8f5c0b-3123-5461-863c-5836807b74a9",
+          "nextChunkIds": [
+              "chk-1b35465c-845e-40b7-b283-4b5cb7beabe8",
+              "chk-33b9983f-edd6-434e-8685-7b15774ebeca",
+              "chk-b75b92ea-bb4b-42db-88db-e2524fd37331"
+          ],
+          "pageNumber": 6,
+          "docId": "fc-73406234-5331-59ee-a64e-c36caa8d5d24",
+          "lastSyncAt": "2025-04-07T06:04:46.470Z",
+          "searchIndexId": "sidx-46f8691c-4b08-570e-b8e7-32dc1e6219e6",
+          "chunkId": "chk-88ed182f-71f2-4aff-aabd-107cc8b58a50",
+          "createdOn": "2025-04-07T06:04:58.508Z",
+          "sourceUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+          "chunkText": "Page\t6    cloud is a positive for the Cisco as customers will invest in  related equipment and subscription purchases.       Figure 6    Source: Statista    Competitors  in the networking equipment  industry must  be  able  to  manage  the  complicated  multicloud  environment to supply efficient and secure cloud products  and services. One way to do this  is with Hyperconverged  Infrastructure  (HCI),  which  helps  companies  manage  hybrid  cloud  environments  by  combining  compute,  virtualization,  storage,  and  networking  into  a  single  platform  to manage data centers. This  lowers costs and  reduces  complexity  of  hybrid  cloud management.  Cisco  provides their HyperFlex solution for hyperconvergence.1    INDUSTRY TRENDS    Businesses  in  all  industries  are  undergoing  rapid  transformations  to  their  networking  and  digital  infrastructures. These transformations began well before  the Covid­19 pandemic but have only accelerated due to  work  from  home  trends  driven  by  the  virus.  As  the  economy  recovers  and  businesses  re­open,  enterprises  will continue to invest more in cloud technologies, security  software,  and  Software­as­a­Service  (SaaS)  because  of  digital  transformations  to  their  operations.  Devices  and  applications are becoming more  interconnected  through  multicloud environments, and customers are demanding  efficient and secure technology solutions from networking  equipment providers.    We  also  anticipate  businesses  will  upgrade  on­premise  Information  Technology  equipment  as more  employees  return to work in the latter half of 2021, which will drive  growth  for  hardware  infrastructure  like  routers  and  switches.     Growth in Number of Connected Devices    The  Covid­19  outbreak  has  accelerated  businesses’  reliance  on  technology  services.  This  trend  is  likely  to  outlast the pandemic as companies continue spending on  software applications and connecting more devices to  IP  networks. Cisco expects global  IP  traffic  to  increase at a  26%  CAGR  globally  between  2017  and  2022,  and  they  expect the number of devices connected to IP networks to  be more than three times the size of the global population  by  2023.14  Figure  7  shows  there will  be  3.6  networked  devices per capita by 2023, up from 2.4 in 2018.14 Many of  these connected devices are now on the edge; employees  take  connected  devices  like  laptops  home and  connect  personal  devices  like  cellphones  to  corporate  networks  through  the cloud. We predict  the growth  in number of  devices will drive revenues for networking infrastructure,  applications, and network security.    Average Number of Devices Per Capita      Figure 7    Source: Cisco Annual Internet Report14    Network Security is Critical    As customers add more connections to their enterprises,  and  as  applications move  to  a multicloud  environment,  network security will be a top priority. Customers need to  protect ",
+          "pageChunks": [
+              "chk-88ed182f-71f2-4aff-aabd-107cc8b58a50",
+              "chk-1b35465c-845e-40b7-b283-4b5cb7beabe8"
+          ],
+          "extractionMethodType": "token",
+          "doc_created_on": "2024-05-16T06:57:48.000Z",
+          "extractionStrategy": "Default Strategy",
+          "recordTitle": "Cisco.pdf",
+          "sys_content_type": "azureStorage",
+          "sys_source_name": "Sample",
+          "recordUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+          "updatedOn": "2025-04-07T06:04:58.508Z",
+          "sourceAcl": [
+              "azure1"
+          ],
+          "chunkType": "Text",
+          "doc_updated_on": "2024-05-16T06:57:48.000Z",
+          "sys_file_type": "pdf",
+          "createdBy": "u-06744d54-2c3b-5fb8-aafc-6a9b1074bf89",
+          "sourceType": "azureStorage",
+          "extractionMethod": "text",
+          "sourceName": "Sample",
+          "doc_source_type": "pdf",
+          "previousChunkIds": [
+              "chk-747ce8d5-f697-4d88-85f4-dc4ba490bcc5",
+              "chk-d1b1811f-09cc-43b5-b1ea-3ca21fe5cb3c",
+              "chk-d2bea853-f7ba-47f9-b192-d22034088b8d"
+          ],
+          "chunkQualified": true
+      },
+      "vector_search_score": 0.7157965,
+      "keyword_search_score": 2.4397812,
+      "positional_score": 0.016530054644808743
+  },
+  {
+      "_index": "answer_index",
+      "_type": "_doc",
+      "_id": "38W6D5YBT7vuFgT7FeS4",
+      "_score": 1.9710195,
+      "_ignored": [
+          "chunkText.keyword"
+      ],
+      "_source": {
+          "sourceId": "fs-ac8f5c0b-3123-5461-863c-5836807b74a9",
+          "nextChunkIds": [
+              "chk-88ed182f-71f2-4aff-aabd-107cc8b58a50",
+              "chk-1b35465c-845e-40b7-b283-4b5cb7beabe8",
+              "chk-33b9983f-edd6-434e-8685-7b15774ebeca"
+          ],
+          "pageNumber": 5,
+          "docId": "fc-73406234-5331-59ee-a64e-c36caa8d5d24",
+          "lastSyncAt": "2025-04-07T06:04:46.470Z",
+          "searchIndexId": "sidx-46f8691c-4b08-570e-b8e7-32dc1e6219e6",
+          "chunkId": "chk-d2bea853-f7ba-47f9-b192-d22034088b8d",
+          "createdOn": "2025-04-07T06:04:58.506Z",
+          "sourceUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+          "chunkText": "negative 5%.  to positive 1% over  the  last  three  quarters.11  However,  the  semiconductor  chip  shortage  that is exacerbated by the pandemic hurts Cisco’s supply  chain and will be a headwind going forward.12    A rapid shift to hybrid work caused by the pandemic is a  positive for Cisco’s cloud portfolio, such as wireless access  points,  security,  and  cloud­based  switching.  It  is  still  uncertain exactly how work setups will be post­pandemic,  but  it  is  certain  that  there  will  be  hybrid  work  opportunities  for more  employees  at more  companies.  Overall,  although  Covid­19  has  been  challenging  for  networking  equipment  providers,  demand  growth  and  enterprise spending should benefit Cisco going forward.    Applications Move to Multicloud    Customers  are  operating  in  multicloud  environments,  deciding  to  use  private,  public,  and  hybrid  clouds.  This  way,  they  can  choose  which  information  to  keep  on­ premises  versus  on  the  cloud.  Industries  are moving  to   multicloud  environments because  it  increases  scalability  and speed of data storage and applications, and customers  spend  less  on maintenance  and  capital  costs  than  they  would with larger, personal data centers.12 Every industry  can  leverage  this  transition,  such  as  governments,  education,  healthcare,  insurance,  and  utilities.  Figure  5  below shows  the shift  in  IT  infrastructure spending  from  traditional data centers to public and private clouds       Figure 5    Source: Statista    Figure 6 below shows the acceleration in annual spending  on cloud infrastructure worldwide. This transition toward",
+          "pageChunks": [
+              "chk-d1b1811f-09cc-43b5-b1ea-3ca21fe5cb3c",
+              "chk-d2bea853-f7ba-47f9-b192-d22034088b8d"
+          ],
+          "extractionMethodType": "token",
+          "doc_created_on": "2024-05-16T06:57:48.000Z",
+          "extractionStrategy": "Default Strategy",
+          "recordTitle": "Cisco.pdf",
+          "sys_content_type": "azureStorage",
+          "sys_source_name": "Sample",
+          "recordUrl": "https://searchaiconnector.blob.core.windows.net/azure1/Cisco.pdf",
+          "updatedOn": "2025-04-07T06:04:58.506Z",
+          "sourceAcl": [
+              "azure1"
+          ],
+          "chunkType": "Text",
+          "doc_updated_on": "2024-05-16T06:57:48.000Z",
+          "sys_file_type": "pdf",
+          "createdBy": "u-06744d54-2c3b-5fb8-aafc-6a9b1074bf89",
+          "sourceType": "azureStorage",
+          "extractionMethod": "text",
+          "sourceName": "Sample",
+          "doc_source_type": "pdf",
+          "previousChunkIds": [
+              "chk-85ed4a44-4ed7-463a-b96c-0b3839747d4f",
+              "chk-747ce8d5-f697-4d88-85f4-dc4ba490bcc5",
+              "chk-d1b1811f-09cc-43b5-b1ea-3ca21fe5cb3c"
+          ],
+          "chunkQualified": true
+      },
+      "keyword_search_score": 1.9710195,
+      "positional_score": 0.008064516129032258
+  },
       {
         "_index": "answer_index",
         "_id": "691c4cd329b2a119f717817c",
@@ -971,15 +1054,48 @@ export const getRelevantResults ={
           "chunkText": `**Table caption (name and description of table)**  
 You can describe your table here or in the context of your page.  
 This table is read using the first row as the header for each column.  
-
-| Description | Date | Location | Organizer | Status | Notes |
-|------------|------|----------|-----------|--------|-------|
-| Academic Senate Meeting | May 25, 2205 | Building 99 Room 1 | Senate Office | Scheduled | Annual planning meeting |
-| Commencement Meeting | December 15, 2205 | Building 42 Room 10 | Admin Dept | Completed | Graduation preparation |
-| Dean's Council | February 1, 2206 | Building 35 Room 5 | Dean Office | Scheduled | Monthly review |
-| Committee on Committees | March 3, 2206 | Building 1 Room 201 | Committee Board | Pending | Agenda to be finalized |
-| Lorem ipsum dolor sit amet, [consectetuer adipiscing elit](#). Sed lacus arcu, porta posuere, varius et. | Lorem [ipsum dolor](#) sit amet | Building X | Sample Org | Ongoing | Sample notes |
-| [Lorem ipsum dolor](#) | [Lorem ipsum dolor](#) | Building Y | Test Org | Completed | Test entry |`,
+| Description | Date | Location | Organizer | Status | Notes | Category | Priority | Duration | Contact Person |
+|------------|------|----------|-----------|--------|-------|----------|----------|----------|----------------|
+| Academic Senate Meeting | May 25, 2025 | Building 99 Room 1 | Senate Office | Scheduled | Annual planning meeting | Governance | High | 2 hrs | Dr. Rao |
+| Commencement Meeting | December 15, 2025 | Building 42 Room 10 | Admin Dept | Completed | Graduation preparation | Event | High | 3 hrs | Mr. Sharma |
+| Dean's Council | February 1, 2026 | Building 35 Room 5 | Dean Office | Scheduled | Monthly review | Governance | Medium | 1 hr | Dr. Mehta |
+| Committee on Committees | March 3, 2026 | Building 1 Room 201 | Committee Board | Pending | Agenda to be finalized | Governance | Medium | 2 hrs | Ms. Iyer |
+| Research Symposium | April 10, 2026 | Hall A | Research Dept | Scheduled | Guest speakers invited | Research | High | 5 hrs | Dr. Reddy |
+| Faculty Workshop | May 5, 2026 | Building 12 Room 3 | HR Dept | Completed | Training session | Training | Medium | 3 hrs | Ms. Nair |
+| Student Orientation | June 1, 2026 | Auditorium | Student Affairs | Scheduled | New admissions | Event | High | 4 hrs | Mr. Kumar |
+| Alumni Meetup | July 20, 2026 | Conference Hall B | Alumni Assoc | Planned | Networking event | Event | Low | 2 hrs | Ms. Das |
+| Budget Review | August 15, 2026 | Building 22 Room 8 | Finance Dept | Pending | Budget discussion | Finance | High | 3 hrs | Mr. Gupta |
+| IT Strategy Meeting | September 10, 2026 | Lab 2 | IT Dept | Scheduled | Infrastructure planning | IT | High | 2 hrs | Mr. Verma |
+| Marketing Review | October 5, 2026 | Building 18 Room 6 | Marketing Team | Completed | Campaign review | Marketing | Medium | 2 hrs | Ms. Kapoor |
+| Staff Meeting | November 2, 2026 | Meeting Room 4 | HR Dept | Scheduled | Monthly sync | HR | Low | 1 hr | Mr. Singh |
+| Project Kickoff | December 1, 2026 | Building 30 Room 2 | Project Team | Completed | New project start | Project | High | 2 hrs | Ms. Patel |
+| Quality Audit | January 12, 2027 | Building 11 Room 9 | QA Team | Pending | Compliance check | QA | High | 4 hrs | Mr. Joshi |
+| Training Session | February 20, 2027 | Lab 5 | Training Dept | Scheduled | Skill development | Training | Medium | 3 hrs | Ms. Shah |
+| Board Meeting | March 25, 2027 | Executive Room | Board Office | Scheduled | Quarterly meeting | Governance | High | 3 hrs | Dr. Kapoor |
+| Safety Drill | April 15, 2027 | Campus Ground | Security Team | Completed | Emergency preparedness | Safety | High | 2 hrs | Mr. Khan |
+| Tech Conference | May 30, 2027 | Hall C | IT Dept | Planned | Industry speakers | IT | High | 6 hrs | Mr. Arjun |
+| Workshop on AI | June 18, 2027 | Lab 7 | AI Research Team | Scheduled | Hands-on session | Research | High | 4 hrs | Dr. Bose |
+| HR Policy Review | July 22, 2027 | Building 5 Room 10 | HR Dept | Pending | Policy updates | HR | Medium | 2 hrs | Ms. Fernandes |
+| Vendor Meeting | August 10, 2027 | Conference Room A | Procurement | Completed | Vendor discussion | Procurement | Medium | 2 hrs | Mr. Roy |
+| Library Committee | September 14, 2027 | Library Hall | Library Team | Scheduled | Resource planning | Academic | Low | 1 hr | Ms. Pillai |
+| Curriculum Review | October 19, 2027 | Building 8 Room 2 | Academic Dept | Pending | Course updates | Academic | High | 3 hrs | Dr. Iyer |
+| Internship Fair | November 25, 2027 | Auditorium | Placement Cell | Planned | Company visits | Placement | High | 5 hrs | Mr. Agarwal |
+| Annual Day Prep | December 5, 2027 | Main Stage | Cultural Team | Scheduled | Event planning | Event | Medium | 4 hrs | Ms. Kaur |
+| Sports Meet | January 10, 2028 | Playground | Sports Dept | Planned | Annual sports | Sports | Medium | 6 hrs | Mr. Yadav |
+| Scholarship Review | February 14, 2028 | Building 6 Room 1 | Finance Dept | Pending | Student aid review | Finance | High | 2 hrs | Ms. Menon |
+| Guest Lecture | March 12, 2028 | Hall D | Academic Dept | Scheduled | External speaker | Academic | Low | 2 hrs | Dr. Nair |
+| Team Building Event | April 18, 2028 | Resort Area | HR Dept | Planned | Employee engagement | HR | Medium | 5 hrs | Ms. Gill |
+| Budget Planning | May 20, 2028 | Building 20 Room 4 | Finance Dept | Scheduled | Next year planning | Finance | High | 3 hrs | Mr. Bansal |
+| Innovation Meetup | June 25, 2028 | Lab 9 | Innovation Cell | Planned | Idea sharing | Innovation | Medium | 2 hrs | Ms. Sethi |
+| Examination Review | July 30, 2028 | Building 3 Room 6 | Exam Dept | Completed | Exam analysis | Academic | High | 3 hrs | Mr. Chatterjee |
+| Placement Review | August 15, 2028 | Placement Office | Placement Cell | Scheduled | Placement stats | Placement | High | 2 hrs | Ms. Rani |
+| Alumni Talk | September 5, 2028 | Hall E | Alumni Assoc | Planned | Career guidance | Event | Low | 2 hrs | Mr. Thomas |
+| Policy Meeting | October 10, 2028 | Building 14 Room 7 | Admin Dept | Pending | Policy discussion | Admin | Medium | 2 hrs | Ms. Joseph |
+| Research Grant Review | November 22, 2028 | Building 16 Room 3 | Research Dept | Scheduled | Grant approvals | Research | High | 4 hrs | Dr. Sen |
+| Cultural Fest | December 15, 2028 | Campus Grounds | Cultural Team | Planned | Annual fest | Event | High | 8 hrs | Ms. Mishra |
+| Faculty Evaluation | January 10, 2029 | Building 19 Room 5 | HR Dept | Pending | Performance review | HR | High | 3 hrs | Mr. Das |
+| Seminar on Innovation | February 20, 2029 | Hall F | Innovation Team | Scheduled | Knowledge sharing | Innovation | Medium | 2 hrs | Ms. Kapoor |
+| End Semester Meeting | March 30, 2029 | Building 2 Room 1 | Academic Dept | Completed | Semester wrap-up | Academic | High | 2 hrs | Dr. Sharma |`,
           "pageChunks": [],
           "chunkTitle": "Error 404",
           "extractionMethodType": "general",
@@ -1020,7 +1136,27 @@ This table is read using the first row as the header for each column.
           "chunkId": "chk-7b5d9f66-4935-4b34-8198-545407777f36",
           "createdOn": "2025-11-18T10:39:15.259Z",
           "sourceUrl": "https://www.propstream.com/",
-          "chunkText": "Sorry, the page you were looking for at this URL was not found. In 2007, the first version of PropStream became available to investors. Originally accessible via a CD download, PropStream solved for the need investors had of finding distressed properties without constantly driving around neighborhoods looking for overgrown lawns and other signs of financial distress. Now an investor could locate and research properties across the United States, right from their desktop. In 2018, PropStream launched as an online real estate data provider, further expanding on the notion that we all should have access to the tools to become successful real estate investors. By combining multi-sourced data, powerful tools, and an intuitive interface, PropStream gave investors the power to instantly locate properties and effectively act on opportunities. Since its launch, PropStream has been disrupting the market by empowering real estate investors with the same tools that the professionals have access to, and more. PropStream remains committed to being nimble and innovative, regularly adding new features, data sets, and analytics that help keep our customers ahead of the game. What makes PropStream so successful? It’s our people. Our team of data experts, developers, customer service specialists, real estate analysts, marketing gurus, and management love our jobs and helping our users. Our number one priority is to make sure our customers have the tools they need to grow their businesses.",
+          "chunkText": `**Table123 caption (name and description of table)**  
+You can describe your table here or in the context of your page.  
+This table is read using the first row as the header for each column.  
+| Description | Date | Location | Organizer | Status | Notes | Category | Priority | Duration | Contact Person |
+|------------|------|----------|-----------|--------|-------|----------|----------|----------|----------------|
+| Academic Senate Meeting | May 25, 2025 | Building 99 Room 1 | Senate Office | Scheduled | Annual planning meeting | Governance | High | 2 hrs | Dr. Rao |
+| Commencement Meeting | December 15, 2025 | Building 42 Room 10 | Admin Dept | Completed | Graduation preparation | Event | High | 3 hrs | Mr. Sharma |
+| Dean's Council | February 1, 2026 | Building 35 Room 5 | Dean Office | Scheduled | Monthly review | Governance | Medium | 1 hr | Dr. Mehta |
+| Committee on Committees | March 3, 2026 | Building 1 Room 201 | Committee Board | Pending | Agenda to be finalized | Governance | Medium | 2 hrs | Ms. Iyer |
+| Research Symposium | April 10, 2026 | Hall A | Research Dept | Scheduled | Guest speakers invited | Research | High | 5 hrs | Dr. Reddy |
+| Faculty Workshop | May 5, 2026 | Building 12 Room 3 | HR Dept | Completed | Training session | Training | Medium | 3 hrs | Ms. Nair |
+| Student Orientation | June 1, 2026 | Auditorium | Student Affairs | Scheduled | New admissions | Event | High | 4 hrs | Mr. Kumar |
+| Alumni Meetup | July 20, 2026 | Conference Hall B | Alumni Assoc | Planned | Networking event | Event | Low | 2 hrs | Ms. Das |
+| Budget Review | August 15, 2026 | Building 22 Room 8 | Finance Dept | Pending | Budget discussion | Finance | High | 3 hrs | Mr. Gupta |
+| IT Strategy Meeting | September 10, 2026 | Lab 2 | IT Dept | Scheduled | Infrastructure planning | IT | High | 2 hrs | Mr. Verma |
+| Marketing Review | October 5, 2026 | Building 18 Room 6 | Marketing Team | Completed | Campaign review | Marketing | Medium | 2 hrs | Ms. Kapoor |
+| Staff Meeting | November 2, 2026 | Meeting Room 4 | HR Dept | Scheduled | Monthly sync | HR | Low | 1 hr | Mr. Singh |
+| Project Kickoff | December 1, 2026 | Building 30 Room 2 | Project Team | Completed | New project start | Project | High | 2 hrs | Ms. Patel |
+| Quality Audit | January 12, 2027 | Building 11 Room 9 | QA Team | Pending | Compliance check | QA | High | 4 hrs | Mr. Joshi |
+| Training Session | February 20, 2027 | Lab 5 | Training Dept | Scheduled | Skill development | Training | Medium | 3 hrs | Ms. Shah |
+`,
           "pageChunks": [],
           "chunkTitle": "Error 404",
           "extractionMethodType": "general",

@@ -105,6 +105,76 @@
         }
     }
 
+    // ── Hidden table (large tables – kept in DOM for popup HTML) ──────────
+    .table-hidden {
+        display: none !important;
+    }
+
+    // ── Table preview bar (shown below text when table has >20 rows) ───────
+    .table-preview-bar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        border: 1px solid #D0D5DD;
+        border-radius: 8px;
+        background: #FFFFFF;
+        padding: 6px 12px;
+        margin-top: 8px;
+        width: fit-content;
+        max-width: 100%;
+        box-sizing: border-box;
+
+        .table-preview-label {
+            font-family: Inter, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #344054;
+            white-space: nowrap;
+            padding: 0 8px 0 0;
+        }
+
+        .table-preview-sep {
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #D0D5DD;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+
+        .table-preview-meta {
+            font-family: Inter, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: #667085;
+            white-space: nowrap;
+        }
+
+        .table-preview-view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+
+            span {
+                font-family: Inter, sans-serif;
+                font-size: 12px;
+                font-weight: 500;
+                color: #155EEF;
+                white-space: nowrap;
+            }
+
+            svg {
+                flex-shrink: 0;
+            }
+        }
+    }
+
     // ── Expand button ──────────────────────────────────────────────────────
     .table-expand-btn {
         display: inline-flex;
@@ -319,11 +389,11 @@
                 scrollbar-width: thin;
                 scrollbar-color: #D0D5DD #F2F4F7;
 
-                // Table in popup – full width, wrapping allowed
+                // Table in popup – grows to natural content width; wrapper scrolls horizontally
                 table {
                     border-collapse: collapse;
-                    width: 100%;
-                    min-width: 400px;
+                    width: max-content;
+                    min-width: 100%;
                     font-family: Inter, sans-serif;
 
                     th {
@@ -348,8 +418,7 @@
                         padding: 10px 14px;
                         border: 1px solid #EAECF0;
                         vertical-align: top;
-                        word-break: break-word;
-                        white-space: normal;
+                        white-space: nowrap;
                     }
 
                     tr:nth-child(even) td {

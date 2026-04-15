@@ -90,11 +90,22 @@ export const showTablePreview = (tableHTML: string, title: string) => {
     render(<TablePreviewPopup tableHTML={tableHTML} title={title} />, tempDiv);
 };
 
+// ─── Parse table row/column counts from markdown ─────────────────────────────
+
+function getTableDimensions(tableMarkdown: string): { rowCount: number; colCount: number } {
+    const lines = tableMarkdown.split('\n').filter(l => l.trim().startsWith('|'));
+    if (lines.length < 2) return { rowCount: 0, colCount: 0 };
+    const colCount = lines[0].split('|').filter((_, i, arr) => i > 0 && i < arr.length - 1).length;
+    // exclude header row and separator row
+    const rowCount = Math.max(0, lines.length - 2);
+    return { rowCount, colCount };
+}
+
 // ─── TableContentBlock ────────────────────────────────────────────────────────
 // Splits `text` at the first GFM table and renders:
 //   • text-before-table  →  div.{textClassName}.{truncated|expanded}
-//   • table              →  div.table-scroll-wrapper   (no overflow:hidden → can scroll)
-//   • expand button      →  button.table-expand-btn    (sibling of scroll-wrapper)
+//   • table (≤20 rows)   →  div.table-scroll-wrapper   (inline, scrollable)
+//   • table (>20 rows)   →  hidden div + table-preview-bar below the text
 //
 // Nothing is mutated after mount – no DOM manipulation, no useEffect.
 
@@ -128,6 +139,8 @@ export function TableContentBlock({
 
     const { textBefore, tableMarkdown } = splitMarkdownAtFirstTable(text);
     const hasTable = !!tableMarkdown;
+    const { rowCount, colCount } = hasTable ? getTableDimensions(tableMarkdown) : { rowCount: 0, colCount: 0 };
+    const isLargeTable = rowCount > 2;
 
     const handleExpandTable = () => {
         const tableEl = tableRef.current?.querySelector('table');
@@ -137,6 +150,7 @@ export function TableContentBlock({
     const containerClass = [
         'search-results-table-container',
         hasTable ? 'has-table' : '',
+        isLargeTable ? 'has-large-table' : '',
         className,
     ].filter(Boolean).join(' ');
 
@@ -147,24 +161,47 @@ export function TableContentBlock({
             <div className={`${textClassName} ${isExpanded ? 'expanded' : 'truncated'}`}>
                 {CMHelpers(hasTable ? textBefore : text)}
                 {inlineChildren}
-            
-            {/* Table lives outside the clamped div so it is never clipped */}
-            {hasTable && (
-                <div ref={tableRef} className="table-scroll-wrapper">
+
+                {/* Inline table for small tables (≤20 rows) */}
+                {hasTable && !isLargeTable && (
+                    <div ref={tableRef} className="table-scroll-wrapper">
+                        {CMHelpers(tableMarkdown)}
+                    </div>
+                )}
+                {hasTable && !isLargeTable && isExpanded && (
+                    <button
+                        className="table-expand-btn"
+                        onClick={handleExpandTable}
+                        title="Expand table"
+                    >
+                        <ImageCarouselSvgIcons type="expand" />
+                        <span>Expand</span>
+                    </button>
+                )}
+            </div>
+
+            {/* Large table: hidden in DOM so popup can grab the HTML */}
+            {hasTable && isLargeTable && (
+                <div ref={tableRef} className="table-hidden">
                     {CMHelpers(tableMarkdown)}
                 </div>
             )}
-             {hasTable && (
-                    <button
-                    className="table-expand-btn"
-                    onClick={handleExpandTable}
-                    title="Expand table"
-                >
-                    <ImageCarouselSvgIcons type="expand" />
-                    <span>Expand</span>
-                </button>
-                  )}
-            </div>
+
+            {/* Table preview bar shown below text when table has >20 rows */}
+            {hasTable && isLargeTable && (
+                <div className="table-preview-bar">
+                    <span className="table-preview-label">Table Preview</span>
+                    <span className="table-preview-sep" />
+                    <span className="table-preview-meta">{rowCount} Rows - {colCount} Columns</span>
+                    <span className="table-preview-sep" />
+                    <button className="table-preview-view-btn" onClick={handleExpandTable}>
+                        <span>View Table</span>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.5 4.5L10.5 1.5M10.5 1.5H7.49999M10.5 1.5L6 6M5 1.5H3.9C3.05992 1.5 2.63988 1.5 2.31901 1.66349C2.03677 1.8073 1.8073 2.03677 1.66349 2.31901C1.5 2.63988 1.5 3.05992 1.5 3.9V8.1C1.5 8.94008 1.5 9.36012 1.66349 9.68099C1.8073 9.96323 2.03677 10.1927 2.31901 10.3365C2.63988 10.5 3.05992 10.5 3.9 10.5H8.1C8.94008 10.5 9.36012 10.5 9.68099 10.3365C9.96323 10.1927 10.1927 9.96323 10.3365 9.68099C10.5 9.36012 10.5 8.94008 10.5 8.1V7" stroke="#155EEF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

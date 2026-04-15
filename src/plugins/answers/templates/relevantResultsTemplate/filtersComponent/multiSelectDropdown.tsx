@@ -99,7 +99,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
             >
                 <div className="dropdown-content">
                     <span className={`dropdown-text`}>
-                    {`Select ${placeholder}`}
+                    {`${placeholder}`}
                     </span>
                     <div className="chevron-icon">
                         <svg 
@@ -169,8 +169,16 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                 <span>{showAllTags ? 'Hide' : `Show all (${selectedOptions.length})`}</span>
                             </button>
                         )}
-                        
-                        
+                        {!hiddenTagsCount && <span />}
+                        <button
+                            className="clear-all-btn"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleClearAll();
+                            }}
+                        >
+                            Clear all
+                        </button>
                     </div>
                 </div>
             )}

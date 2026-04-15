@@ -337,7 +337,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                         <div key={option.id} className="dropdown-item" onClick={() => handleSourceSelect(option)}>
                             <div className="dropdown-item-content">
                                 <div className="dropdown-item-icon">
-                                    <RenderFileIcons type={option.icon} />
+                                        <RenderFileIcons type={option.icon} hostInstance={props.hostInstance} />
                                 </div>
                                 <span className={`dropdown-item-text ${option.label.length > 15 ? 'truncated' : ''}`}>
                                     {option.label}
@@ -362,7 +362,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                     <div className="file-info">
                         <span className="file-info-wrapper">
                             <div className={`file-icon ${card.fileInfo.type}`}>
-                                <RenderFileIcons type={card.fileInfo.type} />
+                                <RenderFileIcons type={card.fileInfo.type} hostInstance={props.hostInstance} />
                             </div>
                             <span className="file-name-wrapper">
                                 <span className="file-name" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>

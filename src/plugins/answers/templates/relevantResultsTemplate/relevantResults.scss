@@ -63,7 +63,7 @@
     max-height: 100%;
     overflow-y: auto;
     background: white;
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 8px 8px;
     font-family: 'Inter', sans-serif;
 
     // Hide scrollbar — webkit
@@ -151,8 +151,8 @@
 
                         .filter-indicator {
                             position: absolute;
-                            top: -2px;
-                            right: -2px;
+                            top: -8px;
+                            left: 0px;                         
                             z-index: 1;
 
                             .dot-icon { width: 6px; height: 6px; }
@@ -455,6 +455,13 @@
                     }
                 }
 
+                // ─── Large-table preview bar: lift see-more-link above the bar ──────
+                .text-container:has(.search-results-table-container.has-large-table) {
+                    .see-more-link {
+                        bottom: 45px;
+                    }
+                }
+
                 .result-indicators {
                     @include resultIndicatorsRow;
 
@@ -494,7 +501,7 @@
                         height: 12px;
                         flex-shrink: 0;
                         display: flex;
-
+                        align-items: center;
                         &.pdf        { color: #F04438; }
                         &.excel      { color: #12B76A; }
                         &.powerpoint { color: #EF6820; }
