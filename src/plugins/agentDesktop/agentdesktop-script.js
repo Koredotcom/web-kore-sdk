@@ -290,6 +290,7 @@ AgentDesktop = function (uuId, aResponse) {
     this.showPhonePanel = false;
     this.showVideo = false;
     this.screenSharingStream = null;
+    this.isScreenShareCancelled = false;
     this.agentProfileIcon = null;
     this.maskClassList = null;
     this.maskPatternList = null;
@@ -760,6 +761,7 @@ AgentDesktop = function (uuId, aResponse) {
         var rejectCall = koreJquery("#rejectcall");
         var acceptCall = koreJquery("#acceptcall");
         rejectCall.off('click').on('click', function (event) {
+            _self.isScreenShareCancelled = true;
             if (_self.activeCall && _self.activeCall.isScreenSharing()) {
                 _self.sendControlMessage('screenshare_end');
                 if (!_self.callDetails.videoCall) {
@@ -781,6 +783,10 @@ AgentDesktop = function (uuId, aResponse) {
             }
         });
         acceptCall.off('click').on('click', function (event) {
+            if (_self.isScreenShareCancelled) {
+                toastContainer.remove();
+                return;
+            }
             if (_self.activeCall) {
                 _self.screenShare(_self.callDetails);
             }
@@ -1090,11 +1096,13 @@ AgentDesktop = function (uuId, aResponse) {
                 toastContainer.remove();
             }  // webrtc_screenshare will be sent, when in video call
             else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
+                _self.isScreenShareCancelled = false;
                 /*if (_self.activeCall) {
                     _self.screenShare(msgJson.message);
                 }*/
                 this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
+                _self.isScreenShareCancelled = true;
                 if (!_self.callDetails.videoCall) {
                     //_self.activeCall.stopSendingVideo();
                     _self.sendVideo(false);
@@ -1230,6 +1238,9 @@ AgentDesktop = function (uuId, aResponse) {
     }
     //this.updateGui();
     this.screenShare = function (data) {
+        if (this.isScreenShareCancelled) {
+            return Promise.resolve();
+        }
         var p = Promise.resolve();
         if (!this.callDetails.videoCall && this.activeCall.hasEnabledSendVideo()) {
             //_self.activeCall.stopSendingVideo();
@@ -1239,6 +1250,16 @@ AgentDesktop = function (uuId, aResponse) {
             if (this.screenSharingStream === null) {
                 return this.phone.openScreenSharing()
                     .then(stream => {
+                        if (this.isScreenShareCancelled) {
+                            stream.getTracks().forEach(function (track) {
+                                if (track && track.readyState === 'live') {
+                                    track.stop();
+                                }
+                            });
+                            this.phone.closeScreenSharing(stream);
+                            this.screenSharingStream = null;
+                            return;
+                        }
                         this.screenSharingStream = stream;
                         this.screenSharingStream.getVideoTracks()[0].onended = function () {
                             me.sendVideo(me.callDetails.videoCall);
@@ -1259,6 +1280,9 @@ AgentDesktop = function (uuId, aResponse) {
                     });
             }
         }).then(() => {
+            if (this.isScreenShareCancelled || !this.screenSharingStream) {
+                return;
+            }
             this.sendControlMessage('screenshare_start');
             this.sendVideo(true);
             return this.activeCall.startScreenSharing(this.screenSharingStream);
@@ -1353,6 +1377,7 @@ AgentDesktop = function (uuId, aResponse) {
                 self.showVideo = false;
                 self.isVideoCallRecording = false;
                 self.screenSharingStream = null;
+                self.isScreenShareCancelled = false;
                 _self.callTerminated();
             },
 
