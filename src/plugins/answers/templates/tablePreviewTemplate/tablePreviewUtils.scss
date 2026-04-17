@@ -6,6 +6,24 @@
     width: 100%;
     box-sizing: border-box;
 
+    // ── Override browser default white-space:pre so text-wrap:auto works ──
+    // Applies to ALL result-text/snippet containers, not just .has-table ones.
+    .result-text,
+    .result-snippet {
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        pre code,
+        code {
+            text-wrap: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+    }
+
     // ── Compact table layout when a table is detected ──────────────────────
     &.has-table {
         flex-direction: column !important;

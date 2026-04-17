@@ -78,7 +78,7 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
             >
                 <div className="dropdown-content">
                     <span className={`dropdown-text`}>
-                         {placeholder}
+                         {selectedOption?.label || placeholder}
                     </span>
                     <div className="chevron-icon">
                         <svg 

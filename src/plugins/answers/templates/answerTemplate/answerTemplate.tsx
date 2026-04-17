@@ -6,7 +6,7 @@ import {ImagePreviewTemplate} from '../imagePreviewTemplate/imagePreviewTemplate
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
 import SearchResultsTemplate from '../SearchResultsTemplate/searchResultsTemplate';
-import { getSearchResults, getTotalResultsCount, getResultsWebsocket } from '../relevantResultsTemplate/searchResultsData';
+import { getSearchResults } from '../relevantResultsTemplate/searchResultsData';
 import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
 
@@ -43,7 +43,7 @@ export function Answers(props: any) {
 
     useEffect(() => {
         if(messageObj?.msgData?.message[0]?.component?.payload?.answer_payload) {
-            messageObj.msgData.message[0].component.payload =  {...messageObj?.msgData?.message[0]?.component?.payload , ...getResultsWebsocket}
+            messageObj.msgData.message[0].component.payload =  {...messageObj?.msgData?.message[0]?.component?.payload}
         }
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
         const templateType = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0].snippet_type;
@@ -85,6 +85,28 @@ export function Answers(props: any) {
         });
         setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
+
+    const renderSearchResults = () => {
+        const payload = messageObj?.msgData?.message[0]?.component?.payload;
+        const searchResults = getSearchResults(payload);
+        const totalResults = payload.totalSearchResults||0;
+        if (!searchResults?.length) return null;
+        return (
+            <div class="sa-answer-relevant-results-wrap">
+                <SearchResultsTemplate
+                    results={searchResults}
+                    totalResults={totalResults}
+                    hostInstance={hostInstance}
+                    msgData={{ template: payload, searchRequestId: payload?.searchRequestId }}
+                    onResultClick={(result: any) => {
+                        if (result.source.url) {
+                            window.open(result.source.url, '_blank');
+                        }
+                    }}
+                />
+            </div>
+        );
+    };
 
     //redirect to specific url
     const redirectToURL=(url:string)=>{
@@ -223,38 +245,22 @@ export function Answers(props: any) {
                             }
                             </div>
 
-                            <div class="sa-answer-relevant-results-wrap">
-                                {(() => {
-                                    const payload = messageObj?.msgData?.message[0]?.component?.payload;
-                                    const searchResults = getSearchResults(payload);
-                                    const totalResults = getTotalResultsCount;
-                                    if (!searchResults?.length) return null;
-                                    return (
-                                        <SearchResultsTemplate
-                                            results={searchResults}
-                                            totalResults={totalResults}
-                                            hostInstance={hostInstance}
-                                            msgData={{ template: payload, searchIndexId: payload?.searchIndexId }}
-                                            onResultClick={(result: any) => {
-                                                if (result.source.url) {
-                                                    window.open(result.source.url, '_blank');
-                                                }
-                                            }}
-                                        />
-                                    );
-                                })()}
-                            </div>
+                            {renderSearchResults()}
                         </div>
 
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <div class="sa-answer-result-block">
+                        <div class="sa-answer-generative-stack">
+                        <div class="sa-answer-result-block ">
                             <div class="sa-answer-result-heading">{answersObj?.extractive?.snippet_title}</div>
                             <div class="sa-answer-result-desc">{answersObj?.extractive?.snippet_content}</div>
 
                             <div class="sa-answer-result-footer">1. {answersObj?.extractive?.source}</div>
                         </div>
+                        {renderSearchResults()}
+                        </div>
+                        
                     </Fragment>
                 )
             }

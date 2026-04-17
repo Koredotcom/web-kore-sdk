@@ -263,6 +263,34 @@
             }
         }
 
+        // ─── Loading State ────────────────────────────────────────────────────
+
+        .results-loading-container {
+            @include flexColumn($gap: 12px, $alignItems: center);
+            justify-content: center;
+            padding: 48px 24px;
+
+            .results-spinner {
+                .spinner-ring {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    border: 3px solid #EEF4FF;
+                    border-top-color: #528BFF;
+                    animation: results-spin 0.7s linear infinite;
+                }
+            }
+
+            .results-loading-text {
+                @include dynamicText(400, 12px, 16px, #667085);
+                margin: 0;
+            }
+        }
+
+        @keyframes results-spin {
+            to { transform: rotate(360deg); }
+        }
+
         .badge-indicator-wrapper {
             @include flexCenter;
             padding: 3px;
@@ -320,7 +348,18 @@
                             flex: 1;
                             @include dynamicText(400, 12px, 16px, #667085);
                             margin: 0;
-
+                            pre {
+                                white-space: pre-wrap;
+                                word-break: break-word;
+                                overflow-wrap: break-word;
+                            }
+                            pre code,
+                            code {
+                                text-wrap: auto;
+                                white-space: pre-wrap;
+                                word-break: break-word;
+                                overflow-wrap: break-word;
+                            }
                             &.truncated {
                                 @include lineClamp(3);
                                 text-overflow: clip;
@@ -430,7 +469,18 @@
                                 @include dynamicText(400, 12px, 16px, #101828);
                                 margin: 0;
                                 word-break: break-word;
-
+                                pre {
+                                    white-space: pre-wrap;
+                                    word-break: break-word;
+                                    overflow-wrap: break-word;
+                                }
+                                pre code,
+                                code {
+                                    text-wrap: auto;
+                                    white-space: pre-wrap;
+                                    word-break: break-word;
+                                    overflow-wrap: break-word;
+                                }
                                 &.truncated {
                                     @include lineClamp(3);
                                     word-break: break-word;
@@ -518,6 +568,7 @@
                             margin-right: auto;
                             max-width: 203px;
                             cursor: pointer;
+                            display: inline-block;
                         }
 
                         .link-icon-hover {

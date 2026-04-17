@@ -140,7 +140,7 @@ export function TableContentBlock({
     const { textBefore, tableMarkdown } = splitMarkdownAtFirstTable(text);
     const hasTable = !!tableMarkdown;
     const { rowCount, colCount } = hasTable ? getTableDimensions(tableMarkdown) : { rowCount: 0, colCount: 0 };
-    const isLargeTable = rowCount > 2;
+    const isLargeTable = rowCount > 1;
 
     const handleExpandTable = () => {
         const tableEl = tableRef.current?.querySelector('table');

@@ -39,11 +39,14 @@ const getImageUrls = (chunkMeta: any): string[] => {
     return Array.isArray(chunkMeta.imageUrl) ? chunkMeta.imageUrl : [chunkMeta.imageUrl];
 };
 
-const buildChunkDataMap = (chunkResult: any[]): { [key: string]: any } => {
+const buildChunkDataMap = (chunkResult: Record<string, any[]> | any[]): { [key: string]: any } => {
     const map: { [key: string]: any } = {};
-    chunkResult?.forEach((chunk: any) => {
-        if (chunk._source?.chunkId) {
-            map[chunk._source.chunkId] = chunk._source;
+    const items: any[] = Array.isArray(chunkResult)
+        ? chunkResult
+        : Object.values(chunkResult).flat();
+    items?.forEach((chunk: any) => {
+        if (chunk.additionalInfo?.chunkId) {
+            map[chunk.additionalInfo.chunkId] = chunk;
         }
     });
     return map;
@@ -61,22 +64,26 @@ const getSelectedSourceData = (results: any, sourceId: string): any[] => {
 
 const buildResultCard = (item: any, chunkDataMap: { [key: string]: any }): ResultCard => {
     const firstChunk = chunkDataMap[item.chunkResults[0]] || {};
-
+    const toArray = (val: any): string[] => {
+        if (!val) return [];
+        return Array.isArray(val) ? val : [val];
+      };
     const relatedResults = item.chunkResults.slice(1).map((chunkId: string, chunkIndex: number) => {
         const chunk = chunkDataMap[chunkId] || {};
+          const imageUrls = toArray(chunk.page_image_url ?? chunk.chunkMeta?.imageUrl ?? chunk.image_url);
         return {
             id: `${item.docId}-${chunkIndex}`,
             text: chunk.chunkText || 'No text available',
             fileInfo: {
                 type: chunk.sourceType,
                 name: item.recordTitle,
-                imageUrls: getImageUrls(chunk.chunkMeta),
-                fileType: chunk.sys_file_type,
+                imageUrls: imageUrls,
+                fileType: chunk.sys_file_type || chunk.additionalInfo?.sys_file_type || chunk?.fileType,
                 recordUrl: chunk.recordUrl
             }
         };
     });
-
+    const firstImgUrls = toArray(firstChunk.page_image_url ?? firstChunk.chunkMeta?.imageUrl ?? firstChunk.image_url);
     return {
         id: item.docId,
         text: firstChunk.chunkText || 'No text available',
@@ -84,8 +91,8 @@ const buildResultCard = (item: any, chunkDataMap: { [key: string]: any }): Resul
             type: firstChunk.sourceType,
             name: item.recordTitle,
             resultCount: item.chunkResults.length,
-            imageUrls: getImageUrls(firstChunk.chunkMeta),
-            fileType: firstChunk.sys_file_type,
+            imageUrls: firstImgUrls,
+            fileType: firstChunk.sys_file_type || firstChunk.additionalInfo?.sys_file_type || firstChunk?.fileType,
             recordUrl: firstChunk.recordUrl
         },
         relatedResults,
@@ -124,17 +131,8 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const [expandedTexts, setExpandedTexts] = useState<{ [key: string]: boolean }>({});
     const [showSourceDropdown, setShowSourceDropdown] = useState(false);
     const [selectedSource, setSelectedSource] = useState({ id: 'all', label: 'All Sources', icon: 'document' });
-    const [activeFilters, setActiveFilters] = useState<FilterState>({
-        fileSource: [],
-        fileTypes: [],
-        publishedOn: 'all',
-        status: 'all',
-        creditLimit: 'all',
-        completed: 'all',
-        assignedTo: 'all',
-        category: 'all',
-        taskType: 'all'
-    });
+    const [activeFilters, setActiveFilters] = useState<FilterState>({});
+    const [isLoading, setIsLoading] = useState(true);
 
     const sourceDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -149,18 +147,14 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [showSourceDropdown]);
-
-    const mapApiDataToResultCards = (): ResultCard[] => {
-        if (!msgData?.template?.results) return [];
-        const chunkDataMap = buildChunkDataMap(msgData.template.chunk_result || []);
-        const sourceData = getSelectedSourceData(msgData.template.results, selectedSource.id);
-        return sourceData.map((item: any) => buildResultCard(item, chunkDataMap));
-    };
-
     // Re-map results whenever the selected source or message data changes
     useEffect(() => {
         if (msgData?.template) {
-            setResultsData(mapApiDataToResultCards());
+            setIsLoading(true);
+            setTimeout(() => {
+                setResultsData(filterResultsByFacets(activeFilters));
+                setIsLoading(false);
+            }, 0);
         }
     }, [selectedSource, msgData]);
 
@@ -183,7 +177,11 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     };
 
     const getSourceOptions = () => {
-        const sourceOptions = msgData.template.tabFacet.buckets.map((tab: any) => ({
+        let tabFacets = msgData.template.tabFacet;
+        if(Array.isArray(tabFacets)){
+            tabFacets = tabFacets[0];
+        }
+        const sourceOptions = tabFacets.buckets.map((tab: any) => ({
             id: tab.key,
             label: tab.name,
             icon: getIcon(tab.key)
@@ -217,9 +215,9 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const handleSourceFilter = () => setShowSourceDropdown(prev => !prev);
 
     const handleSourceSelect = (source: { id: string; label: string; icon: string }) => {
+        setIsLoading(true);
         setSelectedSource(source);
         setShowSourceDropdown(false);
-        // useEffect on selectedSource handles the result re-mapping
     };
 
     const handleMoreFilters = () => setShowFilters(true);
@@ -227,7 +225,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
     const filterResultsByFacets = (filters: FilterState): ResultCard[] => {
         if (!msgData?.template?.chunk_result) return [];
-        const chunkDataMap = buildChunkDataMap(msgData.template.chunk_result);
+        const chunkDataMap = buildChunkDataMap(msgData.template.chunk_result || {});
         const sourceData = getSelectedSourceData(msgData.template.results, selectedSource.id);
 
         const filteredData = sourceData.filter((item: any) =>
@@ -236,8 +234,8 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                 if (!chunkData) return false;
                 return Object.entries(filters).every(([fieldName, filterValue]) => {
                     if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) return true;
-                    const chunkFieldValue = chunkData[fieldName];
-                    if (chunkFieldValue === undefined) return true;
+                    const chunkFieldValue = chunkData[fieldName] || chunkData['additionalInfo'][fieldName];
+                    if (chunkFieldValue === undefined) return false;
                     return Array.isArray(filterValue)
                         ? filterValue.includes(chunkFieldValue)
                         : chunkFieldValue === filterValue;
@@ -251,16 +249,17 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const handleApplyFilters = (filters: FilterState) => {
         setActiveFilters(filters);
         if (msgData?.template) {
-            setResultsData(filterResultsByFacets(filters));
+            setIsLoading(true);
+            setTimeout(() => {
+                setResultsData(filterResultsByFacets(filters));
+                setIsLoading(false);
+            }, 0);
         }
     };
 
     const handleClearFilters = () => {
-        setActiveFilters({
-            fileSource: [], fileTypes: [],
-            publishedOn: '', status: '', creditLimit: '',
-            completed: '', assignedTo: '', category: '', taskType: ''
-        });
+        setIsLoading(true);
+        setActiveFilters({});
         setSelectedSource({ id: 'all', label: 'All Sources', icon: 'document' });
     };
 
@@ -279,7 +278,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const renderTextToggle = (cardId: string, isExpanded: boolean) => (
         isExpanded
             ? <span className="see-less-link" onClick={() => handleTextToggle(cardId)}>see less</span>
-            : <span className="see-more-link" onClick={() => handleTextToggle(cardId)}>See more</span>
+            : <span className="see-more-link" onClick={() => handleTextToggle(cardId)}>see more</span>
     );
 
     // Shared renderer for both main card and related card text sections
@@ -362,7 +361,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                     <div className="file-info">
                         <span className="file-info-wrapper">
                             <div className={`file-icon ${card.fileInfo.type}`}>
-                                <RenderFileIcons type={card.fileInfo.type} hostInstance={props.hostInstance} />
+                                <RenderFileIcons type={card.fileInfo.fileType || card.fileInfo.type} hostInstance={props.hostInstance} />
                             </div>
                             <span className="file-name-wrapper">
                                 <span className="file-name" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
@@ -397,7 +396,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                                 const relatedId = `${card.id}-${relatedCard.id}`;
                                 return (
                                     <Fragment key={relatedCard.id}>
-                                        {index > 0 && <div className="divider"></div>}
+                                        <div className="divider"></div>
                                         <div className="related-item">
                                             {renderTextContent(
                                                 relatedId,
@@ -494,7 +493,14 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
             {/* Results List */}
             <div className="results-container">
-                {filteredResults.length === 0 ? (
+                {isLoading ? (
+                    <div className="results-loading-container">
+                        <div className="results-spinner">
+                            <div className="spinner-ring" />
+                        </div>
+                        <p className="results-loading-text">Loading results…</p>
+                    </div>
+                ) : filteredResults.length === 0 ? (
                     <div className="no-results-container">
                         <div className="no-results-icon">
                             <ImageCarouselSvgIcons type="search-lg" className="search-icon" />

@@ -4,7 +4,6 @@ import './searchResultsTemplate.scss';
 import { h } from 'preact';
 import React from 'preact/compat';
 import { RelevantResultsSvgIcons, RenderFileIcons } from '../relevantResultsTemplate/relevantResultsSvgIcons';
-import { getRelevantResults } from '../relevantResultsTemplate/searchResultsData';
 import { TableContentBlock } from '../tablePreviewTemplate/tablePreviewUtils';
 
 interface SearchResult {
@@ -15,6 +14,7 @@ interface SearchResult {
         type: string;
         url?: string;
         imageUrls?: Array<string>;
+        fileType?: string;
     };
 }
 
@@ -26,8 +26,10 @@ interface SearchResultsTemplateProps {
     msgData?: any;
 }
 
+const MAX_VISIBLE_RESULTS = 3;
 export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     const { results, totalResults = 0, onResultClick, hostInstance, msgData } = props;
+    const visibleResults = results.slice(0, MAX_VISIBLE_RESULTS);
 
     const handleResultClick = (result: SearchResult) => {
         if (onResultClick) {
@@ -45,33 +47,25 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
 
     const handleViewAllClick = () => {
         if (!hostInstance?.bottomSliderAction) return;
-
         const taskBotId = hostInstance?.config?.botOptions?.botInfo?.taskBotId;
-        const url = hostInstance?.config?.botOptions?.koreAPIUrl + 'searchsdk/' + taskBotId + '/' + (msgData?.searchIndexId || '') + '/advancedSearch';
-        const query = msgData?.template?.originalQuery || '';
+        const url = hostInstance?.config?.botOptions?.koreAPIUrl + 'searchsdk/' + taskBotId + '/searchResults/' + (msgData?.searchRequestId || '');
 
         fetch(url, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': 'bearer ' + hostInstance?.accessToken
             },
-            body: JSON.stringify({ query }),
-            method: 'POST'
+            method: 'GET'
         })
             .then(res => {
                 if (res.ok) return res.json();
                 throw new Error('Get search results API failed');
             })
             .then((response: any) => {
-                let searchResultsRes = {};
-                if (!response) {
-                    searchResultsRes = getRelevantResults;
-                }
+                const searchResultsRes = response||{};
                 openSliderWithData(searchResultsRes);
             })
             .catch(() => {
-                let searchResultsRes = getRelevantResults;
-                openSliderWithData(searchResultsRes);
                 console.error('Get search results API failed');
             });
     };
@@ -92,7 +86,7 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
             </header>
 
             <ul className="search-results-list">
-                {results.map((result, index) => (
+                {visibleResults.map((result, index) => (
                     <li
                         key={result.id}
                         className={`search-result-item ${index === 0 ? 'first-item' : ''}`}
@@ -100,7 +94,7 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
                         <article className="result-content">
                             <header className="result-title-row">
                                 <span className="result-type-icon" aria-hidden="true">
-                                    <RenderFileIcons type={result.source.type} hostInstance={hostInstance} />
+                                    <RenderFileIcons type={result.source.fileType || result.source.type} hostInstance={hostInstance} />
                                 </span>
                                 <div
                                     className="result-title-link"
