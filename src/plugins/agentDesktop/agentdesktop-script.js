@@ -147,6 +147,7 @@ import requireKr from '../../components/base-sdk/kore-bot-sdk-client';
 import './agentdesktop.css';
 import moment from 'moment';
 import { pack } from '@amplitude/rrweb-packer';
+import { openRecordingConsentSlider } from './recordingConsentSlider.tsx';
 
 /** @ignore */
 class AgentDesktopPluginScript  {
@@ -199,6 +200,74 @@ AgentDesktop = function (uuId, aResponse) {
     this.authResponse = null;
     let cwInstance = this.config.hostInstance;
     let botInstance = cwInstance?.bot;
+
+    const closeRecordingConsentSlider = () => {
+        try {
+            if (!cwInstance?.chatEle) {
+                return;
+            }
+            // Only close when the recording consent slider is actually open.
+            if (!cwInstance.chatEle.querySelector('.recording-consent-slider')) {
+                return;
+            }
+
+            if (cwInstance?.config?.UI?.version == 'v2') {
+                if (typeof cwInstance.bottomSliderAction === 'function') {
+                    cwInstance.bottomSliderAction('hide');
+                }
+                return;
+            }
+
+            const wrap = cwInstance.chatEle.querySelector('.chat-actions-bottom-wraper');
+            if (!wrap) {
+                return;
+            }
+            wrap.classList.add('close-bottom-slide');
+            setTimeout(() => {
+                wrap.remove();
+            }, 150);
+        } catch (e) {
+            console.log('Failed to close recording consent slider', e);
+        }
+    };
+    if (!this.config.isVoiceCobrowseSession && cwInstance && typeof cwInstance.on === 'function') {
+        cwInstance.on('video_call_recording_proceed', () => {
+            try {
+                const activeBotInstance = cwInstance?.bot || botInstance;
+                if (!activeBotInstance || typeof activeBotInstance.sendMessage !== 'function') {
+                    return;
+                }
+                const messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": { type: "video_call_recording_accepted" },
+                    "type": ""
+                };
+                activeBotInstance.sendMessage(messageToBot, (err) => { });
+                _self.isVideoCallRecording = true;
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
+            } catch (e) {
+                console.log("Failed to send video_call_recording_accepted", e);
+            }
+        });
+        cwInstance.on('video_call_recording_decline', () => {
+            const activeBotInstance = cwInstance?.bot || botInstance;
+            if (!activeBotInstance?.sendMessage) return;
+            const messageToBot = {};
+            messageToBot["event"] = "event";
+            messageToBot["message"] = {
+              body: { type: "video_call_recording_declined" },
+              type: ""
+            };
+            activeBotInstance.sendMessage(messageToBot, () => {});
+            _self.isVideoCallRecording = false;
+            if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                _self.updateVideoCallRecordingUI();
+            }
+        });
+    }
     console.log("agentdesktop uuId", uuId);
     /*if (uuId && uuId.length > 0) {
         localStorage.setItem("kr-cw-uid", uuId)
@@ -221,9 +290,56 @@ AgentDesktop = function (uuId, aResponse) {
     this.showPhonePanel = false;
     this.showVideo = false;
     this.screenSharingStream = null;
+    this.isScreenShareCancelled = false;
     this.agentProfileIcon = null;
     this.maskClassList = null;
     this.maskPatternList = null;
+    this.isVideoCallRecording = false;
+    this.isVideoCallRecordingPaused = false;
+
+    this.updateVideoCallRecordingUI = function () {
+        try {
+            const shouldShow = !!(_self.callDetails?.videoCall && _self.isVideoCallRecording);
+            const host = document.querySelector('#audiovideocallcontainer .action-minimize-audio-control');
+            if (!host) return;
+
+            const existing = host.querySelector('.recording-video-info');
+            if (!shouldShow) {
+                if (existing) existing.remove();
+                return;
+            }
+
+            const tooltipText = _self.isVideoCallRecordingPaused ? 'Recording paused' : 'This call is being recorded.';
+            const labelText = _self.isVideoCallRecordingPaused ? 'Rec Paused' : 'Rec';
+
+            if (!existing) {
+                host.insertAdjacentHTML(
+                    'afterbegin',
+                    `<div class="recording-video-info${_self.isVideoCallRecordingPaused ? ' recording-info-paused' : ''}">
+                        <div class="recording-tooltip">${tooltipText}</div>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M6 0.5C2.96243 0.5 0.5 2.96243 0.5 6C0.5 9.03757 2.96243 11.5 6 11.5C9.03757 11.5 11.5 9.03757 11.5 6C11.5 2.96243 9.03757 0.5 6 0.5Z" fill="#D92D20"/>
+                        </svg>
+                        <p>${labelText}</p>
+                    </div>`
+                );
+                return;
+            }
+
+            if (_self.isVideoCallRecordingPaused) {
+                existing.classList.add('recording-info-paused');
+            } else {
+                existing.classList.remove('recording-info-paused');
+            }
+
+            const tooltipEl = existing.querySelector('.recording-tooltip');
+            if (tooltipEl) tooltipEl.textContent = tooltipText;
+            const labelEl = existing.querySelector('p');
+            if (labelEl) labelEl.textContent = labelText;
+        } catch (e) {
+            console.log('Failed to update recording UI', e);
+        }
+    };
     this.phoneConfig = {
         reconnectIntervalMin: 2, // Minimum interval between WebSocket reconnection attempts. (seconds)
         reconnectIntervalMax: 30, // Maximum interval between WebSocket reconnection attempts (seconds)
@@ -278,6 +394,11 @@ AgentDesktop = function (uuId, aResponse) {
         callContainer.remove();
         this.removeAudoVideoContainer();
         this.disableMinimizeButton(false);
+        _self.isVideoCallRecording = false;
+        _self.isVideoCallRecordingPaused = false;
+        if (typeof _self.updateVideoCallRecordingUI === 'function') {
+            _self.updateVideoCallRecordingUI();
+        }
         _self.enableClickToCallButton();
     }
     this.showFooterButtons = function (callConnected, videoCall) {
@@ -472,6 +593,9 @@ AgentDesktop = function (uuId, aResponse) {
             audiovideocallcontainer.empty();
             if (_self.callDetails.videoCall) {
                 audiovideocallcontainer.append(videoContainerHTML);
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
                 koreJquery("#agentyou").hide()
                 var gLocalVideo = document.getElementById('kore_local_video');
                 gLocalVideo["srcObject"] = gLocalVideo["srcObject"]
@@ -637,6 +761,7 @@ AgentDesktop = function (uuId, aResponse) {
         var rejectCall = koreJquery("#rejectcall");
         var acceptCall = koreJquery("#acceptcall");
         rejectCall.off('click').on('click', function (event) {
+            _self.isScreenShareCancelled = true;
             if (_self.activeCall && _self.activeCall.isScreenSharing()) {
                 _self.sendControlMessage('screenshare_end');
                 if (!_self.callDetails.videoCall) {
@@ -658,6 +783,10 @@ AgentDesktop = function (uuId, aResponse) {
             }
         });
         acceptCall.off('click').on('click', function (event) {
+            if (_self.isScreenShareCancelled) {
+                toastContainer.remove();
+                return;
+            }
             if (_self.activeCall) {
                 _self.screenShare(_self.callDetails);
             }
@@ -932,6 +1061,11 @@ AgentDesktop = function (uuId, aResponse) {
                 }
                 console.log('payload=', msgJson.message);
                 _self.callAccepted = false;
+                _self.isVideoCallRecording = false;
+                _self.isVideoCallRecordingPaused = false;
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
                 _self.showPhonePanel = true;
 
                 if (_self.callDetails.restoreCall) {
@@ -949,6 +1083,11 @@ AgentDesktop = function (uuId, aResponse) {
                 _self.removeAudoVideoContainer()
                 _self.showPhonePanel = false;
                 _self.showVideo = false;
+                _self.isVideoCallRecording = false;
+                _self.isVideoCallRecordingPaused = false;
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
                 if (_self.activeCall) {
                     _self.activeCall.terminate();
                     _self.phone.deinit();
@@ -957,11 +1096,13 @@ AgentDesktop = function (uuId, aResponse) {
                 toastContainer.remove();
             }  // webrtc_screenshare will be sent, when in video call
             else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
+                _self.isScreenShareCancelled = false;
                 /*if (_self.activeCall) {
                     _self.screenShare(msgJson.message);
                 }*/
                 this.showScreenShareMessage(_self.callDetails.videoCall, _self.callDetails.firstName);
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare_cancel') {
+                _self.isScreenShareCancelled = true;
                 if (!_self.callDetails.videoCall) {
                     //_self.activeCall.stopSendingVideo();
                     _self.sendVideo(false);
@@ -1015,6 +1156,23 @@ AgentDesktop = function (uuId, aResponse) {
                     timestamp: new moment()
                 });
                 localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request') {
+                const cwInstance = this.config.hostInstance;
+                if (!cwInstance?.chatEle?.querySelector('.recording-consent-slider')) {
+                    openRecordingConsentSlider(cwInstance);
+                }
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request_timeout') {
+                closeRecordingConsentSlider();
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_resume') {
+                _self.isVideoCallRecordingPaused = false;
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
+            } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_pause') {
+                _self.isVideoCallRecordingPaused = true;
+                if (typeof _self.updateVideoCallRecordingUI === 'function') {
+                    _self.updateVideoCallRecordingUI();
+                }
             }
         });
     }
@@ -1080,6 +1238,9 @@ AgentDesktop = function (uuId, aResponse) {
     }
     //this.updateGui();
     this.screenShare = function (data) {
+        if (this.isScreenShareCancelled) {
+            return Promise.resolve();
+        }
         var p = Promise.resolve();
         if (!this.callDetails.videoCall && this.activeCall.hasEnabledSendVideo()) {
             //_self.activeCall.stopSendingVideo();
@@ -1089,6 +1250,16 @@ AgentDesktop = function (uuId, aResponse) {
             if (this.screenSharingStream === null) {
                 return this.phone.openScreenSharing()
                     .then(stream => {
+                        if (this.isScreenShareCancelled) {
+                            stream.getTracks().forEach(function (track) {
+                                if (track && track.readyState === 'live') {
+                                    track.stop();
+                                }
+                            });
+                            this.phone.closeScreenSharing(stream);
+                            this.screenSharingStream = null;
+                            return;
+                        }
                         this.screenSharingStream = stream;
                         this.screenSharingStream.getVideoTracks()[0].onended = function () {
                             me.sendVideo(me.callDetails.videoCall);
@@ -1109,6 +1280,9 @@ AgentDesktop = function (uuId, aResponse) {
                     });
             }
         }).then(() => {
+            if (this.isScreenShareCancelled || !this.screenSharingStream) {
+                return;
+            }
             this.sendControlMessage('screenshare_start');
             this.sendVideo(true);
             return this.activeCall.startScreenSharing(this.screenSharingStream);
@@ -1201,7 +1375,9 @@ AgentDesktop = function (uuId, aResponse) {
                 self.callMuted = false;
                 self.showPhonePanel = false;
                 self.showVideo = false;
+                self.isVideoCallRecording = false;
                 self.screenSharingStream = null;
+                self.isScreenShareCancelled = false;
                 _self.callTerminated();
             },
 
@@ -1306,9 +1482,9 @@ AgentDesktop = function (uuId, aResponse) {
             stream.getTracks().forEach(function (track) {
                 track.stop();
             });
-            if(this.callDetails.videoCall){
-                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser);
-            }else{
+            if (this.callDetails.videoCall) {
+                this.activeCall = this.phone.call(this.phone.VIDEO, sipUser, [`X-botName:${this.callDetails?.botId || ''}`, `X-cId:${this.callDetails?.conversationId || ''}`, `X-isVideoCall:true`]);
+            } else {
                 this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
             }
         });

@@ -732,6 +732,7 @@ initi18n  () {
         sent: 'Sent',
         you: 'You',
         uploaded: 'uploaded',
+        uploadFailed: 'Upload failed',
         download: 'Download'
       },
     },
