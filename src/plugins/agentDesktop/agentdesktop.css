@@ -682,6 +682,79 @@
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    border-radius: var(--full, 9999px);
+    border: var(--Border-Stroke-Default, 1px) solid var(--component-colors-utility-error-utility-error-200, #FECDCA);
+    background: var(--component-colors-utility-error-utility-error-50, #FEF3F2);
+    padding: var(--xxs, 2px) var(--default, 8px);
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info.recording-info-paused{
+    border: var(--Border-Stroke-Default, 1px) solid var(--component-colors-utility-gray-utility-gray-200, #EAECF0);
+    background: var(--component-colors-utility-gray-utility-gray-50, #F9FAFB);
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info.recording-info-paused svg path{ 
+    fill: #98A2B3;
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info.recording-info-paused p{
+    color: var(--component-colors-utility-gray-utility-gray-700, #344054);
+    text-align: center;
+    font-size: var(--font-size-text-xs, 12px);
+    font-weight: var(--font-weight-normal-Medium, 500);
+    line-height: var(--font-line-height-text-xs, 16px); /* 133.333% */
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info .recording-tooltip {
+    position: absolute;
+    top: -42px;
+    width: 180px;
+    left: -75px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: var(--default, 8px);
+    background: var(--colors-background-bg-primary-solid, #0C111D);
+    padding: var(--default, 8px) var(--md, 12px);
+    color: var(--colors-text-text-white, #FFF);
+    text-align: center;
+    font-size: var(--font-size-text-xs, 12px);
+    font-weight: var(--font-weight-normal-Semibold, 600);
+    line-height: var(--font-line-height-text-xs, 16px);
+    opacity: 0;
+    visibility: hidden;
+}
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info .recording-tooltip::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    width: 10px;
+    height: 10px;
+    background: var(--colors-background-bg-primary-solid, #0C111D);
+    left: 96px;
+    margin: 0 auto;
+    transform: rotate(45deg);
+}
+
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info:hover .recording-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info svg{
+    flex-shrink: 0;
+}
+
+.video-audio-chat-container .action-minimize-audio-control .recording-video-info p{
+    color: var(--component-colors-utility-error-utility-error-700, #B42318);
+    text-align: center;
+    font-size: var(--font-size-text-xs, 12px);
+    font-weight: var(--font-weight-normal-Medium, 500);
+    line-height: var(--font-line-height-text-xs, 16px);
 }
 .video-audio-chat-container .action-minimize-audio-control .maximize-video {
     border-radius: 100%;
