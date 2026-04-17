@@ -1,22 +1,22 @@
 @import '../../../../../templatemanager/templates/dropdown/dropdown.scss';
 @import '../mixins';
 
-.filters-content {
+.sa-answer-filters-content {
     background: white;
     height: 100%;
     max-height: 100%;
     @include flexColumn;
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    .filters-header {
+    .sa-answer-filters-header {
         flex-shrink: 0;
         @include flexRow($justify: space-between);
         padding: 16px;
 
-        .header-left {
+        .sa-answer-header-left {
             @include flexRow($gap: 12px);
 
-            .filters-title {
+            .sa-answer-filters-title {
                 font-size: 14px;
                 line-height: 20px;
                 font-weight: 600;
@@ -24,7 +24,7 @@
                 margin: 0;
             }
 
-            .active-filters-count {
+            .sa-answer-active-filters-count {
                 font-size: 14px;
                 color: #667085;
                 background: #F2F4F7;
@@ -33,7 +33,7 @@
             }
         }
 
-        .close-button {
+        .sa-answer-close-button {
             @include btnReset;
             padding: 4px;
             border-radius: 4px;
@@ -45,11 +45,11 @@
         }
     }
 
-    .filters-sections {
+    .sa-answer-filters-sections {
         flex-grow: 1;
         overflow-y: auto;
 
-        .filter-section {
+        .sa-answer-filter-section {
             border-bottom: 1px solid #EAECF0;
             padding: 0 16px;
 
@@ -57,16 +57,16 @@
                 background-color: #F9FAFB;
             }
 
-            .filter-section-header {
+            .sa-answer-filter-section-header {
                 padding: 16px 0;
                 cursor: pointer;
                 @include easeTransition(background-color);
 
-                .filter-title-row {
+                .sa-answer-filter-title-row {
                     @include flexRow($justify: space-between);
                     margin-bottom: 8px;
 
-                    .filter-section-title {
+                    .sa-answer-filter-section-title {
                         font-size: 14px;
                         font-weight: 500;
                         color: #000;
@@ -74,11 +74,11 @@
                         margin: 0;
                     }
 
-                    .chevron-down {
+                    .sa-answer-chevron-down {
                         @include iconBox(20px);
                         @include easeTransition(transform);
 
-                        &.expanded {
+                        &.sa-answer-expanded {
                             transform: rotate(180deg);
                         }
 
@@ -89,10 +89,10 @@
                     }
                 }
 
-                .filter-expanded-content {
+                .sa-answer-filter-expanded-content {
                     padding-top: 8px;
 
-                    .filter-description {
+                    .sa-answer-filter-description {
                         display: block;
                         font-size: 12px;
                         font-weight: 400;
@@ -104,14 +104,14 @@
         }
     }
 
-    .filters-footer {
+    .sa-answer-filters-footer {
         flex-shrink: 0;
         @include flexRow($justify: flex-end);
         padding: 16px;
         border-top: 1px solid #EAECF0;
         background: #FFFFFF;
 
-        .clear-all-button {
+        .sa-answer-clear-all-button {
             @include btnReset;
             color: #667085;
             font-size: 14px;
@@ -125,18 +125,18 @@
             }
         }
 
-        .action-buttons {
+        .sa-answer-action-buttons {
             @include flexRow($gap: 8px);
 
-            .cancel-button,
-            .apply-button {
+            .sa-answer-cancel-button,
+            .sa-answer-apply-button {
                 @include actionBtnBase;
                 font-size: 12px;
                 line-height: 16px;
                 font-weight: 500;
             }
 
-            .cancel-button {
+            .sa-answer-cancel-button {
                 background: #FFFFFF;
                 border-color: #D0D5DD;
                 color: #344054;
@@ -147,7 +147,7 @@
                 }
             }
 
-            .apply-button {
+            .sa-answer-apply-button {
                 background: #155EEF;
                 border-color: #155EEF;
                 color: #FFFFFF;
@@ -164,19 +164,19 @@
 // ─── Responsive ───────────────────────────────────────────────────────────────
 
 @media (max-width: 768px) {
-    .filters-content {
+    .sa-answer-filters-content {
         width: 95%;
         height: 90vh;
 
-        .filters-sections {
+        .sa-answer-filters-sections {
             padding: 12px 16px;
         }
 
-        .filters-footer {
+        .sa-answer-filters-footer {
             padding: 12px 16px;
 
-            .action-buttons {
-                .apply-button {
+            .sa-answer-action-buttons {
+                .sa-answer-apply-button {
                     flex: 1;
                 }
             }

@@ -56,23 +56,23 @@ interface TablePreviewPopupProps {
 
 function TablePreviewPopup({ tableHTML, title }: TablePreviewPopupProps) {
     return (
-        <div className="sa-table-preview">
-            <div className="sa-table-preview-header">
-                <div className="sa-table-header-content">
-                    <div className="sa-table-header-left">
-                        <div className="sa-table-back-btn" onClick={closeTablePopup}>
+        <div className="sa-answer-table-preview">
+            <div className="sa-answer-table-preview-header">
+                <div className="sa-answer-table-header-content">
+                    <div className="sa-answer-table-header-left">
+                        <div className="sa-answer-table-back-btn" onClick={closeTablePopup}>
                             <ImageCarouselSvgIcons type="back-arrow" />
                         </div>
-                        <div className="sa-table-title">{title || 'Table Preview'}</div>
+                        <div className="sa-answer-table-title">{title || 'Table Preview'}</div>
                     </div>
-                    <div className="sa-table-close-btn" onClick={closeTablePopup}>
+                    <div className="sa-answer-table-close-btn" onClick={closeTablePopup}>
                         <ImageCarouselSvgIcons type="close-button" />
                     </div>
                 </div>
             </div>
-            <div className="sa-table-preview-body">
+            <div className="sa-answer-table-preview-body">
                 <div
-                    className="sa-table-wrapper"
+                    className="sa-answer-table-wrapper"
                     dangerouslySetInnerHTML={{ __html: tableHTML }}
                 />
             </div>
@@ -103,8 +103,8 @@ function getTableDimensions(tableMarkdown: string): { rowCount: number; colCount
 
 // ─── TableContentBlock ────────────────────────────────────────────────────────
 // Splits `text` at the first GFM table and renders:
-//   • text-before-table  →  div.{textClassName}.{truncated|expanded}
-//   • table (≤20 rows)   →  div.table-scroll-wrapper   (inline, scrollable)
+//   • text-before-table  →  div.{textClassName}.{sa-answer-truncated|sa-answer-expanded}
+//   • table (≤20 rows)   →  div.sa-answer-table-scroll-wrapper   (inline, scrollable)
 //   • table (>20 rows)   →  hidden div + table-preview-bar below the text
 //
 // Nothing is mutated after mount – no DOM manipulation, no useEffect.
@@ -114,11 +114,11 @@ interface TableContentBlockProps {
     text: string;
     /** Title forwarded to the table-preview popup */
     title: string;
-    /** CSS class for the text div, e.g. "result-text" or "result-snippet" */
+    /** CSS class for the text div, e.g. "sa-answer-result-text" or "sa-answer-result-snippet" */
     textClassName: string;
     /** Whether the text div is in expanded state */
     isExpanded?: boolean;
-    /** Extra CSS classes on the outer container (e.g. "result-text-image") */
+    /** Extra CSS classes on the outer container (e.g. "sa-answer-result-text-image") */
     className?: string;
     /** Rendered BEFORE the text div (e.g. an inline thumbnail image) */
     extraChildren?: any;
@@ -148,9 +148,9 @@ export function TableContentBlock({
     };
 
     const containerClass = [
-        'search-results-table-container',
-        hasTable ? 'has-table' : '',
-        isLargeTable ? 'has-large-table' : '',
+        'sa-answer-search-results-table-container',
+        hasTable ? 'sa-answer-has-table' : '',
+        isLargeTable ? 'sa-answer-has-large-table' : '',
         className,
     ].filter(Boolean).join(' ');
 
@@ -158,19 +158,19 @@ export function TableContentBlock({
         <div className={containerClass}>
             {extraChildren}
             {/* Text-only div – lineClamp / overflow:hidden applies only here */}
-            <div className={`${textClassName} ${isExpanded ? 'expanded' : 'truncated'}`}>
+            <div className={`${textClassName} ${isExpanded ? 'sa-answer-expanded' : 'sa-answer-truncated'}`}>
                 {CMHelpers(hasTable ? textBefore : text)}
                 {inlineChildren}
 
                 {/* Inline table for small tables (≤20 rows) */}
                 {hasTable && !isLargeTable && (
-                    <div ref={tableRef} className="table-scroll-wrapper">
+                    <div ref={tableRef} className="sa-answer-table-scroll-wrapper">
                         {CMHelpers(tableMarkdown)}
                     </div>
                 )}
                 {hasTable && !isLargeTable && isExpanded && (
                     <button
-                        className="table-expand-btn"
+                        className="sa-answer-table-expand-btn"
                         onClick={handleExpandTable}
                         title="Expand table"
                     >
@@ -182,19 +182,19 @@ export function TableContentBlock({
 
             {/* Large table: hidden in DOM so popup can grab the HTML */}
             {hasTable && isLargeTable && (
-                <div ref={tableRef} className="table-hidden">
+                <div ref={tableRef} className="sa-answer-table-hidden">
                     {CMHelpers(tableMarkdown)}
                 </div>
             )}
 
             {/* Table preview bar shown below text when table has >20 rows */}
             {hasTable && isLargeTable && (
-                <div className="table-preview-bar">
-                    <span className="table-preview-label">Table Preview</span>
-                    <span className="table-preview-sep" />
-                    <span className="table-preview-meta">{rowCount} Rows - {colCount} Columns</span>
-                    <span className="table-preview-sep" />
-                    <button className="table-preview-view-btn" onClick={handleExpandTable}>
+                <div className="sa-answer-table-preview-bar">
+                    <span className="sa-answer-table-preview-label">Table Preview</span>
+                    <span className="sa-answer-table-preview-sep" />
+                    <span className="sa-answer-table-preview-meta">{rowCount} Rows - {colCount} Columns</span>
+                    <span className="sa-answer-table-preview-sep" />
+                    <button className="sa-answer-table-preview-view-btn" onClick={handleExpandTable}>
                         <span>View Table</span>
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10.5 4.5L10.5 1.5M10.5 1.5H7.49999M10.5 1.5L6 6M5 1.5H3.9C3.05992 1.5 2.63988 1.5 2.31901 1.66349C2.03677 1.8073 1.8073 2.03677 1.66349 2.31901C1.5 2.63988 1.5 3.05992 1.5 3.9V8.1C1.5 8.94008 1.5 9.36012 1.66349 9.68099C1.8073 9.96323 2.03677 10.1927 2.31901 10.3365C2.63988 10.5 3.05992 10.5 3.9 10.5H8.1C8.94008 10.5 9.36012 10.5 9.68099 10.3365C9.96323 10.1927 10.1927 9.96323 10.3365 9.68099C10.5 9.36012 10.5 8.94008 10.5 8.1V7" stroke="#155EEF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>

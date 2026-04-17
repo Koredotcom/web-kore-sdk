@@ -35,15 +35,15 @@ export function MultiTagInput(props: MultiTagInputProps): any {
         onChange?.(e.target.value);
     };
 
-    return h('div', { className: "multi-tag-input-wrapper" }, [
+    return h('div', { className: "sa-answer-multi-tag-input-wrapper" }, [
         h('div', { 
-            className: `multi-tag-input ${isFocused ? 'focused' : ''}`,
+            className: `sa-answer-multi-tag-input ${isFocused ? 'sa-answer-focused' : ''}`,
             onClick: handleFocus
         }, [
-            h('div', { className: "input-content" }, [
-                h('span', { className: "input-text" }, value || placeholder)
+            h('div', { className: "sa-answer-input-content" }, [
+                h('span', { className: "sa-answer-input-text" }, value || placeholder)
             ]),
-            h('div', { className: "chevron-icon" }, [
+            h('div', { className: "sa-answer-chevron-icon" }, [
                 h('svg', { 
                     width: "16", 
                     height: "16", 
@@ -61,4 +61,4 @@ export function MultiTagInput(props: MultiTagInputProps): any {
             ])
         ])
     ]);
-} 
+}

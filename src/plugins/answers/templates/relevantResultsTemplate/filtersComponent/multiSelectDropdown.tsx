@@ -91,17 +91,17 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
     const hiddenTagsCount = selectedOptions.length - 4;
 
     return (
-        <div className="multi-select-dropdown-wrapper" ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
+        <div className="sa-answer-multi-select-dropdown-wrapper" ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
             {/* Main dropdown button */}
             <div 
-                className={`multi-select-dropdown ${isOpen ? 'open' : ''}`}
+                className={`sa-answer-multi-select-dropdown ${isOpen ? 'sa-answer-open' : ''}`}
                 onClick={handleToggle}
             >
-                <div className="dropdown-content">
-                    <span className={`dropdown-text`}>
+                <div className="sa-answer-dropdown-content">
+                    <span className="sa-answer-dropdown-text">
                     {`${placeholder}`}
                     </span>
-                    <div className="chevron-icon">
+                    <div className="sa-answer-chevron-icon">
                         <svg 
                             width="16" 
                            height="16" 
@@ -122,15 +122,15 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
 
             {/* Selected Tags Display */}
             {selectedOptions.length > 0 && (
-                <div className="selected-tags-container">
-                    <div className="tags-wrapper">
+                <div className="sa-answer-selected-tags-container">
+                    <div className="sa-answer-tags-wrapper">
                         {visibleTags.map(option => (
-                            <div key={option.id} className="selected-tag">
-                                <span className={`tag-text ${option.label.length > 15 ? 'truncated' : ''}`}>
+                            <div key={option.id} className="sa-answer-selected-tag">
+                                <span className={`sa-answer-tag-text ${option.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
                                     {option.label}
                                 </span>
                                 <button 
-                                    className="tag-remove-btn"
+                                    className="sa-answer-tag-remove-btn"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleRemoveTag(option.value);
@@ -145,10 +145,10 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
                     
                     {/* Show/Hide and Clear All Actions */}
-                    <div className="tags-actions">
+                    <div className="sa-answer-tags-actions">
                         {hiddenTagsCount > 0 && (
                             <button 
-                                className="show-hide-btn"
+                                className="sa-answer-show-hide-btn"
                                 onClick={() => setShowAllTags(!showAllTags)}
                             >
                                 <svg 
@@ -156,7 +156,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                     height="12" 
                                     viewBox="0 0 12 12" 
                                     fill="none"
-                                    className={showAllTags ? 'rotated' : ''}
+                                    className={showAllTags ? 'sa-answer-rotated' : ''}
                                 >
                                     <path 
                                         d="M3 4.5L6 7.5L9 4.5" 
@@ -171,7 +171,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                         )}
                         {!hiddenTagsCount && <span />}
                         <button
-                            className="clear-all-btn"
+                            className="sa-answer-clear-all-btn"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleClearAll();
@@ -185,11 +185,11 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
 
             {/* Dropdown menu */}
             {isOpen && (
-                <div className="dropdown-menu">
+                <div className="sa-answer-dropdown-menu">
                     {/* Search input */}
-                    <div className="search-section">
-                        <div className="search-input">
-                            <div className="search-icon">
+                    <div className="sa-answer-search-section">
+                        <div className="sa-answer-search-input">
+                            <div className="sa-answer-search-icon">
                                 <svg 
                                     width="16" 
                                     height="16" 
@@ -210,21 +210,21 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                 placeholder={searchPlaceholder}
                                 value={searchTerm}
                                 onInput={handleSearchChange}
-                                className="search-field"
+                                className="sa-answer-search-field"
                             />
                         </div>
                     </div>
 
                     {/* Select All / Clear buttons */}
-                    <div className="action-buttons">
+                    <div className="sa-answer-action-buttons">
                         <button 
-                            className="select-all-btn"
+                            className="sa-answer-select-all-btn"
                             onClick={handleSelectAll}
                         >
                             Select all
                         </button>
                         <button 
-                            className="clear-btn"
+                            className="sa-answer-clear-btn"
                             onClick={handleClearAll}
                         >
                             Clear
@@ -232,14 +232,14 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
 
                     {/* Options list */}
-                    <div className="options-list">
+                    <div className="sa-answer-options-list">
                         {filteredOptions.map(option => (
                             <div 
                                 key={option.id}
-                                className={`option-item ${selectedValues.includes(option.value) ? 'selected' : ''}`}
+                                className={`sa-answer-option-item ${selectedValues.includes(option.value) ? 'sa-answer-selected' : ''}`}
                                 onClick={() => handleOptionToggle(option.value)}
                             >
-                                <div className="checkbox">
+                                <div className="sa-answer-checkbox">
                                     {selectedValues.includes(option.value) && (
                                         <svg 
                                             width="12" 
@@ -257,7 +257,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                         </svg>
                                     )}
                                 </div>
-                                <span className={`option-label ${option.label.length > 20 ? 'truncated' : ''}`}>
+                                <span className={`sa-answer-option-label ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
                                     {option.label}
                                 </span>
                             </div>
@@ -265,15 +265,15 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
 
                     {/* Footer buttons */}
-                    <div className="footer-buttons">
+                    <div className="sa-answer-footer-buttons">
                         <button 
-                            className="cancel-btn"
+                            className="sa-answer-cancel-btn"
                             onClick={() => setIsOpen(false)}
                         >
                             Cancel
                         </button>
                         <button 
-                            className="apply-btn"
+                            className="sa-answer-apply-btn"
                             onClick={() => setIsOpen(false)}
                         >
                             Apply
@@ -283,4 +283,4 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
             )}
         </div>
     );
-} 
+}

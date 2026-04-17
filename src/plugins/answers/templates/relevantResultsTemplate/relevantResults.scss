@@ -2,7 +2,7 @@
 
 // ─── File-specific mixins ─────────────────────────────────────────────────────
 
-// Shared styles for both .filter-badge instances inside .filters-container.
+// Shared styles for both .sa-answer-filter-badge instances inside .sa-answer-filters-container.
 @mixin filterBadgeBase {
     @include flexRow($gap: 6px);
     padding: 2px 8px;
@@ -16,14 +16,14 @@
     color: #344054;
     @include easeTransition;
 
-    &:hover     { background: #F9FAFB; }
-    &.primary   { background: white; }
-    &.secondary { background: #F9FAFB; }
+    &:hover             { background: #F9FAFB; }
+    &.sa-answer-primary   { background: white; }
+    &.sa-answer-secondary { background: #F9FAFB; }
 
     svg { width: 12px; height: 12px; }
 }
 
-// Common base for all three .see-more-link occurrences.
+// Common base for all three .sa-answer-see-more-link occurrences.
 // Each call adds its own background (solid white or gradient).
 @mixin seeMoreLinkCommon {
     position: absolute;
@@ -54,11 +54,11 @@
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-.filters-container-wrapper {
+.sa-answer-filters-container-wrapper {
     height: 100%;
 }
 
-.search-results-slider {
+.sa-answer-search-results-slider {
     min-height: 100%;
     max-height: 100%;
     overflow-y: auto;
@@ -77,20 +77,20 @@
 
     // ─── Header ───────────────────────────────────────────────────────────────
 
-    .slider-header {
+    .sa-answer-slider-header {
         @include flexRow($gap: 8px, $justify: space-between);
         padding: 16px;
 
-        .header-content {
+        .sa-answer-header-content {
             flex: 1;
 
-            .header-title {
+            .sa-answer-header-title {
                 @include dynamicText(600, 14px, 18px, #000000);
                 margin: 0;
             }
         }
 
-        .close-button {
+        .sa-answer-close-button {
             @include flexCenter;
             @include btnReset;
             width: 20px;
@@ -103,25 +103,25 @@
 
     // ─── Search + Filters ─────────────────────────────────────────────────────
 
-    .search-filters-section {
+    .sa-answer-search-filters-section {
         @include flexColumn($gap: 8px);
         padding: 0 16px;
 
-        .search-input-container {
-            .search-input {
+        .sa-answer-search-input-container {
+            .sa-answer-search-input {
                 @include flexRow($gap: 8px);
                 padding: 8px 12px;
                 border: 1px solid #D0D5DD;
                 border-radius: 4px;
                 background: white;
 
-                .search-icon {
+                .sa-answer-search-icon {
                     width: 16px;
                     height: 16px;
                     flex-shrink: 0;
                 }
 
-                .search-field {
+                .sa-answer-search-field {
                     flex: 1;
                     border: none;
                     outline: none;
@@ -136,45 +136,45 @@
             }
         }
 
-        .filters-container {
+        .sa-answer-filters-container {
             @include flexRow($gap: 8px, $justify: space-between);
 
-            .filter-badge-wrapper {
+            .sa-answer-filter-badge-wrapper {
                 position: relative;
 
-                .filter-badge {
+                .sa-answer-filter-badge {
                     @include filterBadgeBase;
 
-                    .filter-icon-wrapper {
+                    .sa-answer-filter-icon-wrapper {
                         position: relative;
                         @include flexCenter;
 
-                        .filter-indicator {
+                        .sa-answer-filter-indicator {
                             position: absolute;
                             top: -8px;
-                            left: 0px;                         
+                            left: 0px;
                             z-index: 1;
 
-                            .dot-icon { width: 6px; height: 6px; }
+                            .sa-answer-dot-icon { width: 6px; height: 6px; }
                         }
                     }
 
-                    .selected-source-text {
+                    .sa-answer-selected-source-text {
                         @include textEllipsis;
                         max-width: 120px;
 
-                        &.truncated { max-width: 100px; }
+                        &.sa-answer-truncated { max-width: 100px; }
                     }
                 }
 
-                .source-dropdown {
+                .sa-answer-source-dropdown {
                     position: absolute;
                     top: 100%;
                     left: 0;
                     z-index: 1000;
                     margin-top: 4px;
 
-                    .dropdown-menu {
+                    .sa-answer-dropdown-menu {
                         background: white;
                         border: 1px solid #EAECF0;
                         border-radius: 8px;
@@ -182,21 +182,21 @@
                         min-width: 167px;
                         overflow: hidden;
 
-                        .dropdown-item {
+                        .sa-answer-dropdown-item {
                             padding: 1px 6px;
                             cursor: pointer;
                             @include easeTransition(background-color);
 
                             &:hover { background-color: #F9FAFB; }
 
-                            .dropdown-item-content {
+                            .sa-answer-dropdown-item-content {
                                 @include flexRow($gap: 12px);
                                 padding: 4px;
                                 border-radius: 6px;
 
-                                .dropdown-item-icon { @include iconBox(16px); }
+                                .sa-answer-dropdown-item-icon { @include iconBox(16px); }
 
-                                .dropdown-item-text {
+                                .sa-answer-dropdown-item-text {
                                     font-family: Inter, sans-serif;
                                     font-weight: 500;
                                     font-size: 14px;
@@ -205,7 +205,7 @@
                                     flex: 1;
                                     @include textEllipsis;
 
-                                    &.truncated { max-width: 120px; }
+                                    &.sa-answer-truncated { max-width: 120px; }
                                 }
                             }
                         }
@@ -213,23 +213,23 @@
                 }
             }
 
-            .filter-badge { @include filterBadgeBase; }
+            .sa-answer-filter-badge { @include filterBadgeBase; }
         }
     }
 
     // ─── Results ──────────────────────────────────────────────────────────────
 
-    .results-container {
+    .sa-answer-results-container {
         @include flexColumn($gap: 8px);
         padding: 16px;
 
-        .no-results-container {
+        .sa-answer-no-results-container {
             @include flexColumn($gap: 12px, $alignItems: center);
             justify-content: center;
             padding: 40px 24px;
             text-align: center;
 
-            .no-results-icon {
+            .sa-answer-no-results-icon {
                 @include flexCenter;
                 border: 1px solid #D0D5DD;
                 border-radius: 7.5px;
@@ -238,18 +238,18 @@
                 height: 36px;
             }
 
-            .no-results-title {
+            .sa-answer-no-results-title {
                 @include dynamicText(600, 14px, 20px, #000);
                 margin: 0;
             }
 
-            .no-results-subtitle {
+            .sa-answer-no-results-subtitle {
                 @include dynamicText(400, 12px, 16px, #667085);
                 margin: 0;
                 max-width: 240px;
             }
 
-            .clear-filters-button {
+            .sa-answer-clear-filters-button {
                 @include flexCenter;
                 margin-top: 4px;
                 padding: 4px 12px;
@@ -265,13 +265,13 @@
 
         // ─── Loading State ────────────────────────────────────────────────────
 
-        .results-loading-container {
+        .sa-answer-results-loading-container {
             @include flexColumn($gap: 12px, $alignItems: center);
             justify-content: center;
             padding: 48px 24px;
 
-            .results-spinner {
-                .spinner-ring {
+            .sa-answer-results-spinner {
+                .sa-answer-spinner-ring {
                     width: 36px;
                     height: 36px;
                     border-radius: 50%;
@@ -281,7 +281,7 @@
                 }
             }
 
-            .results-loading-text {
+            .sa-answer-results-loading-text {
                 @include dynamicText(400, 12px, 16px, #667085);
                 margin: 0;
             }
@@ -291,7 +291,7 @@
             to { transform: rotate(360deg); }
         }
 
-        .badge-indicator-wrapper {
+        .sa-answer-badge-indicator-wrapper {
             @include flexCenter;
             padding: 3px;
             border-radius: 9999px;
@@ -313,7 +313,7 @@
             }
         }
 
-        .see-less-link {
+        .sa-answer-see-less-link {
             @include dynamicText(400, 12px, 16px, #528BFF);
             cursor: pointer;
             display: inline-block;
@@ -324,27 +324,27 @@
 
         // ─── Result Card ──────────────────────────────────────────────────────
 
-        .result-card {
+        .sa-answer-result-card {
             background: #F2F4F7;
             border: 1px solid #EAECF5;
             border-radius: 8px;
             overflow: hidden;
 
-            .result-content {
+            .sa-answer-result-content {
                 background: white;
                 padding: 8px;
                 position: relative;
 
-                .result-text-section {
+                .sa-answer-result-text-section {
                     @include flexRow($gap: 8px, $alignItems: flex-start);
 
-                    .text-container {
+                    .sa-answer-text-container {
                         flex: 1;
                         @include flexColumn($gap: 8px, $alignItems: flex-start);
                         position: relative;
                         width:100%;
                         box-sizing: border-box;
-                        .result-text {
+                        .sa-answer-result-text {
                             flex: 1;
                             @include dynamicText(400, 12px, 16px, #667085);
                             margin: 0;
@@ -360,14 +360,14 @@
                                 word-break: break-word;
                                 overflow-wrap: break-word;
                             }
-                            &.truncated {
+                            &.sa-answer-truncated {
                                 @include lineClamp(3);
                                 text-overflow: clip;
                                 word-break: break-word;
                                 overflow-wrap: break-word;
                             }
 
-                            &.expanded {
+                            &.sa-answer-expanded {
                                 display: block;
                                 overflow: visible;
                                 height: auto;
@@ -375,17 +375,17 @@
                             }
                         }
 
-                        .result-text-image {
+                        .sa-answer-result-text-image {
                             @include flexRow($gap: 8px);
 
-                            .result-text-image-img {
+                            .sa-answer-result-text-image-img {
                                 width: 64px;
                                 height: 48px;
                                 border-radius: 4px;
                             }
                         }
 
-                        .see-more-link {
+                        .sa-answer-see-more-link {
                             @include seeMoreLinkCommon;
                             background-color: #FFFFFF;
                             text-decoration: none;
@@ -395,76 +395,76 @@
 
                 // ─── Related Results ──────────────────────────────────────────
 
-                .related-results {
+                .sa-answer-related-results {
                     margin-top: 8px;
 
-                    .divider { @include dividerLine; }
+                    .sa-answer-divider { @include dividerLine; }
 
-                    .related-item {
+                    .sa-answer-related-item {
                         @include flexRow($gap: 8px, $alignItems: flex-start);
                         padding: 4px 0;
 
-                        .text-container {
+                        .sa-answer-text-container {
                             flex: 1;
                             @include flexColumn($gap: 8px, $alignItems: flex-start);
                             position: relative;
 
-                            .result-text {
+                            .sa-answer-result-text {
                                 flex: 1;
                                 @include dynamicText(400, 12px, 16px, #667085);
                                 margin: 0;
 
-                                &.truncated {
+                                &.sa-answer-truncated {
                                     @include lineClamp(3);
                                     word-break: break-word;
                                     overflow-wrap: break-word;
                                 }
 
-                                &.expanded {
+                                &.sa-answer-expanded {
                                     display: block;
                                     overflow: visible;
                                     height: auto;
                                 }
                             }
 
-                            .result-text-image {
+                            .sa-answer-result-text-image {
                                 @include flexRow($gap: 8px);
 
-                                .result-text-image-img {
+                                .sa-answer-result-text-image-img {
                                     width: 64px;
                                     height: 48px;
                                     border-radius: 4px;
                                 }
                             }
 
-                            .see-more-link {
+                            .sa-answer-see-more-link {
                                 @include seeMoreLinkCommon;
                                 background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 25%);
                                 padding-left: 20px;
                             }
                         }
 
-                        .result-indicators { @include resultIndicatorsRow; }
+                        .sa-answer-result-indicators { @include resultIndicatorsRow; }
                     }
                 }
 
                 // ─── Expanded Content (no related results) ────────────────────
 
-                .expanded-content {
+                .sa-answer-expanded-content {
                     margin-top: 8px;
 
-                    .divider { @include dividerLine; }
+                    .sa-answer-divider { @include dividerLine; }
 
-                    .related-item {
+                    .sa-answer-related-item {
                         @include flexRow($gap: 8px, $alignItems: flex-start);
                         padding: 4px 0;
 
-                        .text-container {
+                        .sa-answer-text-container {
                             flex: 1;
                             @include flexColumn($gap: 8px, $alignItems: flex-start);
                             position: relative;
 
-                            .result-text {
+                            .sa-answer-result-text {
                                 flex: 1;
                                 @include dynamicText(400, 12px, 16px, #101828);
                                 margin: 0;
@@ -481,38 +481,38 @@
                                     word-break: break-word;
                                     overflow-wrap: break-word;
                                 }
-                                &.truncated {
+                                &.sa-answer-truncated {
                                     @include lineClamp(3);
                                     word-break: break-word;
                                     overflow-wrap: break-word;
                                 }
 
-                                &.expanded {
+                                &.sa-answer-expanded {
                                     display: block;
                                     overflow: visible;
                                     height: auto;
                                 }
                             }
 
-                            .see-more-link {
+                            .sa-answer-see-more-link {
                                 @include seeMoreLinkCommon;
                                 background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 25%);
                                 padding-left: 20px;
                             }
                         }
 
-                        .result-indicators { @include resultIndicatorsRow; }
+                        .sa-answer-result-indicators { @include resultIndicatorsRow; }
                     }
                 }
 
                 // ─── Large-table preview bar: lift see-more-link above the bar ──────
-                .text-container:has(.search-results-table-container.has-large-table) {
-                    .see-more-link {
+                .sa-answer-text-container:has(.sa-answer-search-results-table-container.sa-answer-has-large-table) {
+                    .sa-answer-see-more-link {
                         bottom: 45px;
                     }
                 }
 
-                .result-indicators {
+                .sa-answer-result-indicators {
                     @include resultIndicatorsRow;
 
                     .dot-indicator {
@@ -537,16 +537,16 @@
 
             // ─── Result Header ────────────────────────────────────────────────
 
-            .result-header {
+            .sa-answer-result-header {
                 padding: 4px 8px;
 
-                .file-info {
+                .sa-answer-file-info {
                     @include flexRow($gap: 4px, $justify: space-between);
                     padding: 0;
 
-                    .file-info-wrapper { @include flexRow($gap: 4px); }
+                    .sa-answer-file-info-wrapper { @include flexRow($gap: 4px); }
 
-                    .file-icon {
+                    .sa-answer-file-icon {
                         width: 12px;
                         height: 12px;
                         flex-shrink: 0;
@@ -557,10 +557,10 @@
                         &.powerpoint { color: #EF6820; }
                     }
 
-                    .file-name-wrapper {
+                    .sa-answer-file-name-wrapper {
                         @include flexRow($gap: 4px);
 
-                        .file-name {
+                        .sa-answer-file-name {
                             @include dynamicText(500, 12px, 16px, #475467);
                             @include flexRow($gap: 4px);
                             @include textEllipsis;
@@ -571,7 +571,7 @@
                             display: inline-block;
                         }
 
-                        .link-icon-hover {
+                        .sa-answer-link-icon-hover {
                             display: inline-flex;
                             align-items: center;
                             opacity: 0;
@@ -580,12 +580,12 @@
                         }
 
                         &:hover {
-                            .file-name          { color: #528BFF !important; }
-                            .link-icon-hover    { opacity: 1 !important; visibility: visible !important; }
+                            .sa-answer-file-name          { color: #528BFF !important; }
+                            .sa-answer-link-icon-hover    { opacity: 1 !important; visibility: visible !important; }
                         }
                     }
 
-                    .view-button {
+                    .sa-answer-view-button {
                         @include btnReset;
                         @include dynamicText(500, 11px, 14px, #667085);
                         padding: 2px 0;
@@ -595,21 +595,21 @@
                         &:hover { text-decoration: none; color: #155EEF !important; }
                     }
 
-                    .result-count {
+                    .sa-answer-result-count {
                         @include dynamicText(400, 11px, 14px, #667085);
                         margin-left: 4px;
                     }
                 }
             }
 
-            &.with-related .result-content {
+            &.sa-answer-with-related .sa-answer-result-content {
                 @include flexColumn($gap: 4px);
                 padding: 8px;
             }
         }
     }
 
-    .more-images-block {
+    .sa-answer-more-images-block {
         margin-top: 8px;
         display: flex;
         flex-wrap: wrap;
@@ -619,7 +619,7 @@
 
 // ─── Image Thumbnail ──────────────────────────────────────────────────────────
 
-.image-thumbnail-wrapper {
+.sa-answer-image-thumbnail-wrapper {
     position: relative;
     width: 64px;
     height: 48px;
@@ -628,7 +628,7 @@
     border-radius: 4px;
     overflow: hidden;
 
-    .result-text-image-img {
+    .sa-answer-result-text-image-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -637,7 +637,7 @@
         @include easeTransition(transform);
     }
 
-    .image-zoom-overlay {
+    .sa-answer-image-zoom-overlay {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -667,7 +667,7 @@
             height: 100%;
         }
 
-        .image-zoom-overlay {
+        .sa-answer-image-zoom-overlay {
             opacity: 1;
             visibility: visible;
         }

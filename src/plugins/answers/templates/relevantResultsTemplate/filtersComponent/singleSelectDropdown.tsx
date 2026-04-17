@@ -70,17 +70,17 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
     const selectedOption = options.find(option => option.value === selectedValue);
 
     return (
-        <div className="single-select-dropdown-wrapper" onClick={(e) => e.stopPropagation()} ref={dropdownRef}>
+        <div className="sa-answer-single-select-dropdown-wrapper" onClick={(e) => e.stopPropagation()} ref={dropdownRef}>
             {/* Main dropdown button */}
             <div 
-                className={`single-select-dropdown ${isOpen ? 'open' : ''}`}
+                className={`sa-answer-single-select-dropdown ${isOpen ? 'sa-answer-open' : ''}`}
                 onClick={handleToggle}
             >
-                <div className="dropdown-content">
-                    <span className={`dropdown-text`}>
+                <div className="sa-answer-dropdown-content">
+                    <span className="sa-answer-dropdown-text">
                          {selectedOption?.label || placeholder}
                     </span>
-                    <div className="chevron-icon">
+                    <div className="sa-answer-chevron-icon">
                         <svg 
                             width="16" 
                             height="16" 
@@ -101,11 +101,11 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
 
             {/* Dropdown menu */}
             {isOpen && (
-                <div className="dropdown-menu">
+                <div className="sa-answer-dropdown-menu">
                     {/* Search input */}
-                    <div className="search-section">
-                        <div className="search-input">
-                            <div className="search-icon">
+                    <div className="sa-answer-search-section">
+                        <div className="sa-answer-search-input">
+                            <div className="sa-answer-search-icon">
                                 <svg 
                                     width="16" 
                                     height="16" 
@@ -126,26 +126,26 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
                                 placeholder={searchPlaceholder}
                                 value={searchTerm}
                                 onInput={handleSearchChange}
-                                className="search-field"
+                                className="sa-answer-search-field"
                             />
                         </div>
                     </div>
 
                     {/* Options list */}
-                    <div className="options-list">
+                    <div className="sa-answer-options-list">
                         {filteredOptions.map(option => (
                             <div 
                                 key={option.id}
-                                className={`option-item ${selectedValue === option.value ? 'selected' : ''}`}
+                                className={`sa-answer-option-item ${selectedValue === option.value ? 'sa-answer-selected' : ''}`}
                                 onClick={() => handleOptionSelect(option.value)}
                             >
-                                <div className="option-content">
-                                    <span className={`option-label ${option.label.length > 20 ? 'truncated' : ''}`}>
+                                <div className="sa-answer-option-content">
+                                    <span className={`sa-answer-option-label ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
                                         {option.label}
                                     </span>
                                 </div>
                                 {selectedValue === option.value && (
-                                    <div className="check-icon">
+                                    <div className="sa-answer-check-icon">
                                         <svg 
                                             width="20" 
                                             height="20" 
@@ -169,4 +169,4 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
             )}
         </div>
     );
-} 
+}

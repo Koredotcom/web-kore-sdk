@@ -1,15 +1,15 @@
 // ─── Shared table container – inline (compact) view ─────────────────────────
 
-.search-results-table-container {
+.sa-answer-search-results-table-container {
     position: relative;
     // Fill parent width regardless of parent's align-items setting
     width: 100%;
     box-sizing: border-box;
 
     // ── Override browser default white-space:pre so text-wrap:auto works ──
-    // Applies to ALL result-text/snippet containers, not just .has-table ones.
-    .result-text,
-    .result-snippet {
+    // Applies to ALL result-text/snippet containers, not just .sa-answer-has-table ones.
+    .sa-answer-result-text,
+    .sa-answer-result-snippet {
         pre {
             white-space: pre-wrap;
             word-break: break-word;
@@ -25,7 +25,7 @@
     }
 
     // ── Compact table layout when a table is detected ──────────────────────
-    &.has-table {
+    &.sa-answer-has-table {
         flex-direction: column !important;
         // stretch so the scroll-wrapper fills the full container width
         align-items: stretch !important;
@@ -34,8 +34,8 @@
         // Text wrappers fill full width so line-clamp spans the whole row.
         // flex:none overrides the row-context "flex:1" that would otherwise
         // make the div grow vertically (creating a blank gap between text and table).
-        .result-text,
-        .result-snippet {
+        .sa-answer-result-text,
+        .sa-answer-result-snippet {
             width: 100%;
             box-sizing: border-box;
             flex: none !important;
@@ -43,13 +43,13 @@
 
         // Remove default browser <p> margins that ReactMarkdown injects inside
         // the text-wrapper div, which would otherwise push content down
-        .result-text p,
-        .result-snippet p {
+        .sa-answer-result-text p,
+        .sa-answer-result-snippet p {
             margin: 0;
         }
 
         // Keep the expand button small – don't let it stretch to full width
-        .table-expand-btn {
+        .sa-answer-table-expand-btn {
             align-self: flex-end;
             bottom: -26px;
             position: absolute;
@@ -58,7 +58,7 @@
     }
 
     // ── Scroll wrapper injected around the table by JS ─────────────────────
-    .table-scroll-wrapper {
+    .sa-answer-table-scroll-wrapper {
         overflow-x: auto;
         // Explicit width so the wrapper always spans the container
         width: 100%;
@@ -124,12 +124,12 @@
     }
 
     // ── Hidden table (large tables – kept in DOM for popup HTML) ──────────
-    .table-hidden {
+    .sa-answer-table-hidden {
         display: none !important;
     }
 
     // ── Table preview bar (shown below text when table has >20 rows) ───────
-    .table-preview-bar {
+    .sa-answer-table-preview-bar {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -143,7 +143,7 @@
         max-width: 100%;
         box-sizing: border-box;
 
-        .table-preview-label {
+        .sa-answer-table-preview-label {
             font-family: Inter, sans-serif;
             font-size: 12px;
             font-weight: 500;
@@ -152,7 +152,7 @@
             padding: 0 8px 0 0;
         }
 
-        .table-preview-sep {
+        .sa-answer-table-preview-sep {
             display: inline-block;
             width: 1px;
             height: 16px;
@@ -161,7 +161,7 @@
             flex-shrink: 0;
         }
 
-        .table-preview-meta {
+        .sa-answer-table-preview-meta {
             font-family: Inter, sans-serif;
             font-size: 12px;
             font-weight: 400;
@@ -169,7 +169,7 @@
             white-space: nowrap;
         }
 
-        .table-preview-view-btn {
+        .sa-answer-table-preview-view-btn {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -194,7 +194,7 @@
     }
 
     // ── Expand button ──────────────────────────────────────────────────────
-    .table-expand-btn {
+    .sa-answer-table-expand-btn {
         display: inline-flex;
         flex-direction: row;
         align-items: center;
@@ -234,32 +234,6 @@
     }
 }
 
-// ─── See-more / See-less when a table block is present ───────────────────────
-// When the text wrapper is a <div> (not <p>), block content no longer hoists
-// out, so line-clamp works. However the "see-more-link" is normally
-// `position: absolute; bottom: 0` relative to .text-container, which places
-// it below the table. Switch it to normal flow so it appears right after
-// the truncated text container.
-
-// .text-container:has(.search-results-table-container.has-table) {
-//     .see-more-link,
-//     .see-less-link {
-//         position: relative !important;
-//         bottom: auto !important;
-//         right: auto !important;
-//         display: inline-block !important;
-//         padding-left: 0 !important;
-//         background: transparent !important;
-//         background-color: transparent !important;
-//         margin-top: 2px;
-
-//         &::before {
-//             // Remove the "..." prefix – the text itself is already clamped
-//             display: none;
-//         }
-//     }
-// }
-
 // ─── Table preview popup (full-screen overlay) ───────────────────────────────
 
 #sa-table-popup-container {
@@ -273,7 +247,7 @@
     z-index: 999999;
     overflow: hidden;
 
-    .sa-table-preview {
+    .sa-answer-table-preview {
         width: 100%;
         height: 100vh;
         background-color: rgba(15, 23, 42, 0.55);
@@ -283,7 +257,7 @@
         flex-direction: column;
 
         // ── Header ──────────────────────────────────────────────────────────
-        .sa-table-preview-header {
+        .sa-answer-table-preview-header {
             position: fixed;
             top: 0;
             left: 0;
@@ -296,21 +270,21 @@
             align-items: center;
             box-sizing: border-box;
 
-            .sa-table-header-content {
+            .sa-answer-table-header-content {
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 gap: 12px;
 
-                .sa-table-header-left {
+                .sa-answer-table-header-left {
                     display: flex;
                     align-items: center;
                     gap: 8px;
                     flex: 1;
                     min-width: 0;
 
-                    .sa-table-back-btn {
+                    .sa-answer-table-back-btn {
                         cursor: pointer;
                         display: flex;
                         align-items: center;
@@ -331,7 +305,7 @@
                         }
                     }
 
-                    .sa-table-title {
+                    .sa-answer-table-title {
                         color: #FFFFFF;
                         font-family: Inter, sans-serif;
                         font-size: 16px;
@@ -344,7 +318,7 @@
                     }
                 }
 
-                .sa-table-close-btn {
+                .sa-answer-table-close-btn {
                     cursor: pointer;
                     display: flex;
                     align-items: center;
@@ -372,7 +346,7 @@
         }
 
         // ── Body ────────────────────────────────────────────────────────────
-        .sa-table-preview-body {
+        .sa-answer-table-preview-body {
             margin-top: 64px;
             flex: 1;
             overflow-y: auto;
@@ -389,7 +363,7 @@
             scrollbar-color: rgba(128, 134, 139, 0.3) transparent;
 
             // ── White card wrapping the table ────────────────────────────
-            .sa-table-wrapper {
+            .sa-answer-table-wrapper {
                 background: #FFFFFF;
                 border-radius: 8px;
                 overflow-x: auto;

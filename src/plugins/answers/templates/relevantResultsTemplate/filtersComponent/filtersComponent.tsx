@@ -68,19 +68,19 @@ export function FiltersComponent(props: FiltersComponentProps): any {
     const handleClearAll = () => setFilters(buildDefaultFilters(facets));
 
     return (
-        <div className="filters-content">
-            <div className="filters-header">
-                <div className="header-left">
-                    <h2 className="filters-title">Filter Results</h2>
+        <div className="sa-answer-filters-content">
+            <div className="sa-answer-filters-header">
+                <div className="sa-answer-header-left">
+                    <h2 className="sa-answer-filters-title">Filter Results</h2>
                 </div>
-                <button className="close-button" onClick={onClose}>
+                <button className="sa-answer-close-button" onClick={onClose}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M15 5L5 15M5 5L15 15" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </button>
             </div>
 
-            <div className="filters-sections">
+            <div className="sa-answer-filters-sections">
                 {facets.map((facet) => {
                     if (!facet.buckets?.length) return null;
 
@@ -90,22 +90,22 @@ export function FiltersComponent(props: FiltersComponentProps): any {
                     const placeholder = `Select ${facet.name.toLowerCase()}`;
 
                     return (
-                        <div key={facet.fieldName} className="filter-section">
+                        <div key={facet.fieldName} className="sa-answer-filter-section">
                             <div
-                                className="filter-section-header"
+                                className="sa-answer-filter-section-header"
                                 onClick={() => toggleSection(facet.fieldName)}
                             >
-                                <div className="filter-title-row">
-                                    <h3 className="filter-section-title">{facet.name}</h3>
-                                    <div className={`chevron-down ${isExpanded ? 'expanded' : ''}`}>
+                                <div className="sa-answer-filter-title-row">
+                                    <h3 className="sa-answer-filter-section-title">{facet.name}</h3>
+                                    <div className={`sa-answer-chevron-down ${isExpanded ? 'sa-answer-expanded' : ''}`}>
                                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
                                             <path d="M1 1L6 5L11 1" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </div>
                                 </div>
                                 {isExpanded && (
-                                    <div className="filter-expanded-content">
-                                        <span className="filter-description">Select {facet.name.toLowerCase()} to filter by</span>
+                                    <div className="sa-answer-filter-expanded-content">
+                                        <span className="sa-answer-filter-description">Select {facet.name.toLowerCase()} to filter by</span>
                                         {facet.multiselect ? (
                                             <MultiSelectDropdown
                                                 options={options}
@@ -129,12 +129,12 @@ export function FiltersComponent(props: FiltersComponentProps): any {
                 })}
             </div>
 
-            <div className="filters-footer">
-                <div className="action-buttons">
-                    <button className="cancel-button" onClick={handleClearAll}>
+            <div className="sa-answer-filters-footer">
+                <div className="sa-answer-action-buttons">
+                    <button className="sa-answer-cancel-button" onClick={handleClearAll}>
                         Clear
                     </button>
-                    <button className="apply-button" onClick={handleApplyFilters}>
+                    <button className="sa-answer-apply-button" onClick={handleApplyFilters}>
                         Apply
                     </button>
                 </div>

@@ -1,10 +1,10 @@
 @import '../mixins';
 
-.multi-select-dropdown-wrapper {
+.sa-answer-multi-select-dropdown-wrapper {
     position: relative;
     width: 100%;
 
-    .multi-select-dropdown {
+    .sa-answer-multi-select-dropdown {
         @include flexRow($gap: 8px);
         padding: 8px 12px;
         border: 1px solid #EAECF0;
@@ -15,42 +15,42 @@
         width: 100%;
 
         &:hover { border-color: #D0D5DD; }
-        &.open  { border-color: #84ADFF; }
+        &.sa-answer-open  { border-color: #84ADFF; }
 
-        .dropdown-content {
+        .sa-answer-dropdown-content {
             flex: 1;
             @include flexRow($gap: 8px, $justify: space-between);
 
-            .dropdown-text {
+            .sa-answer-dropdown-text {
                 @include dynamicText(400, 14px, 18px, #101828);
                 @include textEllipsis;
                 flex: 1;
 
-                &.truncated { max-width: 200px; }
+                &.sa-answer-truncated { max-width: 200px; }
             }
         }
 
-        .chevron-icon {
+        .sa-answer-chevron-icon {
             @include iconBox(16px);
 
             svg { @include easeTransition(transform); }
         }
 
-        &.open .chevron-icon svg { transform: rotate(180deg); }
+        &.sa-answer-open .sa-answer-chevron-icon svg { transform: rotate(180deg); }
     }
 
     // ─── Selected Tags ─────────────────────────────────────────────────────────
 
-    .selected-tags-container {
+    .sa-answer-selected-tags-container {
         margin-top: 4px;
 
-        .tags-wrapper {
+        .sa-answer-tags-wrapper {
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
             margin-bottom: 4px;
 
-            .selected-tag {
+            .sa-answer-selected-tag {
                 @include flexRow($gap: 4px);
                 padding: 2px 8px;
                 background: #FFFFFF;
@@ -58,14 +58,14 @@
                 border-radius: 4px;
                 max-width: 200px;
 
-                .tag-text {
+                .sa-answer-tag-text {
                     @include dynamicText(400, 12px, 16px, #344054);
                     @include textEllipsis;
 
-                    &.truncated { max-width: 150px; }
+                    &.sa-answer-truncated { max-width: 150px; }
                 }
 
-                .tag-remove-btn {
+                .sa-answer-tag-remove-btn {
                     @include flexCenter;
                     width: 12px;
                     height: 12px;
@@ -81,10 +81,10 @@
             }
         }
 
-        .tags-actions {
+        .sa-answer-tags-actions {
             @include flexRow($gap: 4px, $justify: space-between);
 
-            .show-hide-btn {
+            .sa-answer-show-hide-btn {
                 @include flexRow($gap: 4px);
                 padding: 4px;
                 @include btnReset;
@@ -96,11 +96,11 @@
                 svg {
                     @include easeTransition(transform);
 
-                    &.rotated { transform: rotate(180deg); }
+                    &.sa-answer-rotated { transform: rotate(180deg); }
                 }
             }
 
-            .clear-all-btn {
+            .sa-answer-clear-all-btn {
                 @include btnReset;
                 @include interText(400, 12px, 1.33, #667085);
                 @include easeTransition(color);
@@ -112,7 +112,7 @@
 
     // ─── Dropdown Menu ─────────────────────────────────────────────────────────
 
-    .dropdown-menu {
+    .sa-answer-dropdown-menu {
         position: absolute;
         top: 100%;
         left: 0;
@@ -126,19 +126,19 @@
         padding: 12px;
         width: 100%;
 
-        .search-section {
+        .sa-answer-search-section {
             margin-bottom: 8px;
 
-            .search-input {
+            .sa-answer-search-input {
                 @include flexRow($gap: 8px);
                 padding: 10px 14px;
                 border: 1px solid #D0D5DD;
                 border-radius: 8px;
                 background: #FFFFFF;
 
-                .search-icon { @include iconBox(16px); }
+                .sa-answer-search-icon { @include iconBox(16px); }
 
-                .search-field {
+                .sa-answer-search-field {
                     flex: 1;
                     border: none;
                     outline: none;
@@ -150,13 +150,13 @@
             }
         }
 
-        .action-buttons {
+        .sa-answer-action-buttons {
             @include flexRow($justify: space-between);
             padding: 6px;
             margin-bottom: 4px;
 
-            .select-all-btn,
-            .clear-btn {
+            .sa-answer-select-all-btn,
+            .sa-answer-clear-btn {
                 @include btnReset;
                 @include interText(500, 12px, 1.33, #155EEF);
                 padding: 0;
@@ -164,14 +164,14 @@
                 &:hover { text-decoration: underline; }
             }
 
-            .clear-btn { color: #98A2B3; }
+            .sa-answer-clear-btn { color: #98A2B3; }
         }
 
-        .options-list {
+        .sa-answer-options-list {
             max-height: 200px;
             overflow-y: auto;
 
-            .option-item {
+            .sa-answer-option-item {
                 @include flexRow($gap: 8px);
                 padding: 8px 12px;
                 border-radius: 4px;
@@ -180,45 +180,45 @@
 
                 &:hover { background-color: #F9FAFB; }
 
-                &.selected {
+                &.sa-answer-selected {
                     background-color: #F9FAFB;
 
-                    .checkbox {
+                    .sa-answer-checkbox {
                         background-color: #155EEF;
                         border-color: #155EEF;
                     }
                 }
 
-                .checkbox {
+                .sa-answer-checkbox {
                     @include iconBox(16px);
                     border: 1px solid #D0D5DD;
                     border-radius: 4px;
                     background-color: #FFFFFF;
                 }
 
-                .option-label {
+                .sa-answer-option-label {
                     @include interText(400, 14px, 1.43, #101828);
                     @include textEllipsis;
                     flex: 1;
 
-                    &.truncated { max-width: 200px; }
+                    &.sa-answer-truncated { max-width: 200px; }
                 }
             }
         }
 
-        .footer-buttons {
+        .sa-answer-footer-buttons {
             @include flexRow($gap: 8px, $justify: flex-end);
             padding: 16px 0 0;
             border-top: 1px solid #EAECF0;
             margin-top: 8px;
 
-            .cancel-btn,
-            .apply-btn {
+            .sa-answer-cancel-btn,
+            .sa-answer-apply-btn {
                 @include actionBtnBase;
                 @include interText(500, 12px, 1.33, inherit);
             }
 
-            .cancel-btn {
+            .sa-answer-cancel-btn {
                 background: #FFFFFF;
                 border-color: #D0D5DD;
                 color: #344054;
@@ -226,7 +226,7 @@
                 &:hover { background: #F9FAFB; }
             }
 
-            .apply-btn {
+            .sa-answer-apply-btn {
                 background: #155EEF;
                 border-color: #155EEF;
                 color: #FFFFFF;

@@ -1,9 +1,9 @@
 @import '../mixins';
 
-.multi-tag-input-wrapper {
+.sa-answer-multi-tag-input-wrapper {
     width: 100%;
 
-    .multi-tag-input {
+    .sa-answer-multi-tag-input {
         @include flexRow($gap: 8px);
         padding: 8px 12px;
         border: 1px solid #D0D5DD;
@@ -14,16 +14,16 @@
 
         &:hover { border-color: #84ADFF; }
 
-        &.focused {
+        &.sa-answer-focused {
             border-color: #84ADFF;
             box-shadow: 0px 0px 0px 4px rgba(41, 112, 255, 0.24), 0px 1px 2px 0px rgba(16, 24, 40, 0.04);
         }
 
-        .input-content {
+        .sa-answer-input-content {
             flex: 1;
             @include flexRow($gap: 8px);
 
-            .input-text {
+            .sa-answer-input-text {
                 @include interText(400, 14px, 1.43, #101828);
 
                 &:empty::before {
@@ -33,12 +33,12 @@
             }
         }
 
-        .chevron-icon {
+        .sa-answer-chevron-icon {
             @include iconBox(16px);
 
             svg { @include easeTransition(transform); }
         }
 
-        &.focused .chevron-icon svg { transform: rotate(180deg); }
+        &.sa-answer-focused .sa-answer-chevron-icon svg { transform: rotate(180deg); }
     }
 }

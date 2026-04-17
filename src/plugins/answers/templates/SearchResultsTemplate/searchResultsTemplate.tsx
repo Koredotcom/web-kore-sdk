@@ -42,13 +42,13 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     const openSliderWithData = (data: any) => {
         const sliderElement = getHTML(RelevantResults, { msgData: data }, hostInstance) as HTMLElement;
         sliderElement.querySelector('.actions-contnet-data')?.classList.add('ninety-percent-height');
-        hostInstance.bottomSliderAction('show', sliderElement, true, 'popup-window-block', true);
+        hostInstance.bottomSliderAction('show', sliderElement, true, 'popup-window-block', 'sa-answer-search-all-results-slider');
     };
 
     const handleViewAllClick = () => {
         if (!hostInstance?.bottomSliderAction) return;
         const taskBotId = hostInstance?.config?.botOptions?.botInfo?.taskBotId;
-        const url = hostInstance?.config?.botOptions?.koreAPIUrl + 'searchsdk/' + taskBotId + '/searchResults/' + (msgData?.searchRequestId || '');
+        const url = hostInstance?.config?.botOptions?.koreAPIUrl?.replace(/\/?$/, "/") + 'searchsdk/' + taskBotId + '/searchResults/' + (msgData?.searchRequestId || '');
 
         fetch(url, {
             headers: {
@@ -71,33 +71,33 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     };
 
     return (
-        <section className="search-results-container">
-            <header className="search-results-header">
-                <h3 className="search-results-title">Relevant Results</h3>
+        <section className="sa-answer-search-results-container">
+            <header className="sa-answer-search-results-header">
+                <h3 className="sa-answer-search-results-title">Relevant Results</h3>
                 {totalResults > 0 && (
                     <button
-                        className="search-results-view-all"
+                        className="sa-answer-search-results-view-all"
                         onClick={handleViewAllClick}
                     >
-                        <span className="search-all-results-text">All Results ({totalResults})</span>
+                        <span className="sa-answer-search-all-results-text">All Results ({totalResults})</span>
                         <RelevantResultsSvgIcons type="arrow-right" />
                     </button>
                 )}
             </header>
 
-            <ul className="search-results-list">
+            <ul className="sa-answer-search-results-list">
                 {visibleResults.map((result, index) => (
                     <li
                         key={result.id}
-                        className={`search-result-item ${index === 0 ? 'first-item' : ''}`}
+                        className={`sa-answer-search-result-item ${index === 0 ? 'sa-answer-first-item' : ''}`}
                     >
-                        <article className="result-content">
-                            <header className="result-title-row">
-                                <span className="result-type-icon" aria-hidden="true">
+                        <article className="sa-answer-result-content">
+                            <header className="sa-answer-result-title-row">
+                                <span className="sa-answer-result-type-icon" aria-hidden="true">
                                     <RenderFileIcons type={result.source.fileType || result.source.type} hostInstance={hostInstance} />
                                 </span>
                                 <div
-                                    className="result-title-link"
+                                    className="sa-answer-result-title-link"
                                     onClick={() => handleResultClick(result)}
                                 >
                                     {result.source.title}
@@ -106,8 +106,8 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
                             <TableContentBlock
                                 text={result.snippet}
                                 title={result.source.title}
-                                textClassName="result-snippet"
-                                className="result-text-image"
+                                textClassName="sa-answer-result-snippet"
+                                className="sa-answer-result-text-image"
                                 extraChildren={result.source.imageUrls?.[0]
                                     ? renderImageWithZoom(
                                         result.source.imageUrls[0],

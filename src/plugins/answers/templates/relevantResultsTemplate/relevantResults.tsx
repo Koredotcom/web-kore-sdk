@@ -111,9 +111,9 @@ export const showFileUrl = (image_urls: any, title: string) => {
 };
 
 export const renderImageWithZoom = (src: string, title: string, onClick: () => void) => (
-    <div className="image-thumbnail-wrapper" onClick={onClick}>
-        <img className="result-text-image-img" src={src} alt="Result" />
-        <div className="image-zoom-overlay">
+    <div className="sa-answer-image-thumbnail-wrapper" onClick={onClick}>
+        <img className="sa-answer-result-text-image-img" src={src} alt="Result" />
+        <div className="sa-answer-image-zoom-overlay">
             <RelevantResultsSvgIcons type="zoom-icon" />
         </div>
     </div>
@@ -277,8 +277,8 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
     const renderTextToggle = (cardId: string, isExpanded: boolean) => (
         isExpanded
-            ? <span className="see-less-link" onClick={() => handleTextToggle(cardId)}>see less</span>
-            : <span className="see-more-link" onClick={() => handleTextToggle(cardId)}>see more</span>
+            ? <span className="sa-answer-see-less-link" onClick={() => handleTextToggle(cardId)}>see less</span>
+            : <span className="sa-answer-see-more-link" onClick={() => handleTextToggle(cardId)}>see more</span>
     );
 
     // Shared renderer for both main card and related card text sections
@@ -299,7 +299,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
         const moreImagesEl = imageUrls?.length
             ? (
-                <div className="more-images-block">
+                <div className="sa-answer-more-images-block">
                     {imageUrls.map((image, i) =>
                         renderImageWithZoom(image, name, () => showFileUrl(imageUrls![i], name))
                     )}
@@ -308,7 +308,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
             : null;
 
         return (
-            <div className={`text-container ${isSingleImage ? 'image-with-text' : ''}`}>
+            <div className={`sa-answer-text-container ${isSingleImage ? 'sa-answer-image-with-text' : ''}`}>
                 {/* TableContentBlock splits text at the first markdown table so text
                     and table are always in separate DOM elements — no DOM manipulation
                     needed, so lineClamp on the text div works correctly and the table
@@ -316,9 +316,9 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                 <TableContentBlock
                     text={text}
                     title={name}
-                    textClassName="result-text"
+                    textClassName="sa-answer-result-text"
                     isExpanded={isExpanded}
-                    className="result-text-image"
+                    className="sa-answer-result-text-image"
                     extraChildren={inlineImgEl}
                     inlineChildren={moreImagesEl}
                 />
@@ -330,15 +330,15 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const renderSourceDropdown = () => {
         if (!showSourceDropdown) return null;
         return (
-            <div className="source-dropdown">
-                <div className="dropdown-menu">
+            <div className="sa-answer-source-dropdown">
+                <div className="sa-answer-dropdown-menu">
                     {getSourceOptions().map((option: any) => (
-                        <div key={option.id} className="dropdown-item" onClick={() => handleSourceSelect(option)}>
-                            <div className="dropdown-item-content">
-                                <div className="dropdown-item-icon">
+                        <div key={option.id} className="sa-answer-dropdown-item" onClick={() => handleSourceSelect(option)}>
+                            <div className="sa-answer-dropdown-item-content">
+                                <div className="sa-answer-dropdown-item-icon">
                                         <RenderFileIcons type={option.icon} hostInstance={props.hostInstance} />
                                 </div>
-                                <span className={`dropdown-item-text ${option.label.length > 15 ? 'truncated' : ''}`}>
+                                <span className={`sa-answer-dropdown-item-text ${option.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
                                     {option.label}
                                 </span>
                             </div>
@@ -356,23 +356,23 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         const shouldShowBadge = card.text.length > 80;
 
         return (
-            <div key={card.id} className={`result-card ${card.isExpanded ? 'with-related' : ''}`}>
-                <div className="result-header">
-                    <div className="file-info">
-                        <span className="file-info-wrapper">
-                            <div className={`file-icon ${card.fileInfo.type}`}>
+            <div key={card.id} className={`sa-answer-result-card ${card.isExpanded ? 'sa-answer-with-related' : ''}`}>
+                <div className="sa-answer-result-header">
+                    <div className="sa-answer-file-info">
+                        <span className="sa-answer-file-info-wrapper">
+                            <div className={`sa-answer-file-icon ${card.fileInfo.type}`}>
                                 <RenderFileIcons type={card.fileInfo.fileType || card.fileInfo.type} hostInstance={props.hostInstance} />
                             </div>
-                            <span className="file-name-wrapper">
-                                <span className="file-name" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
+                            <span className="sa-answer-file-name-wrapper">
+                                <span className="sa-answer-file-name" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
                                     {card.fileInfo.name}
                                 </span>
-                                <span className="link-icon-hover"><RenderFileIcons type="link-icon" /></span>
+                                <span className="sa-answer-link-icon-hover"><RenderFileIcons type="link-icon" /></span>
                             </span>
                         </span>
                         {card?.fileInfo?.resultCount && card.fileInfo.resultCount > 1 && (
                             <button
-                                className="view-button"
+                                className="sa-answer-view-button"
                                 onClick={() => card.isExpanded
                                     ? handleHideRelatedResults(card.id)
                                     : handleViewRelatedResults(card.id)
@@ -380,24 +380,24 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                             >
                                 {card.isExpanded ? 'Show less' : 'Show all results'}
                                 {!card.isExpanded && (
-                                    <span className="result-count">({card.fileInfo.resultCount})</span>
+                                    <span className="sa-answer-result-count">({card.fileInfo.resultCount})</span>
                                 )}
                             </button>
                         )}
                     </div>
                 </div>
-                <div className="result-content">
-                    <div className="result-text-section">
+                <div className="sa-answer-result-content">
+                    <div className="sa-answer-result-text-section">
                         {renderTextContent(card.id, card.text, card.fileInfo.imageUrls, card.fileInfo.name, isTextExpanded, shouldShowBadge)}
                     </div>
                     {card.relatedResults && card.isExpanded && (
-                        <div className="related-results">
+                        <div className="sa-answer-related-results">
                             {card.relatedResults.map((relatedCard, index) => {
                                 const relatedId = `${card.id}-${relatedCard.id}`;
                                 return (
                                     <Fragment key={relatedCard.id}>
-                                        <div className="divider"></div>
-                                        <div className="related-item">
+                                        <div className="sa-answer-divider"></div>
+                                        <div className="sa-answer-related-item">
                                             {renderTextContent(
                                                 relatedId,
                                                 relatedCard.text,
@@ -425,7 +425,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
     if (showFilters) {
         return (
-            <div className="filters-container-wrapper">
+            <div className="sa-answer-filters-container-wrapper">
                 <FiltersComponent
                     onClose={handleCloseFilters}
                     onApplyFilters={handleApplyFilters}
@@ -439,47 +439,47 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const filteredResults = getFilteredResultsData();
 
     return (
-        <div className="search-results-slider">
+        <div className="sa-answer-search-results-slider">
             {/* Header */}
-            <div className="slider-header">
-                <div className="header-content">
-                    <h3 className="header-title">Relevant Results ({getTotalResultCount()})</h3>
+            <div className="sa-answer-slider-header">
+                <div className="sa-answer-header-content">
+                    <h3 className="sa-answer-header-title">Relevant Results ({getTotalResultCount()})</h3>
                 </div>
-                <button className="close-button" onClick={handleClose}>
+                <button className="sa-answer-close-button" onClick={handleClose}>
                     <ImageCarouselSvgIcons type="close-button" />
                 </button>
             </div>
 
             {/* Search and Filters */}
-            <div className="search-filters-section">
-                <div className="search-input-container">
-                    <div className="search-input">
-                        <ImageCarouselSvgIcons type="search-icon" className="search-icon" />
+            <div className="sa-answer-search-filters-section">
+                <div className="sa-answer-search-input-container">
+                    <div className="sa-answer-search-input">
+                        <ImageCarouselSvgIcons type="search-icon" className="sa-answer-search-icon" />
                         <input
                             type="text"
                             placeholder="Search"
-                            className="search-field"
+                            className="sa-answer-search-field"
                             onChange={handleSearch}
                         />
                     </div>
                 </div>
-                <div className="filters-container">
-                    <div className="filter-badge-wrapper" ref={sourceDropdownRef}>
-                        <button className="filter-badge primary" onClick={handleSourceFilter}>
-                            <span className={`selected-source-text ${selectedSource.label.length > 15 ? 'truncated' : ''}`}>
+                <div className="sa-answer-filters-container">
+                    <div className="sa-answer-filter-badge-wrapper" ref={sourceDropdownRef}>
+                        <button className="sa-answer-filter-badge sa-answer-primary" onClick={handleSourceFilter}>
+                            <span className={`sa-answer-selected-source-text ${selectedSource.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
                                 {selectedSource.label}
                             </span>
                             <ImageCarouselSvgIcons type="chevron-down" />
                         </button>
                         {renderSourceDropdown()}
                     </div>
-                    <div className="filter-badge-wrapper">
-                        <button className="filter-badge secondary" onClick={handleMoreFilters}>
-                            <div className="filter-icon-wrapper">
+                    <div className="sa-answer-filter-badge-wrapper">
+                        <button className="sa-answer-filter-badge sa-answer-secondary" onClick={handleMoreFilters}>
+                            <div className="sa-answer-filter-icon-wrapper">
                                 <ImageCarouselSvgIcons type="filter-icon" />
                                 {getActiveFiltersCount() > 0 && (
-                                    <div className="filter-indicator">
-                                        <svg width="6" height="6" viewBox="0 0 6 6" fill="none" className="dot-icon">
+                                    <div className="sa-answer-filter-indicator">
+                                        <svg width="6" height="6" viewBox="0 0 6 6" fill="none" className="sa-answer-dot-icon">
                                             <circle cx="3" cy="3" r="3" fill="#F04438" />
                                         </svg>
                                     </div>
@@ -492,22 +492,22 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
             </div>
 
             {/* Results List */}
-            <div className="results-container">
+            <div className="sa-answer-results-container">
                 {isLoading ? (
-                    <div className="results-loading-container">
-                        <div className="results-spinner">
-                            <div className="spinner-ring" />
+                    <div className="sa-answer-results-loading-container">
+                        <div className="sa-answer-results-spinner">
+                            <div className="sa-answer-spinner-ring" />
                         </div>
-                        <p className="results-loading-text">Loading results…</p>
+                        <p className="sa-answer-results-loading-text">Loading results…</p>
                     </div>
                 ) : filteredResults.length === 0 ? (
-                    <div className="no-results-container">
-                        <div className="no-results-icon">
-                            <ImageCarouselSvgIcons type="search-lg" className="search-icon" />
+                    <div className="sa-answer-no-results-container">
+                        <div className="sa-answer-no-results-icon">
+                            <ImageCarouselSvgIcons type="search-lg" className="sa-answer-search-icon" />
                         </div>
-                        <h3 className="no-results-title">No results found</h3>
-                        <p className="no-results-subtitle">Your search did not match any results. Please clear filters and try again</p>
-                        <button className="clear-filters-button" onClick={handleClearFilters}>
+                        <h3 className="sa-answer-no-results-title">No results found</h3>
+                        <p className="sa-answer-no-results-subtitle">Your search did not match any results. Please clear filters and try again</p>
+                        <button className="sa-answer-clear-filters-button" onClick={handleClearFilters}>
                             Clear Filters
                         </button>
                     </div>

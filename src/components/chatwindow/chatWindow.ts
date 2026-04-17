@@ -2763,7 +2763,7 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction(action: any, appendElement: any, fullSlide?: any, customClass?: string, searchAllResults?: boolean,) {
+bottomSliderAction(action: any, appendElement: any, fullSlide?: any, customClass?: string, parentCustomClass?: string) {
   const me: any = this;
   if (me.config.UI.version == 'v2') {
     $(".kore-action-sheet").animate({ height: 'toggle' });
@@ -2785,8 +2785,8 @@ bottomSliderAction(action: any, appendElement: any, fullSlide?: any, customClass
     if (customClass) {
       actionSlider.querySelector('.actions-contnet-data').classList.add(customClass);
     }
-    if (searchAllResults) {
-      actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').parentElement.classList.add('search-all-results-slider');
+    if (parentCustomClass) {
+      actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').parentElement.classList.add(parentCustomClass);
     }
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
     me.chatEle.appendChild(actionSlider);

@@ -1,10 +1,10 @@
 @import '../mixins';
 
-.single-select-dropdown-wrapper {
+.sa-answer-single-select-dropdown-wrapper {
     position: relative;
     width: 100%;
 
-    .single-select-dropdown {
+    .sa-answer-single-select-dropdown {
         @include flexRow($gap: 8px);
         padding: 8px 12px;
         border: 1px solid #EAECF0;
@@ -15,33 +15,33 @@
         width: 92%;
 
         &:hover { border-color: #D0D5DD; }
-        &.open  { border-color: #84ADFF; }
+        &.sa-answer-open  { border-color: #84ADFF; }
 
-        .dropdown-content {
+        .sa-answer-dropdown-content {
             flex: 1;
             @include flexRow($gap: 8px, $justify: space-between);
 
-            .dropdown-text {
+            .sa-answer-dropdown-text {
                 @include interText(400, 14px, 1.43, #101828);
                 @include textEllipsis;
                 flex: 1;
 
-                &.truncated { max-width: 200px; }
+                &.sa-answer-truncated { max-width: 200px; }
             }
         }
 
-        .chevron-icon {
+        .sa-answer-chevron-icon {
             @include iconBox(16px);
 
             svg { @include easeTransition(transform); }
         }
 
-        &.open .chevron-icon svg { transform: rotate(180deg); }
+        &.sa-answer-open .sa-answer-chevron-icon svg { transform: rotate(180deg); }
     }
 
     // ─── Dropdown Menu ─────────────────────────────────────────────────────────
 
-    .dropdown-menu {
+    .sa-answer-dropdown-menu {
         position: absolute;
         left: 0;
         right: 0;
@@ -54,19 +54,19 @@
         padding: 12px;
         width: 92%;
 
-        .search-section {
+        .sa-answer-search-section {
             margin-bottom: 8px;
 
-            .search-input {
+            .sa-answer-search-input {
                 @include flexRow($gap: 8px);
                 padding: 10px 14px;
                 border: 1px solid #D0D5DD;
                 border-radius: 8px;
                 background: #FFFFFF;
 
-                .search-icon { @include iconBox(16px); }
+                .sa-answer-search-icon { @include iconBox(16px); }
 
-                .search-field {
+                .sa-answer-search-field {
                     flex: 1;
                     border: none;
                     outline: none;
@@ -78,33 +78,33 @@
             }
         }
 
-        .options-list {
+        .sa-answer-options-list {
             max-height: 200px;
             overflow-y: auto;
 
-            .option-item {
+            .sa-answer-option-item {
                 @include flexRow($gap: 8px, $justify: space-between);
                 padding: 8px 12px;
                 border-radius: 4px;
                 cursor: pointer;
                 @include easeTransition(background-color);
 
-                &:hover    { background-color: #F9FAFB; }
-                &.selected { background-color: #F9FAFB; }
+                &:hover          { background-color: #F9FAFB; }
+                &.sa-answer-selected { background-color: #F9FAFB; }
 
-                .option-content {
+                .sa-answer-option-content {
                     flex: 1;
 
-                    .option-label {
+                    .sa-answer-option-label {
                         @include interText(400, 14px, 1.43, #101828);
                         @include textEllipsis;
                         flex: 1;
 
-                        &.truncated { max-width: 200px; }
+                        &.sa-answer-truncated { max-width: 200px; }
                     }
                 }
 
-                .check-icon { @include iconBox(20px); }
+                .sa-answer-check-icon { @include iconBox(20px); }
             }
         }
     }
