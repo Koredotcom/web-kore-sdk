@@ -8340,6 +8340,8 @@ rrwebInit = function (exports) {
             var _this = this;
             var _a, _b;
             var d = e.data;
+            if (!d || typeof d !== 'object') return;
+            if (Object.prototype.hasOwnProperty.call(d, '__proto__') || Object.prototype.hasOwnProperty.call(d, 'constructor') || Object.prototype.hasOwnProperty.call(d, 'prototype')) return;
             switch (d.source) {
                 case exports.IncrementalSource.Mutation: {
                     if (isSync) {
@@ -8671,6 +8673,8 @@ rrwebInit = function (exports) {
         Replayer.prototype.applyMutation = function (d, useVirtualParent) {
             var e_11, _a;
             var _this = this;
+            if (!d || typeof d !== 'object') return;
+            if (Object.prototype.hasOwnProperty.call(d, '__proto__') || Object.prototype.hasOwnProperty.call(d, 'constructor') || Object.prototype.hasOwnProperty.call(d, 'prototype')) return;
             d.removes.forEach(function (mutation) {
                 var target = _this.mirror.getNode(mutation.id);
                 if (!target) {
