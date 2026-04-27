@@ -4,6 +4,7 @@ import { SingleSelectDropdown } from './singleSelectDropdown';
 import { MultiSelectDropdown } from './multiSelectDropdown';
 import React from 'preact/compat';
 import { h } from 'preact';
+import { ImageCarouselSvgIcons } from '../../imagePreviewTemplate/imageCarouselSvgIcons';
 
 interface FiltersComponentProps {
     onClose: () => void;
@@ -68,19 +69,15 @@ export function FiltersComponent(props: FiltersComponentProps): any {
     const handleClearAll = () => setFilters(buildDefaultFilters(facets));
 
     return (
-        <div className="sa-answer-filters-content">
-            <div className="sa-answer-filters-header">
-                <div className="sa-answer-header-left">
-                    <h2 className="sa-answer-filters-title">Filter Results</h2>
-                </div>
-                <button className="sa-answer-close-button" onClick={onClose}>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M15 5L5 15M5 5L15 15" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+        <div className="sa-answer-filters-content kwsdk-w-100 kwsdk-d-flex kwsdk-flex-column kwsdk-overflow-hidden kwsdk-h-100">
+            <div className="sa-answer-filters-header kwsdk-w-100 kwsdk-d-flex kwsdk-justify-content-between kwsdk-align-items-center kwsdk-p-4">
+                <h2 className="sa-answer-filters-title kwsdk-text-sm semibold kwsdk-text-truncate">Filter Results</h2>
+                <button className="sa-answer-close-button kwsdk-btn-link" onClick={onClose}>
+                    <ImageCarouselSvgIcons type="close-button" />
                 </button>
             </div>
 
-            <div className="sa-answer-filters-sections">
+            <div className="sa-answer-filters-sections kwsdk-flex-grow-1 kwsdk-overflow-y-auto kwsdk-p-4 kwsdk-pt-0 kwsdk-d-flex kwsdk-flex-column kwsdk-gap-2">
                 {facets.map((facet) => {
                     if (!facet.buckets?.length) return null;
 
@@ -90,22 +87,19 @@ export function FiltersComponent(props: FiltersComponentProps): any {
                     const placeholder = `Select ${facet.name.toLowerCase()}`;
 
                     return (
-                        <div key={facet.fieldName} className="sa-answer-filter-section">
-                            <div
-                                className="sa-answer-filter-section-header"
-                                onClick={() => toggleSection(facet.fieldName)}
-                            >
-                                <div className="sa-answer-filter-title-row">
-                                    <h3 className="sa-answer-filter-section-title">{facet.name}</h3>
-                                    <div className={`sa-answer-chevron-down ${isExpanded ? 'sa-answer-expanded' : ''}`}>
-                                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
-                                            <path d="M1 1L6 5L11 1" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <div key={facet.fieldName} className="sa-answer-filter-section kwsdk-d-flex kwsdk-flex-column kwsdk-w-100">
+                            <div className="sa-answer-filter-section-header kwsdk-border-bottom kwsdk-pt-3 kwsdk-pb-3" onClick={() => toggleSection(facet.fieldName)}>
+                                <div className="sa-answer-filter-title-row kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-between kwsdk-w-100">
+                                    <h3 className="sa-answer-filter-section-title kwsdk-text-sm semibold kwsdk-text-truncate kwsdk-flex-grow-1 kwsdk-text-truncate kwsdk-w-100 kwsdk-m-0">{facet.name}</h3>
+                                    <div className={`sa-answer-chevron-down kwsdk-flex-shrink-0 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center ${isExpanded ? 'sa-answer-expanded' : ''}`}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 9L12 15L18 9" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
                                 </div>
                                 {isExpanded && (
                                     <div className="sa-answer-filter-expanded-content">
-                                        <span className="sa-answer-filter-description">Select {facet.name.toLowerCase()} to filter by</span>
+                                        <div className="sa-answer-filter-description kwsdk-mb-1 kwsdk-text-xs medium">Select {facet.name.toLowerCase()} to filter by</div>
                                         {facet.multiselect ? (
                                             <MultiSelectDropdown
                                                 options={options}
@@ -129,15 +123,13 @@ export function FiltersComponent(props: FiltersComponentProps): any {
                 })}
             </div>
 
-            <div className="sa-answer-filters-footer">
-                <div className="sa-answer-action-buttons">
-                    <button className="sa-answer-cancel-button" onClick={handleClearAll}>
-                        Clear
-                    </button>
-                    <button className="sa-answer-apply-button" onClick={handleApplyFilters}>
-                        Apply
-                    </button>
-                </div>
+            <div className="sa-answer-filters-footer kwsdk-p-4 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-end kwsdk-gap-2">
+                <button className="kr-button-secondary kwsdk-w-auto" onClick={handleClearAll}>
+                    Clear
+                </button>
+                <button className="kr-button-primary kwsdk-w-auto" onClick={handleApplyFilters}>
+                    Apply
+                </button>
             </div>
         </div>
     );

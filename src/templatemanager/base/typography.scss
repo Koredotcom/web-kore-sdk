@@ -1,0 +1,85 @@
+// Typography: text scale only. Color uses `--sdk-gloabl-text-color` from
+// `src/templatemanager/base/variables.scss` (:root). Classes use `$kr-prefix` (default `kwsdk-`), aligned with `utilities.scss`.
+
+@use 'sass:map';
+
+$kr-prefix: 'kwsdk-' !default;
+
+@mixin headingTextDisplay(
+	$size,
+	$weight: var(--font-weight-normal-Regular, 400),
+	$lineheight: normal,
+	$color: var(--sdk-gloabl-text-color, #101828),
+	$textalign: start,
+	$spacing: null
+) {
+	font-size: $size;
+	font-weight: $weight;
+	line-height: $lineheight;
+	color: $color;
+	text-align: $textalign;
+	margin: 0;
+	@if $spacing {
+		letter-spacing: $spacing;
+	}
+
+	&.medium {
+		font-weight: 500;
+	}
+	&.semibold {
+		font-weight: 600;
+	}
+	&.bold {
+		font-weight: 700;
+	}
+}
+
+// Single `text` group: display sizes + body scale (unique keys; body xl–xxxs matches former `text` map).
+$typography-variants: (
+	'text': (
+		'xl': (
+			size: 20px,
+			line-height: 30px,
+		),
+		'lg': (
+			size: 18px,
+			line-height: 28px,
+		),
+		'md': (
+			size: 16px,
+			line-height: 24px,
+		),
+		'sm': (
+			size: 14px,
+			line-height: 20px,
+		),
+		'xs': (
+			size: 12px,
+			line-height: 16px,
+		),
+		'xxs': (
+			size: 10px,
+			line-height: 12px,
+		),
+		'xxxs': (
+			size: 8px,
+			line-height: 12px,
+		),
+	),
+) !default;
+
+$text-color: var(--sdk-gloabl-text-color);
+
+@each $size-name, $properties in map.get($typography-variants, 'text') {
+	.#{$kr-prefix}text-#{$size-name} {
+		$spacing-value: map.get($properties, spacing);
+
+		@include headingTextDisplay(
+			$size: map.get($properties, size),
+			$lineheight: map.get($properties, line-height),
+			$color: $text-color,
+			$textalign: start,
+			$spacing: $spacing-value
+		);
+	}
+}

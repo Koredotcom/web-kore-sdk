@@ -42,7 +42,7 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     const openSliderWithData = (data: any) => {
         const sliderElement = getHTML(RelevantResults, { msgData: data }, hostInstance) as HTMLElement;
         sliderElement.querySelector('.actions-contnet-data')?.classList.add('ninety-percent-height');
-        hostInstance.bottomSliderAction('show', sliderElement, true, 'popup-window-block', 'sa-answer-search-all-results-slider');
+        hostInstance.bottomSliderAction('show', sliderElement, false, 'popup-window-block', 'sa-answer-search-all-results-slider');
     };
 
     const handleViewAllClick = () => {
@@ -71,12 +71,12 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     };
 
     return (
-        <section className="sa-answer-search-results-container">
-            <header className="sa-answer-search-results-header">
-                <h3 className="sa-answer-search-results-title">Relevant Results</h3>
+        <section className="sa-answer-search-results-container kwsdk-w-100">
+            <header className="sa-answer-search-results-heade kwsdk-w-100 kwsdk-d-flex kwsdk-justify-content-between kwsdk-pb-2">
+                <p className="sa-answer-search-results-title kwsdk-w-100 kwsdk-text-xs semibold kwsdk-text-truncate">Relevant Results</p>
                 {totalResults > 0 && (
                     <button
-                        className="sa-answer-search-results-view-all"
+                        className="kwsdk-btn-link kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1 kwsdk-flex-shrink-0 kwsdk-text-xs semibold"
                         onClick={handleViewAllClick}
                     >
                         <span className="sa-answer-search-all-results-text">All Results ({totalResults})</span>
@@ -85,39 +85,37 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
                 )}
             </header>
 
-            <ul className="sa-answer-search-results-list">
+            <ul className="sa-answer-search-results-list kwsdk-w-100 kwsdk-d-flex kwsdk-flex-column">
                 {visibleResults.map((result, index) => (
                     <li
                         key={result.id}
-                        className={`sa-answer-search-result-item ${index === 0 ? 'sa-answer-first-item' : ''}`}
+                        className={`kwsdk-border-top kwsdk-pb-2 kwsdk-pt-2 kwsdk-w-100 kwsdk-d-flex kwsdk-flex-column kwsdk-gap-1`}
                     >
-                        <article className="sa-answer-result-content">
-                            <header className="sa-answer-result-title-row">
-                                <span className="sa-answer-result-type-icon" aria-hidden="true">
-                                    <RenderFileIcons type={result.source.fileType || result.source.type} hostInstance={hostInstance} />
-                                </span>
-                                <div
-                                    className="sa-answer-result-title-link"
-                                    onClick={() => handleResultClick(result)}
-                                >
-                                    {result.source.title}
-                                </div>
-                            </header>
-                            <TableContentBlock
-                                text={result.snippet}
-                                title={result.source.title}
-                                textClassName="sa-answer-result-snippet"
-                                className="sa-answer-result-text-image"
-                                extraChildren={result.source.imageUrls?.[0]
-                                    ? renderImageWithZoom(
-                                        result.source.imageUrls[0],
-                                        result.source.title,
-                                        () => showFileUrl(result.source.imageUrls?.[0], result.source.title)
-                                    )
-                                    : null
-                                }
-                            />
-                        </article>
+                        <header className="sa-answer-result-title-row kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1">
+                            <span className="sa-answer-result-type-icon kwsdk-flex-shrink-0" aria-hidden="true">
+                                <RenderFileIcons type={result.source.fileType || result.source.type} hostInstance={hostInstance} />
+                            </span>
+                            <div
+                                className="sa-answer-result-title-link kwsdk-text-xs semibold kwsdk-text-truncate"
+                                onClick={() => handleResultClick(result)}
+                            >
+                                {result.source.title}
+                            </div>
+                        </header>
+                        <TableContentBlock
+                            text={result.snippet}
+                            title={result.source.title}
+                            textClassName="sa-answer-result-snippet"
+                            className="sa-answer-result-text-image kwsdk-line-clamp-3 kwsdk-text-xs"
+                            extraChildren={result.source.imageUrls?.[0]
+                                ? renderImageWithZoom(
+                                    result.source.imageUrls[0],
+                                    result.source.title,
+                                    () => showFileUrl(result.source.imageUrls?.[0], result.source.title)
+                                )
+                                : null
+                            }
+                        />
                     </li>
                 ))}
             </ul>

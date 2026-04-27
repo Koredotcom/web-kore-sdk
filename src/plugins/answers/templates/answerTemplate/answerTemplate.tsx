@@ -92,7 +92,7 @@ export function Answers(props: any) {
         const totalResults = payload.totalSearchResults||0;
         if (!searchResults?.length) return null;
         return (
-            <div class="sa-answer-relevant-results-wrap">
+            <div class="sa-answer-relevant-results-wrap kwsdk-w-100 kwsdk-pt-2 kwsdk-pb-2 kwsdk-ps-4 kwsdk-pe-4">
                 <SearchResultsTemplate
                     results={searchResults}
                     totalResults={totalResults}
@@ -199,8 +199,8 @@ export function Answers(props: any) {
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
-                        <div class="sa-answer-generative-stack">
-                            <div class="sa-answer-result-block sa-answer-ai-card">
+                        <div class="sa-answer-generative-stack kwsdk-d-flex kwsdk-flex-column kwsdk-gap-3 kwsdk-flex-grow-1 kwsdk-w-100 kwsdk-align-items-stretch">
+                            <div class="sa-answer-result-block sa-answer-ai-card kwsdk-pb-3">
                             <div className="sa-answer-header-block">
                                 <div className="sa-answer-left">
                                 {modelType === 'generative_model'&& <Fragment>
@@ -251,8 +251,8 @@ export function Answers(props: any) {
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <div class="sa-answer-generative-stack">
-                        <div class="sa-answer-result-block ">
+                        <div class="sa-answer-generative-stack kwsdk-d-flex kwsdk-flex-column kwsdk-gap-3 kwsdk-flex-grow-1 kwsdk-w-100 kwsdk-align-items-stretch">
+                        <div class="sa-answer-result-block">
                             <div class="sa-answer-result-heading">{answersObj?.extractive?.snippet_title}</div>
                             <div class="sa-answer-result-desc">{answersObj?.extractive?.snippet_content}</div>
 

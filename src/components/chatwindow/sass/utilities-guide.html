@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Kore SDK — kwsdk- utilities &amp; typography</title>
+	<style>
+		:root {
+			--doc-bg: #f0f2f6;
+			--doc-surface: #ffffff;
+			--doc-elevated: #fafbfc;
+			--doc-border: #e4e7ec;
+			--doc-border-strong: #d0d5dd;
+			--doc-text: #182230;
+			--doc-text-muted: #475467;
+			--doc-text-soft: #667085;
+			--doc-accent: #009dab;
+			--doc-accent-soft: rgba(0, 157, 171, 0.12);
+			--doc-code-bg: #f4f6f9;
+			--doc-pre-bg: #0f172a;
+			--doc-pre-fg: #e2e8f0;
+			--doc-radius: 12px;
+			--doc-radius-sm: 8px;
+			--doc-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 12px rgba(16, 24, 40, 0.04);
+			--doc-shadow-hover: 0 4px 8px rgba(16, 24, 40, 0.08), 0 12px 24px rgba(16, 24, 40, 0.06);
+			--doc-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+			--doc-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+		}
+
+		*,
+		*::before,
+		*::after {
+			box-sizing: border-box;
+		}
+
+		html {
+			scroll-behavior: smooth;
+		}
+
+		body {
+			margin: 0;
+			font-family: var(--doc-font);
+			font-size: 0.9375rem;
+			line-height: 1.6;
+			color: var(--doc-text);
+			background: var(--doc-bg);
+			background-image: radial-gradient(ellipse 120% 80% at 50% -20%, var(--doc-accent-soft), transparent 55%);
+		}
+
+		a {
+			color: var(--doc-accent);
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		.doc-shell {
+			max-width: 52rem;
+			margin: 0 auto;
+			padding: 1.5rem 1.25rem 4rem;
+		}
+
+		.doc-hero {
+			background: var(--doc-surface);
+			border: 1px solid var(--doc-border);
+			border-radius: var(--doc-radius);
+			box-shadow: var(--doc-shadow);
+			padding: 2rem 1.75rem 1.75rem;
+			margin-bottom: 1.5rem;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.doc-hero::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, var(--doc-accent), #34c3d0);
+		}
+
+		.doc-hero h1 {
+			font-size: clamp(1.35rem, 3vw, 1.75rem);
+			font-weight: 700;
+			letter-spacing: -0.02em;
+			line-height: 1.25;
+			margin: 0 0 1rem;
+			color: var(--doc-text);
+		}
+
+		.doc-hero h1 kbd {
+			font-family: var(--doc-mono);
+			font-size: 0.9em;
+			font-weight: 600;
+			background: var(--doc-accent-soft);
+			color: var(--doc-accent);
+			padding: 0.15em 0.45em;
+			border-radius: 6px;
+			border: 1px solid rgba(0, 157, 171, 0.25);
+		}
+
+		.doc-lead {
+			font-size: 1rem;
+			color: var(--doc-text-muted);
+			line-height: 1.65;
+			margin: 0;
+		}
+
+		.doc-lead strong {
+			color: var(--doc-text);
+			font-weight: 600;
+		}
+
+		.doc-path {
+			display: inline;
+			font-family: var(--doc-mono);
+			font-size: 0.8125rem;
+			background: var(--doc-code-bg);
+			padding: 0.12em 0.4em;
+			border-radius: 4px;
+			border: 1px solid var(--doc-border);
+			word-break: break-all;
+		}
+
+		.doc-note {
+			margin: 1.25rem 0 0;
+			padding: 0.875rem 1rem 0.875rem 1rem;
+			border-radius: var(--doc-radius-sm);
+			background: linear-gradient(90deg, var(--doc-accent-soft), transparent);
+			border: 1px solid rgba(0, 157, 171, 0.2);
+			border-left: 4px solid var(--doc-accent);
+			font-size: 0.875rem;
+			color: var(--doc-text-muted);
+		}
+
+		.doc-note strong {
+			color: var(--doc-text);
+		}
+
+		.doc-layout {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		@media (min-width: 960px) {
+			.doc-shell {
+				max-width: 72rem;
+				padding: 2rem 1.5rem 4rem;
+			}
+
+			.doc-layout {
+				grid-template-columns: 14rem 1fr;
+				align-items: start;
+			}
+		}
+
+		.doc-toc {
+			position: sticky;
+			top: 1rem;
+			background: var(--doc-surface);
+			border: 1px solid var(--doc-border);
+			border-radius: var(--doc-radius-sm);
+			padding: 1rem 1.1rem;
+			box-shadow: var(--doc-shadow);
+		}
+
+		.doc-toc-title {
+			font-size: 0.6875rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--doc-text-soft);
+			margin: 0 0 0.65rem;
+		}
+
+		.doc-toc ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.doc-toc li {
+			margin: 0.15rem 0;
+		}
+
+		.doc-toc a {
+			display: block;
+			padding: 0.35rem 0.5rem;
+			border-radius: 6px;
+			font-size: 0.8125rem;
+			color: var(--doc-text-muted);
+			transition: background 0.15s, color 0.15s;
+		}
+
+		.doc-toc a:hover {
+			background: var(--doc-code-bg);
+			color: var(--doc-accent);
+			text-decoration: none;
+		}
+
+		.doc-main section {
+			background: var(--doc-surface);
+			border: 1px solid var(--doc-border);
+			border-radius: var(--doc-radius);
+			box-shadow: var(--doc-shadow);
+			padding: 1.5rem 1.5rem 1.35rem;
+			margin-bottom: 1.25rem;
+		}
+
+		.doc-main h2 {
+			font-size: 1.0625rem;
+			font-weight: 700;
+			letter-spacing: -0.015em;
+			margin: 0 0 0.75rem;
+			padding-bottom: 0.65rem;
+			border-bottom: 1px solid var(--doc-border);
+			color: var(--doc-text);
+		}
+
+		.doc-main h2 code {
+			font-weight: 600;
+			font-size: 0.9em;
+		}
+
+		.doc-main > section > p:first-of-type {
+			margin-top: 0;
+		}
+
+		.doc-main p,
+		.doc-main li {
+			color: var(--doc-text-muted);
+			font-size: 0.9375rem;
+		}
+
+		.doc-main ul {
+			padding-left: 1.25rem;
+		}
+
+		.doc-main li {
+			margin: 0.35rem 0;
+		}
+
+		.doc-card {
+			background: var(--doc-elevated);
+			border: 1px solid var(--doc-border);
+			border-radius: var(--doc-radius-sm);
+			padding: 1.1rem 1.2rem;
+			margin: 1rem 0;
+		}
+
+		.doc-card p:last-child {
+			margin-bottom: 0;
+		}
+
+		.doc-inline-note {
+			font-size: 0.875rem;
+			color: var(--doc-text-muted);
+			border-left: 3px solid var(--doc-accent);
+			padding-left: 0.85rem;
+			margin: 1rem 0;
+		}
+
+		.doc-inline-note code {
+			font-size: 0.8125rem;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.8125rem;
+			margin: 0.75rem 0 0.25rem;
+			border-radius: var(--doc-radius-sm);
+			overflow: hidden;
+			border: 1px solid var(--doc-border);
+		}
+
+		th,
+		td {
+			text-align: left;
+			padding: 0.55rem 0.65rem;
+			border-bottom: 1px solid var(--doc-border);
+			vertical-align: top;
+		}
+
+		th {
+			background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+			font-weight: 600;
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: var(--doc-text-soft);
+		}
+
+		tr:last-child td {
+			border-bottom: none;
+		}
+
+		tbody tr {
+			transition: background 0.12s ease;
+		}
+
+		tbody tr:hover {
+			background: rgba(0, 157, 171, 0.04);
+		}
+
+		code,
+		kbd {
+			font-family: var(--doc-mono);
+			font-size: 0.8125rem;
+			background: var(--doc-code-bg);
+			color: #344054;
+			padding: 0.15em 0.4em;
+			border-radius: 5px;
+			border: 1px solid var(--doc-border);
+		}
+
+		th code {
+			font-size: 0.6875rem;
+			text-transform: none;
+			letter-spacing: 0;
+		}
+
+		pre {
+			background: var(--doc-pre-bg);
+			color: var(--doc-pre-fg);
+			padding: 1rem 1.15rem;
+			border-radius: var(--doc-radius-sm);
+			overflow-x: auto;
+			font-size: 0.8125rem;
+			line-height: 1.55;
+			margin: 0.85rem 0;
+			border: 1px solid #1e293b;
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+		}
+
+		pre code {
+			background: none;
+			border: none;
+			padding: 0;
+			color: inherit;
+			font-size: inherit;
+		}
+
+		.doc-footer {
+			text-align: center;
+			font-size: 0.75rem;
+			color: var(--doc-text-soft);
+			margin-top: 2rem;
+			padding-top: 1.5rem;
+			border-top: 1px solid var(--doc-border);
+		}
+	</style>
+</head>
+<body>
+	<div class="doc-shell">
+		<header class="doc-hero">
+			<h1>Kore SDK — <kbd>kwsdk-</kbd> utilities &amp; typography</h1>
+			<p class="doc-lead">
+				<strong>Layout utilities</strong> live in <span class="doc-path">src/components/chatwindow/sass/utilities.scss</span>.
+				<strong>Typography scale</strong> (font size / line height for copy) lives in
+				<span class="doc-path">src/components/chatwindow/sass/typography.scss</span>.
+				Both are imported from <code>chatWindow.scss</code>. Prefixed classes use <code>$kr-prefix</code> (default <code>kwsdk-</code>) so they stay separate from Bootstrap or other CSS on the host page.
+			</p>
+			<p class="doc-note">
+				<strong>Note:</strong> This file is the <strong>full reference</strong> (open it in a browser). The <code>kwsdk-*</code> styles apply when the chat window bundle loads (for example after a webpack build that includes <code>utilities.scss</code> and <code>typography.scss</code>).
+			</p>
+		</header>
+
+		<div class="doc-layout">
+			<nav class="doc-toc" aria-label="On this page">
+				<p class="doc-toc-title">On this page</p>
+				<ul>
+					<li><a href="#why-kr">Why <code>kwsdk-</code>?</a></li>
+					<li><a href="#quick-start">Quick start</a></li>
+					<li><a href="#typography">Typography</a></li>
+					<li><a href="#display">Display</a></li>
+					<li><a href="#flexbox">Flexbox</a></li>
+					<li><a href="#spacing">Margin &amp; padding</a></li>
+					<li><a href="#text-utilities">Text &amp; font utilities</a></li>
+					<li><a href="#overflow">Overflow</a></li>
+					<li><a href="#position">Position &amp; inset</a></li>
+					<li><a href="#sizing">Width &amp; height</a></li>
+					<li><a href="#border">Border &amp; radius</a></li>
+					<li><a href="#shadow">Shadow</a></li>
+					<li><a href="#visibility">Visibility &amp; z-index</a></li>
+					<li><a href="#interaction">Interaction</a></li>
+					<li><a href="#customizing">Customizing SCSS</a></li>
+				</ul>
+			</nav>
+
+			<main class="doc-main">
+				<section id="why-kr">
+					<h2>Why <code>kwsdk-</code>?</h2>
+					<p>
+						Class names use the <code>kwsdk-</code> prefix so they do not clash with Bootstrap or other global utility classes in the host application. Layout helpers live in <code>utilities.scss</code>; type scale in <code>typography.scss</code> — both ship with the chat window stylesheet via <code>chatWindow.scss</code>.
+					</p>
+				</section>
+
+				<section id="quick-start">
+					<h2>Quick start</h2>
+					<div class="doc-card">
+						<p>Add multiple classes on any element inside the chat UI markup (same idea as Bootstrap, with the prefix):</p>
+						<pre><code>&lt;div class="kwsdk-d-flex kwsdk-justify-content-between kwsdk-align-items-center kwsdk-gap-2 kwsdk-mb-3"&gt;
+  …
+&lt;/div&gt;</code></pre>
+						<p><strong>Spacing scale:</strong> sizes <code>0</code>–<code>5</code> map to tokens in <code>$kr-spacers</code> inside <code>utilities.scss</code>. <code>auto</code> is allowed for <strong>margin</strong> utilities only, not padding.</p>
+						<table>
+							<thead>
+								<tr>
+									<th>Token</th>
+									<th>Typical size (default <code>$kr-spacer</code> is 0.25rem — 4px at 16px root)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><td><code>0</code></td><td>0</td></tr>
+								<tr><td><code>1</code></td><td>0.25rem (~4px)</td></tr>
+								<tr><td><code>2</code></td><td>0.5rem (~8px)</td></tr>
+								<tr><td><code>3</code></td><td>0.75rem (~12px)</td></tr>
+								<tr><td><code>4</code></td><td>1rem (~16px)</td></tr>
+								<tr><td><code>5</code></td><td>1.25rem (~20px)</td></tr>
+								<tr><td><code>auto</code></td><td>Only for margin utilities (<code>m-*</code>, <code>mt-*</code>, …), not padding.</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section id="typography">
+					<h2>Typography (<code>typography.scss</code>)</h2>
+					<p>Semantic text sizes: one class per step, color from branding.</p>
+					<div class="doc-card">
+						<p><strong>Color:</strong> all steps use <code>var(--sdk-gloabl-text-color)</code> (spelling matches <span class="doc-path">src/templatemanager/base/variables.scss</span> on <code>:root</code>). Ensure that stylesheet (or equivalent tokens) is present so the variable resolves.</p>
+						<p><strong>Pattern:</strong> <code>kwsdk-text-&lt;size&gt;</code> — prefix comes from <code>$kr-prefix</code> in <code>typography.scss</code> (same default as utilities).</p>
+						<pre><code>&lt;p class="kwsdk-text-md"&gt;Body copy&lt;/p&gt;
+&lt;p class="kwsdk-text-sm semibold"&gt;Caption, semibold&lt;/p&gt;</code></pre>
+						<p class="doc-inline-note">Weight helpers <code>medium</code>, <code>semibold</code>, and <code>bold</code> are <strong>unprefixed</strong> modifier classes on the same element as a <code>kwsdk-text-*</code> class (they are nested in SCSS under each typography rule).</p>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>Class</th>
+								<th>Font size</th>
+								<th>Line height</th>
+								<th>Letter-spacing</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><code>kwsdk-text-xl</code></td><td>20px</td><td>30px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-lg</code></td><td>18px</td><td>28px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-md</code></td><td>16px</td><td>24px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-sm</code></td><td>14px</td><td>20px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-xs</code></td><td>12px</td><td>16px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-xxs</code></td><td>10px</td><td>12px</td><td>—</td></tr>
+							<tr><td><code>kwsdk-text-xxxs</code></td><td>8px</td><td>12px</td><td>—</td></tr>
+						</tbody>
+					</table>
+					<p>Optional modifiers (combine with any <code>kwsdk-text-*</code>): <code>medium</code> (500), <code>semibold</code> (600), <code>bold</code> (700). Default weight uses <code>var(--font-weight-normal-Regular, 400)</code> from the <code>headingTextDisplay</code> mixin.</p>
+					<p>Override the scale before importing <code>typography.scss</code> by redefining <code>$typography-variants</code> (map with a <code>text</code> key; each size entry supports <code>size</code>, <code>line-height</code>, and optional <code>spacing</code> for <code>letter-spacing</code>).</p>
+				</section>
+
+				<section id="display">
+					<h2>Display</h2>
+					<p>Pattern: <code>kwsdk-d-&lt;value&gt;</code>. Uses <code>!important</code>.</p>
+					<table>
+						<thead>
+							<tr>
+								<th>Class</th>
+								<th>CSS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><code>kwsdk-d-none</code></td><td><code>display: none</code></td></tr>
+							<tr><td><code>kwsdk-d-inline</code></td><td><code>display: inline</code></td></tr>
+							<tr><td><code>kwsdk-d-inline-block</code></td><td><code>display: inline-block</code></td></tr>
+							<tr><td><code>kwsdk-d-block</code></td><td><code>display: block</code></td></tr>
+							<tr><td><code>kwsdk-d-flex</code></td><td><code>display: flex</code></td></tr>
+							<tr><td><code>kwsdk-d-inline-flex</code></td><td><code>display: inline-flex</code></td></tr>
+							<tr><td><code>kwsdk-d-grid</code></td><td><code>display: grid</code></td></tr>
+							<tr><td><code>kwsdk-d-inline-grid</code></td><td><code>display: inline-grid</code></td></tr>
+							<tr><td><code>kwsdk-d-table</code></td><td><code>display: table</code></td></tr>
+							<tr><td><code>kwsdk-d-table-row</code></td><td><code>display: table-row</code></td></tr>
+							<tr><td><code>kwsdk-d-table-cell</code></td><td><code>display: table-cell</code></td></tr>
+						</tbody>
+					</table>
+					<p class="doc-inline-note">There are no breakpoint-specific display classes (no <code>kwsdk-d-md-flex</code>); only the list above.</p>
+				</section>
+
+				<section id="flexbox">
+					<h2>Flexbox</h2>
+					<p>These rules do <strong>not</strong> use <code>!important</code>, so host or component CSS can override them more easily.</p>
+					<table>
+						<thead>
+							<tr>
+								<th>Class</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><code>kwsdk-flex-row</code>, <code>kwsdk-flex-column</code>, <code>kwsdk-flex-row-reverse</code>, <code>kwsdk-flex-column-reverse</code></td><td><code>flex-direction</code></td></tr>
+							<tr><td><code>kwsdk-flex-wrap</code>, <code>kwsdk-flex-nowrap</code>, <code>kwsdk-flex-wrap-reverse</code></td><td><code>flex-wrap</code></td></tr>
+							<tr><td><code>kwsdk-justify-content-start</code> … <code>end</code>, <code>center</code>, <code>between</code>, <code>around</code>, <code>evenly</code></td><td><code>justify-content</code></td></tr>
+							<tr><td><code>kwsdk-align-items-*</code></td><td><code>start</code>, <code>end</code>, <code>center</code>, <code>baseline</code>, <code>stretch</code> → <code>align-items</code></td></tr>
+							<tr><td><code>kwsdk-align-content-*</code></td><td><code>start</code>, <code>end</code>, <code>center</code>, <code>between</code>, <code>around</code>, <code>stretch</code> → <code>align-content</code></td></tr>
+							<tr><td><code>kwsdk-align-self-*</code></td><td><code>auto</code>, <code>start</code>, <code>end</code>, <code>center</code>, <code>baseline</code>, <code>stretch</code> → <code>align-self</code></td></tr>
+							<tr><td><code>kwsdk-flex-fill</code></td><td><code>flex: 1 1 auto</code></td></tr>
+							<tr><td><code>kwsdk-flex-grow-0</code>, <code>kwsdk-flex-grow-1</code></td><td><code>flex-grow</code></td></tr>
+							<tr><td><code>kwsdk-flex-shrink-0</code>, <code>kwsdk-flex-shrink-1</code></td><td><code>flex-shrink</code></td></tr>
+							<tr><td><code>kwsdk-order-0</code> … <code>kwsdk-order-5</code>, <code>kwsdk-order-first</code>, <code>kwsdk-order-last</code></td><td><code>order</code></td></tr>
+							<tr><td><code>kwsdk-gap-0</code> … <code>kwsdk-gap-5</code></td><td><code>gap</code> (no <code>auto</code>)</td></tr>
+							<tr><td><code>kwsdk-row-gap-*</code>, <code>kwsdk-column-gap-*</code></td><td><code>row-gap</code> / <code>column-gap</code> for sizes <code>0</code>–<code>5</code></td></tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section id="spacing">
+					<h2>Margin and padding</h2>
+					<p>Pattern: <code>kwsdk-&lt;prop&gt;-&lt;0–5|auto&gt;</code>. Uses <code>!important</code>.</p>
+					<ul>
+						<li><strong>Margin:</strong> <code>kwsdk-m-*</code>, <code>kwsdk-mt-*</code>, <code>kwsdk-mb-*</code>, <code>kwsdk-ms-*</code>, <code>kwsdk-me-*</code>, <code>kwsdk-mx-*</code>, <code>kwsdk-my-*</code> (<code>ms</code>/<code>me</code> = inline start/end).</li>
+						<li><strong>Padding:</strong> <code>kwsdk-p-*</code>, <code>kwsdk-pt-*</code>, <code>kwsdk-pb-*</code>, <code>kwsdk-ps-*</code>, <code>kwsdk-pe-*</code>, <code>kwsdk-px-*</code>, <code>kwsdk-py-*</code> — no <code>auto</code> token for padding.</li>
+					</ul>
+				</section>
+
+				<section id="text-utilities">
+					<h2>Text &amp; font utilities (<code>utilities.scss</code>)</h2>
+					<p>These are layout-oriented helpers (alignment, transform, weight), not the typography scale above. Some names start with <code>kwsdk-text-</code> but they are separate from <code>kwsdk-text-md</code> / <code>kwsdk-text-sm</code> typography classes.</p>
+					<table>
+						<thead>
+							<tr>
+								<th>Class</th>
+								<th>Effect</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><code>kwsdk-text-start</code>, <code>kwsdk-text-end</code>, <code>kwsdk-text-center</code></td><td>Text alignment</td></tr>
+							<tr><td><code>kwsdk-text-lowercase</code>, <code>kwsdk-text-uppercase</code>, <code>kwsdk-text-capitalize</code></td><td><code>text-transform</code></td></tr>
+							<tr><td><code>kwsdk-fw-bold</code>, <code>kwsdk-fw-semibold</code>, <code>kwsdk-fw-normal</code>, <code>kwsdk-fw-light</code></td><td>Font weight</td></tr>
+							<tr><td><code>kwsdk-fst-italic</code>, <code>kwsdk-fst-normal</code></td><td>Font style</td></tr>
+							<tr><td><code>kwsdk-text-wrap</code>, <code>kwsdk-text-nowrap</code>, <code>kwsdk-text-truncate</code></td><td>Whitespace / ellipsis</td></tr>
+							<tr><td><code>kwsdk-text-decoration-none</code>, <code>kwsdk-text-decoration-underline</code>, <code>kwsdk-text-decoration-line-through</code></td><td>Text decoration</td></tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section id="overflow">
+					<h2>Overflow</h2>
+					<p><code>kwsdk-overflow-{auto|hidden|visible|scroll}</code> and the same suffixes on <code>kwsdk-overflow-x-*</code>, <code>kwsdk-overflow-y-*</code>.</p>
+				</section>
+
+				<section id="position">
+					<h2>Position and inset</h2>
+					<ul>
+						<li><code>kwsdk-position-static</code>, <code>kwsdk-position-relative</code>, <code>kwsdk-position-absolute</code>, <code>kwsdk-position-fixed</code>, <code>kwsdk-position-sticky</code></li>
+						<li><code>kwsdk-top-*</code>, <code>kwsdk-bottom-*</code>, <code>kwsdk-start-*</code>, <code>kwsdk-end-*</code> with <code>0</code>, <code>50</code>, <code>100</code>, <code>auto</code></li>
+					</ul>
+				</section>
+
+				<section id="sizing">
+					<h2>Width and height</h2>
+					<p><code>kwsdk-w-25</code>, <code>50</code>, <code>75</code>, <code>100</code>, <code>auto</code> and the same keys for <code>kwsdk-h-*</code>. Also <code>kwsdk-mw-100</code>, <code>kwsdk-mh-100</code>.</p>
+				</section>
+
+				<section id="border">
+					<h2>Border and radius</h2>
+					<p><code>kwsdk-border</code>, <code>kwsdk-border-0</code>, <code>kwsdk-border-top</code>, <code>kwsdk-border-bottom</code>; <code>kwsdk-rounded</code>, <code>kwsdk-rounded-0</code> … <code>kwsdk-rounded-3</code>, <code>kwsdk-rounded-circle</code>, <code>kwsdk-rounded-pill</code>.</p>
+				</section>
+
+				<section id="shadow">
+					<h2>Shadow</h2>
+					<p><code>kwsdk-shadow-none</code>, <code>kwsdk-shadow-sm</code>, <code>kwsdk-shadow</code>, <code>kwsdk-shadow-lg</code>.</p>
+				</section>
+
+				<section id="visibility">
+					<h2>Visibility and z-index</h2>
+					<p><code>kwsdk-visible</code>, <code>kwsdk-invisible</code>. Z-index: <code>kwsdk-z-0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>10</code>, <code>50</code>, <code>100</code>, <code>1000</code>, <code>1020</code>, <code>1030</code>, <code>1040</code>, <code>1050</code>.</p>
+				</section>
+
+				<section id="interaction">
+					<h2>Interaction</h2>
+					<p><code>kwsdk-user-select-all</code>, <code>kwsdk-user-select-auto</code>, <code>kwsdk-user-select-none</code>.</p>
+					<p class="doc-inline-note">
+						<code>kwsdk-pe-none</code> and <code>kwsdk-pe-auto</code> control <strong>pointer-events</strong>, not padding. Padding end uses <code>kwsdk-pe-0</code> … <code>kwsdk-pe-5</code> (padding).
+					</p>
+				</section>
+
+				<section id="customizing">
+					<h2>Customizing in SCSS</h2>
+					<div class="doc-card">
+						<p>Before importing the partials (or in a file imported earlier), you can override:</p>
+						<pre><code>// Shared prefix (set once before both imports if you want them in sync)
+$kr-prefix: 'kwsdk-';
+
+// utilities.scss — from another file in the same folder, for example:
+// Default $kr-spacer is 0.25rem (one 4px step). Larger $kr-spacer scales all tiers.
+// $kr-spacer: 0.5rem; // optional: 8px, 16px, 24px, …
+// $kr-spacers map can be redefined if needed
+@import 'utilities.scss';
+
+// typography.scss
+// $typography-variants: ( 'text': ( ... ) );
+@import 'typography.scss';</code></pre>
+						<p><code>!default</code> is used on <code>$kr-prefix</code>, <code>$kr-spacer</code>, <code>$kr-spacers</code> (utilities), and <code>$typography-variants</code> (typography).</p>
+					</div>
+				</section>
+
+				<p class="doc-footer">Kore Web SDK · utilities &amp; typography reference</p>
+			</main>
+		</div>
+	</div>
+</body>
+</html>

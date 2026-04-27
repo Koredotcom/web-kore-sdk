@@ -56,23 +56,23 @@ interface TablePreviewPopupProps {
 
 function TablePreviewPopup({ tableHTML, title }: TablePreviewPopupProps) {
     return (
-        <div className="sa-answer-table-preview">
-            <div className="sa-answer-table-preview-header">
-                <div className="sa-answer-table-header-content">
-                    <div className="sa-answer-table-header-left">
-                        <div className="sa-answer-table-back-btn" onClick={closeTablePopup}>
+        <div className="sa-answer-table-preview kwsdk-w-100 kwsdk-h-100 kwsdk-d-flex kwsdk-flex-column kwsdk-overflow-hidden">
+            <div className="sa-answer-table-preview-header kwsdk-p-4">
+                <div className="sa-answer-table-header-content kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-between kwsdk-w-100">
+                    <div className="sa-answer-table-header-left kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2">
+                        <button className="sa-answer-table-back-btn kwsdk-btn-link kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent" onClick={closeTablePopup}>
                             <ImageCarouselSvgIcons type="back-arrow" />
-                        </div>
-                        <div className="sa-answer-table-title">{title || 'Table Preview'}</div>
+                        </button>
+                        <div className="sa-answer-table-title kwsdk-text-sm semibold kwsdk-text-truncate kwsdk-flex-grow-1 kwsdk-text-truncate kwsdk-w-100 kwsdk-m-0">{title || 'Table Preview'}</div>
                     </div>
-                    <div className="sa-answer-table-close-btn" onClick={closeTablePopup}>
+                    <button className="sa-answer-table-close-btn kwsdk-btn-link kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent" onClick={closeTablePopup}>
                         <ImageCarouselSvgIcons type="close-button" />
-                    </div>
+                    </button>
                 </div>
             </div>
-            <div className="sa-answer-table-preview-body">
+            <div className="sa-answer-table-preview-body kwsdk-flex-grow-1 kwsdk-overflow-y-auto kwsdk-p-4 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center">
                 <div
-                    className="sa-answer-table-wrapper"
+                    className="sa-answer-table-wrapper kwsdk-w-100 kwsdk-overflow-auto"
                     dangerouslySetInnerHTML={{ __html: tableHTML }}
                 />
             </div>
@@ -189,14 +189,14 @@ export function TableContentBlock({
 
             {/* Table preview bar shown below text when table has >20 rows */}
             {hasTable && isLargeTable && (
-                <div className="sa-answer-table-preview-bar">
-                    <span className="sa-answer-table-preview-label">Table Preview</span>
-                    <span className="sa-answer-table-preview-sep" />
-                    <span className="sa-answer-table-preview-meta">{rowCount} Rows - {colCount} Columns</span>
-                    <span className="sa-answer-table-preview-sep" />
-                    <button className="sa-answer-table-preview-view-btn" onClick={handleExpandTable}>
+                <div className="sa-answer-table-preview-bar kwsdk-rounded-2 kwsdk-border kwsdk-bg-white kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-w-100">
+                    <span className="sa-answer-table-preview-label kwsdk-text-xs kwsdk-text-truncate">Table Preview</span>
+                    <span className="sa-answer-table-preview-sep kwsdk-flex-shrink-0"/>
+                    <span className="sa-answer-table-preview-meta kwsdk-text-xs kwsdk-text-truncate">{rowCount} Rows - {colCount} Columns</span>
+                    <span className="sa-answer-table-preview-sep kwsdk-flex-shrink-0" />
+                    <button className="sa-answer-table-preview-view-btn kwsdk-text-xs medium kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2" onClick={handleExpandTable}>
                         <span>View Table</span>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                             <path d="M10.5 4.5L10.5 1.5M10.5 1.5H7.49999M10.5 1.5L6 6M5 1.5H3.9C3.05992 1.5 2.63988 1.5 2.31901 1.66349C2.03677 1.8073 1.8073 2.03677 1.66349 2.31901C1.5 2.63988 1.5 3.05992 1.5 3.9V8.1C1.5 8.94008 1.5 9.36012 1.66349 9.68099C1.8073 9.96323 2.03677 10.1927 2.31901 10.3365C2.63988 10.5 3.05992 10.5 3.9 10.5H8.1C8.94008 10.5 9.36012 10.5 9.68099 10.3365C9.96323 10.1927 10.1927 9.96323 10.3365 9.68099C10.5 9.36012 10.5 8.94008 10.5 8.1V7" stroke="#155EEF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>

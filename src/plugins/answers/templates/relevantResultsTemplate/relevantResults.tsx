@@ -277,8 +277,8 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
     const renderTextToggle = (cardId: string, isExpanded: boolean) => (
         isExpanded
-            ? <span className="sa-answer-see-less-link" onClick={() => handleTextToggle(cardId)}>see less</span>
-            : <span className="sa-answer-see-more-link" onClick={() => handleTextToggle(cardId)}>see more</span>
+            ? <button className="sa-answer-see-less-link kwsdk-text-xs kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-p-0" onClick={() => handleTextToggle(cardId)}>see less</button>
+            : <button className="sa-answer-see-more-link kwsdk-text-xs kwsdk-position-absolute kwsdk-bg-white kwsdk-z-1 kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-p-0" onClick={() => handleTextToggle(cardId)}>...see more</button>
     );
 
     // Shared renderer for both main card and related card text sections
@@ -308,7 +308,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
             : null;
 
         return (
-            <div className={`sa-answer-text-container ${isSingleImage ? 'sa-answer-image-with-text' : ''}`}>
+            <div className={`sa-answer-text-container kwsdk-position-relative ${isSingleImage ? 'sa-answer-image-with-text' : ''}`}>
                 {/* TableContentBlock splits text at the first markdown table so text
                     and table are always in separate DOM elements — no DOM manipulation
                     needed, so lineClamp on the text div works correctly and the table
@@ -316,7 +316,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                 <TableContentBlock
                     text={text}
                     title={name}
-                    textClassName="sa-answer-result-text"
+                    textClassName="sa-answer-result-text kwsdk-text-xs kwsdk-line-clamp-3"
                     isExpanded={isExpanded}
                     className="sa-answer-result-text-image"
                     extraChildren={inlineImgEl}
@@ -330,21 +330,17 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const renderSourceDropdown = () => {
         if (!showSourceDropdown) return null;
         return (
-            <div className="sa-answer-source-dropdown">
-                <div className="sa-answer-dropdown-menu">
-                    {getSourceOptions().map((option: any) => (
-                        <div key={option.id} className="sa-answer-dropdown-item" onClick={() => handleSourceSelect(option)}>
-                            <div className="sa-answer-dropdown-item-content">
-                                <div className="sa-answer-dropdown-item-icon">
-                                        <RenderFileIcons type={option.icon} hostInstance={props.hostInstance} />
-                                </div>
-                                <span className={`sa-answer-dropdown-item-text ${option.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
-                                    {option.label}
-                                </span>
-                            </div>
+            <div className="sa-answer-source-dropdown kwsdk-position-absolute kwsdk-top-100 kwsdk-left-0 kwsdk-z-1 kwsdk-bg-white kwsdk-rounded-2 kwsdk-border kwsdk-p-1">
+                {getSourceOptions().map((option: any) => (
+                    <button role="button" tabIndex={0} key={option.id} className="sa-answer-dropdown-item kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-p-2 kwsdk-w-100 kwsdk-text-left kwsdk-bg-white kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent" onClick={() => handleSourceSelect(option)}>
+                        <div className="sa-answer-dropdown-item-icon kwsdk-flex-shrink-0 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center">
+                            <RenderFileIcons type={option.icon} hostInstance={props.hostInstance} />
                         </div>
-                    ))}
-                </div>
+                        <span className={`sa-answer-dropdown-item-text kwsdk-text-sm medium kwsdk-text-truncate`}>
+                            {option.label}
+                        </span>
+                    </button>
+                ))}
             </div>
         );
     };
@@ -356,37 +352,37 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         const shouldShowBadge = card.text.length > 80;
 
         return (
-            <div key={card.id} className={`sa-answer-result-card ${card.isExpanded ? 'sa-answer-with-related' : ''}`}>
-                <div className="sa-answer-result-header">
-                    <div className="sa-answer-file-info">
-                        <span className="sa-answer-file-info-wrapper">
-                            <div className={`sa-answer-file-icon ${card.fileInfo.type}`}>
-                                <RenderFileIcons type={card.fileInfo.fileType || card.fileInfo.type} hostInstance={props.hostInstance} />
-                            </div>
-                            <span className="sa-answer-file-name-wrapper">
-                                <span className="sa-answer-file-name" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
-                                    {card.fileInfo.name}
-                                </span>
-                                <span className="sa-answer-link-icon-hover"><RenderFileIcons type="link-icon" /></span>
+            <div key={card.id} className={`sa-answer-result-card kwsdk-w-100 kwsdk-bg-white kwsdk-rounded-2 kwsdk-border ${card.isExpanded ? 'sa-answer-with-related' : ''}`}>
+                <div className="sa-answer-result-header kwsdk-gap-2 kwsdk-d-flex kwsdk-align-items-center kwsdk-w-100">
+                    <div className="sa-answer-file-info-wrapper kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-flex-grow-1 kwsdk-w-100 kwsdk-overflow-hidden">
+                        <div className={`sa-answer-file-icon kwsdk-flex-shrink-0 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center ${card.fileInfo.type}`}>
+                            <RenderFileIcons type={card.fileInfo.fileType || card.fileInfo.type} hostInstance={props.hostInstance} />
+                        </div>
+                        <span className="sa-answer-file-name-wrapper kwsdk-text-xs medium kwsdk-text-truncate kwsdk-overflow-hidden kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2">
+                            <span className="sa-answer-file-name kwsdk-text-truncate kwsdk-mw-100" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
+                                {card.fileInfo.name}
                             </span>
-                        </span>
-                        {card?.fileInfo?.resultCount && card.fileInfo.resultCount > 1 && (
-                            <button
-                                className="sa-answer-view-button"
-                                onClick={() => card.isExpanded
-                                    ? handleHideRelatedResults(card.id)
-                                    : handleViewRelatedResults(card.id)
-                                }
-                            >
-                                {card.isExpanded ? 'Show less' : 'Show all results'}
-                                {!card.isExpanded && (
-                                    <span className="sa-answer-result-count">({card.fileInfo.resultCount})</span>
-                                )}
+                            <button className="sa-answer-link-icon-hover kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-flex-shrink-0 kwsdk-p-0 kwsdk-d-flex">
+                                <RenderFileIcons type="link-icon" />
                             </button>
-                        )}
+                        </span>
                     </div>
+                    {card?.fileInfo?.resultCount && card.fileInfo.resultCount > 1 && (
+                        <button
+                            className="sa-answer-view-button kwsdk-flex-shrink-0 kwsdk-text-xs medium kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-p-0"
+                            onClick={() => card.isExpanded
+                                ? handleHideRelatedResults(card.id)
+                                : handleViewRelatedResults(card.id)
+                            }
+                        >
+                            {card.isExpanded ? 'Show less' : 'Show all results'}
+                            {!card.isExpanded && (
+                                <span className="sa-answer-result-count">({card.fileInfo.resultCount})</span>
+                            )}
+                        </button>
+                    )}
                 </div>
-                <div className="sa-answer-result-content">
+                <div className="sa-answer-result-content kwsdk-w-100 kwsdk-bg-white kwsdk-rounded-2 kwsdk-position-relative">
                     <div className="sa-answer-result-text-section">
                         {renderTextContent(card.id, card.text, card.fileInfo.imageUrls, card.fileInfo.name, isTextExpanded, shouldShowBadge)}
                     </div>
@@ -425,7 +421,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
 
     if (showFilters) {
         return (
-            <div className="sa-answer-filters-container-wrapper">
+            <div className="sa-answer-filters-container-wrapper kwsdk-h-100">
                 <FiltersComponent
                     onClose={handleCloseFilters}
                     onApplyFilters={handleApplyFilters}
@@ -439,44 +435,40 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const filteredResults = getFilteredResultsData();
 
     return (
-        <div className="sa-answer-search-results-slider">
+        <div className="sa-answer-search-results-slider kwsdk-w-100 kwsdk-d-flex kwsdk-flex-column kwsdk-overflow-hidden kwsdk-h-100">
             {/* Header */}
-            <div className="sa-answer-slider-header">
-                <div className="sa-answer-header-content">
-                    <h3 className="sa-answer-header-title">Relevant Results ({getTotalResultCount()})</h3>
-                </div>
-                <button className="sa-answer-close-button" onClick={handleClose}>
+            <div className="sa-answer-slider-header kwsdk-w-100 kwsdk-d-flex kwsdk-justify-content-between kwsdk-align-items-center kwsdk-p-4">
+                <h3 className="sa-answer-header-title kwsdk-text-sm semibold kwsdk-text-truncate">Relevant Results ({getTotalResultCount()})</h3>
+                <button className="sa-answer-close-button kwsdk-btn-link" onClick={handleClose}>
                     <ImageCarouselSvgIcons type="close-button" />
                 </button>
             </div>
 
             {/* Search and Filters */}
-            <div className="sa-answer-search-filters-section">
-                <div className="sa-answer-search-input-container">
-                    <div className="sa-answer-search-input">
-                        <ImageCarouselSvgIcons type="search-icon" className="sa-answer-search-icon" />
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            className="sa-answer-search-field"
-                            onChange={handleSearch}
-                        />
-                    </div>
+            <div className="sa-answer-search-filters-section kwsdk-p-4 kwsdk-pt-0 kwsdk-d-flex kwsdk-flex-column kwsdk-gap-2">
+                <div className="sa-answer-search-input kwsdk-position-relative kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2">
+                    <ImageCarouselSvgIcons type="search-icon" className="sa-answer-search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        className="sa-answer-search-field kwsdk-w-100 kwsdk-text-sm medium kwsdk-border kwsdk-rounded-1"
+                        onChange={handleSearch}
+                    />
                 </div>
-                <div className="sa-answer-filters-container">
-                    <div className="sa-answer-filter-badge-wrapper" ref={sourceDropdownRef}>
-                        <button className="sa-answer-filter-badge sa-answer-primary" onClick={handleSourceFilter}>
-                            <span className={`sa-answer-selected-source-text ${selectedSource.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
+                <div className="sa-answer-filters-container kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-justify-content-between" style={{ display: 'none' }}>
+                    <div className="sa-answer-filter-badge-wrapper kwsdk-position-relative" ref={sourceDropdownRef}>
+                        <button className="sa-answer-filter-badge sa-answer-primary kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1 kwsdk-rounded-pill kwsdk-border kwsdk-bg-white" onClick={handleSourceFilter}>
+                            <span className={`sa-answer-selected-source-text kwsdk-text-sm medium kwsdk-text-truncate`}>
                                 {selectedSource.label}
                             </span>
-                            <ImageCarouselSvgIcons type="chevron-down" />
+                            <ImageCarouselSvgIcons type="chevron-down" className="kwsdk-flex-shrink-0" />
                         </button>
                         {renderSourceDropdown()}
                     </div>
-                    <div className="sa-answer-filter-badge-wrapper">
-                        <button className="sa-answer-filter-badge sa-answer-secondary" onClick={handleMoreFilters}>
-                            <div className="sa-answer-filter-icon-wrapper">
-                                <ImageCarouselSvgIcons type="filter-icon" />
+                    <div className="sa-answer-filter-badge-wrapper kwsdk-position-relative">
+                        <button className="sa-answer-filter-badge sa-answer-secondary kwsdk-text-sm medium kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1 kwsdk-rounded-pill kwsdk-border kwsdk-bg-white" onClick={handleMoreFilters}>
+                            <div className="sa-answer-filter-icon-wrapper kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1">
+                                <ImageCarouselSvgIcons type="filter-icon" className="kwsdk-flex-shrink-0" />
                                 {getActiveFiltersCount() > 0 && (
                                     <div className="sa-answer-filter-indicator">
                                         <svg width="6" height="6" viewBox="0 0 6 6" fill="none" className="sa-answer-dot-icon">
@@ -492,24 +484,22 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
             </div>
 
             {/* Results List */}
-            <div className="sa-answer-results-container">
+            <div className="sa-answer-results-container kwsdk-p-4 kwsdk-pt-0 kwsdk-flex-grow-1 kwsdk-overflow-y-auto kwsdk-d-flex kwsdk-flex-column kwsdk-gap-2">
                 {isLoading ? (
-                    <div className="sa-answer-results-loading-container">
-                        <div className="sa-answer-results-spinner">
-                            <div className="sa-answer-spinner-ring" />
-                        </div>
-                        <p className="sa-answer-results-loading-text">Loading results…</p>
+                    <div className="sa-answer-results-loading-container kwsdk-d-flex kwsdk-flex-column kwsdk-align-items-center kwsdk-justify-content-center kwsdk-gap-2 kwsdk-h-100 kwsdk-w-100">
+                        <div className="sa-answer-spinner-ring"/>
+                        <p className="sa-answer-results-loading-text kwsdk-text-sm medium kwsdk-text-capitalize">Loading results…</p>
                     </div>
                 ) : filteredResults.length === 0 ? (
-                    <div className="sa-answer-no-results-container">
-                        <div className="sa-answer-no-results-icon">
+                    <div className="sa-answer-no-results-container kwsdk-d-flex kwsdk-flex-column kwsdk-align-items-center kwsdk-justify-content-center kwsdk-gap-2 kwsdk-h-100 kwsdk-w-100">
+                        <div className="sa-answer-no-results-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-rounded-2 kwsdk-border">
                             <ImageCarouselSvgIcons type="search-lg" className="sa-answer-search-icon" />
                         </div>
-                        <h3 className="sa-answer-no-results-title">No results found</h3>
-                        <p className="sa-answer-no-results-subtitle">Your search did not match any results. Please clear filters and try again</p>
-                        <button className="sa-answer-clear-filters-button" onClick={handleClearFilters}>
+                        <h3 className="sa-answer-no-results-title kwsdk-text-sm semibold kwsdk-text-center">No results found</h3>
+                        <p className="sa-answer-no-results-subtitle kwsdk-text-xs kwsdk-text-center">Your search did not match any results. Please clear filters and try again</p>
+                        <button className="kr-button-secondary kwsdk-w-auto" onClick={handleClearFilters}>
                             Clear Filters
-                        </button>
+                        </button>  
                     </div>
                 ) : (
                     filteredResults.map(renderResultCard)
