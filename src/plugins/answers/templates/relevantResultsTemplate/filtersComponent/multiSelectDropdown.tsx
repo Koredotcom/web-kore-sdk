@@ -94,7 +94,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
         <div className="sa-answer-multi-select-dropdown-wrapper" ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
             {/* Main dropdown button */}
             <div 
-                className={`sa-answer-multi-select-dropdown ${isOpen ? 'sa-answer-open' : ''}`}
+                className={`sa-answer-multi-select-dropdown kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border kwsdk-bg-white ${isOpen ? 'sa-answer-open' : ''}`}
                 onClick={handleToggle}
             >
                 <div className="sa-answer-dropdown-content">
@@ -185,10 +185,10 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
 
             {/* Dropdown menu */}
             {isOpen && (
-                <div className="sa-answer-dropdown-menu">
+                <div className="sa-answer-dropdown-menu kwsdk-rounded kwsdk-border kwsdk-bg-white kwsdk-w-100">
                     {/* Search input */}
                     <div className="sa-answer-search-section">
-                        <div className="sa-answer-search-input">
+                        <div className="sa-answer-search-input kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border">
                             <div className="sa-answer-search-icon">
                                 <svg 
                                     width="16" 

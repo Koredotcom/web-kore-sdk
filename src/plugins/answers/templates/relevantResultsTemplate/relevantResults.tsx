@@ -258,6 +258,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     };
 
     const handleClearFilters = () => {
+        setSearchQuery('');
         setIsLoading(true);
         setActiveFilters({});
         setSelectedSource({ id: 'all', label: 'All Sources', icon: 'document' });
@@ -392,7 +393,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                                 const relatedId = `${card.id}-${relatedCard.id}`;
                                 return (
                                     <Fragment key={relatedCard.id}>
-                                        <div className="sa-answer-divider"></div>
+                                        <div className="sa-answer-divider kwsdk-mb-1 kwsdk-mt-1"></div>
                                         <div className="sa-answer-related-item">
                                             {renderTextContent(
                                                 relatedId,

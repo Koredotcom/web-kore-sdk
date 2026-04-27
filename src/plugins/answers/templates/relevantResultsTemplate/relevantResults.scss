@@ -90,6 +90,10 @@
                 }
             }
         }
+        .sa-answer-has-table + .sa-answer-see-more-link {
+            inset-block-end: 37px;
+        }
+   
         .sa-answer-see-more-link , .sa-answer-see-less-link{
             inset-inline-end: 0px;
             inset-block-end: 0px;
@@ -97,8 +101,9 @@
             cursor: pointer;
         }
         .sa-answer-related-results{
-            margin: 4px 0;
-            border: 1px solid var(--sdk-gloabl-border-color);
+            .sa-answer-divider{
+                border: 1px solid var(--sdk-gloabl-border-color);
+            }
         }
     }
 }

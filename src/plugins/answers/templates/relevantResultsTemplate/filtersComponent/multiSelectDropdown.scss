@@ -7,9 +7,6 @@
     .sa-answer-multi-select-dropdown {
         @include flexRow($gap: 8px);
         padding: 8px 12px;
-        border: 1px solid #EAECF0;
-        border-radius: 8px;
-        background: #FFFFFF;
         cursor: pointer;
         @include easeTransition;
         width: 100%;
@@ -118,9 +115,6 @@
         left: 0;
         right: 0;
         margin-top: 4px;
-        background: #FFFFFF;
-        border: 1px solid #EAECF0;
-        border-radius: 8px;
         box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.08), 0px 4px 8px -2px rgba(16, 24, 40, 0.08);
         z-index: 1000;
         padding: 12px;
@@ -132,9 +126,6 @@
             .sa-answer-search-input {
                 @include flexRow($gap: 8px);
                 padding: 10px 14px;
-                border: 1px solid #D0D5DD;
-                border-radius: 8px;
-                background: #FFFFFF;
 
                 .sa-answer-search-icon { @include iconBox(16px); }
 

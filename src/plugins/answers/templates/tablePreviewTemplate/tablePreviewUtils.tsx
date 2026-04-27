@@ -189,12 +189,12 @@ export function TableContentBlock({
 
             {/* Table preview bar shown below text when table has >20 rows */}
             {hasTable && isLargeTable && (
-                <div className="sa-answer-table-preview-bar kwsdk-rounded-2 kwsdk-border kwsdk-bg-white kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-w-100">
+                <div className="sa-answer-table-preview-bar kwsdk-mt-2 kwsdk-rounded-2 kwsdk-border kwsdk-bg-white kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-w-100">
                     <span className="sa-answer-table-preview-label kwsdk-text-xs kwsdk-text-truncate">Table Preview</span>
                     <span className="sa-answer-table-preview-sep kwsdk-flex-shrink-0"/>
                     <span className="sa-answer-table-preview-meta kwsdk-text-xs kwsdk-text-truncate">{rowCount} Rows - {colCount} Columns</span>
                     <span className="sa-answer-table-preview-sep kwsdk-flex-shrink-0" />
-                    <button className="sa-answer-table-preview-view-btn kwsdk-text-xs medium kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2" onClick={handleExpandTable}>
+                    <button className="sa-answer-table-preview-view-btn kwsdk-text-xxs medium kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2" onClick={handleExpandTable}>
                         <span>View Table</span>
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                             <path d="M10.5 4.5L10.5 1.5M10.5 1.5H7.49999M10.5 1.5L6 6M5 1.5H3.9C3.05992 1.5 2.63988 1.5 2.31901 1.66349C2.03677 1.8073 1.8073 2.03677 1.66349 2.31901C1.5 2.63988 1.5 3.05992 1.5 3.9V8.1C1.5 8.94008 1.5 9.36012 1.66349 9.68099C1.8073 9.96323 2.03677 10.1927 2.31901 10.3365C2.63988 10.5 3.05992 10.5 3.9 10.5H8.1C8.94008 10.5 9.36012 10.5 9.68099 10.3365C9.96323 10.1927 10.1927 9.96323 10.3365 9.68099C10.5 9.36012 10.5 8.94008 10.5 8.1V7" stroke="#155EEF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
