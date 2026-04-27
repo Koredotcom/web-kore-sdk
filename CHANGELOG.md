@@ -1,3 +1,10 @@
+### 11.24.0
+* Release Apr 25, 2026
+* Bug fixes
+  * reduced bundle size by optimizing CSAT images in feedback template
+  * restricted user screen share on agent cancelling the request in agent desktop plugin
+  * prototype pollution security vulnerability fix in agent desktop plugin
+
 ### 11.23.1
 * Release Apr 11, 2026
 * Features
