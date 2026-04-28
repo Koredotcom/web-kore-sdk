@@ -1,3 +1,23 @@
+### 11.24.0
+* Release Apr 25, 2026
+* Bug fixes
+  * reduced bundle size by optimizing CSAT images in feedback template
+  * restricted user screen share on agent cancelling the request in agent desktop plugin
+  * prototype pollution security vulnerability fix in agent desktop plugin
+
+### 11.23.1
+* Release Apr 11, 2026
+* Features
+  * added error message info support for file uploads
+  * added video call recording support in agent desktop plugin
+
+### 11.23.0
+* Release Mar 28, 2026
+* Features
+  * analytics dashboard support added for proactive web campaigns plugin
+* Documentation
+  * added SharePoint integration instructions
+  
 ### 11.22.1
 * Release Mar 14, 2026
 * Features

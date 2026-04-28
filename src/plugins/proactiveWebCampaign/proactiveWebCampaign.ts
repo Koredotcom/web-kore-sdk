@@ -2501,7 +2501,7 @@ class ProactiveWebCampaignPlugin {
         }
 
         const activeCampaigns = this.campInfo.filter((campaign: any) => {
-            // Check engagement hours
+            // Enagement Hours are validated at services after the rules are met
             /* if (!this.checkEngagementHours(campaign.engagementStrategy)) {
                 // returns false, if outside engagement hours`);
                 return false;
@@ -3885,13 +3885,13 @@ class ProactiveWebCampaignPlugin {
         const payload: any = {
             'event_name': 'pwe_event',
             'resourceid': '/pwe_message',
-            'user': this.hostInstance.config.botOptions.userIdentity,
+            'user': this.hostInstance?.config?.botOptions?.userIdentity,
             'type': 'pwe_message',
-            'userId': this.authInfo.userInfo.userId,
-            'isLoggedInUser': this.hostInstance.config.pwcConfig.knownUser || false,
+            'userId': this.authInfo?.userInfo?.userId,
+            'isLoggedInUser': this.hostInstance?.config?.pwcConfig?.knownUser || false,
             'botInfo': {
-                'chatBot': this.hostInstance._botInfo.name,
-                'taskBotId': this.hostInstance._botInfo._id
+                'chatBot': this.hostInstance?._botInfo?.name,
+                'taskBotId': this.hostInstance?._botInfo?._id
             },
             'campInfo': {
                 'campId': campId,

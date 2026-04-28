@@ -558,19 +558,19 @@ To send some additional information along with user message, custom data will be
 ###### Code Sample for sending customData
 Setting custom data which will be added to all the further messages sent
 ```js
-botOptions.botInfo.customData = {
+chatWindowInstance.config.botOptions.botInfo.customData = {
     someinfo: "tobot"
 }
 ```
 To update previously added customData, simply update customData key with new object to futher messages
 ```js
-botOptions.botInfo.customData = {
+chatWindowInstance.config.botOptions.botInfo.customData = {
     newInfo: "tobot2"
 }
 ```
 To remove previously added customData to futher messages
 ```js
-delete botOptions.botInfo.customData;
+delete chatWindowInstance.config.botOptions.botInfo.customData;
 ```
 
 ### How to pass meta tags to bot from Web SDK ?
@@ -580,15 +580,15 @@ To send meta tags information along with user message by setting the metaTags ob
 ###### Code Sample for sending meta tags
 Setting meta tags which will be added to all the further messages sent
 ```js
-botOptions.botInfo.metaTags = ["premium_user"];
+chatWindowInstance.config.botOptions.botInfo.metaTags = ["premium_user"];
 ```
 To update previously added metat tags, simply update metaTags key with new array to futher messages
 ```js
-botOptions.botInfo.metaTags = ["regular_user"];
+chatWindowInstance.config.botOptions.botInfo.metaTags = ["regular_user"];
 ```
 To remove previously added customData to futher messages
 ```js
-delete botOptions.botInfo.metaTags;
+delete chatWindowInstance.config.botOptions.botInfo.metaTags;
 ```
 
 ## ConnectionMode usage
