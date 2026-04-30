@@ -10,6 +10,9 @@
     border-top-color: var(--sdk-global-theme-color);
     animation: results-spin 0.7s linear infinite;
 }
+.sa-answer-results-loading-container{
+    min-height: 200px;
+}
 
 .sa-answer-no-results-container{
     .sa-answer-no-results-icon{

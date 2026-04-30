@@ -135,6 +135,10 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const [isLoading, setIsLoading] = useState(true);
 
     const sourceDropdownRef = useRef<HTMLDivElement>(null);
+    const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const isSearchLoadingRef = useRef(false);
+    const pendingFilterResultsRef = useRef<ResultCard[] | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -158,7 +162,25 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         }
     }, [selectedSource, msgData]);
 
-    const getTotalResultCount = (): number => {
+    // Clear loading after the debounced searchQuery state value is applied
+    useEffect(() => {
+        if (!isSearchLoadingRef.current) return;
+        isSearchLoadingRef.current = false;
+        setIsLoading(false);
+    }, [searchQuery]);
+
+    const getTotalResultCount = (filtered: ResultCard[]): number => {
+        const hasSearchQuery = searchQuery.trim().length > 0;
+        const hasActiveFilters = Object.values(activeFilters).some(v =>
+            Array.isArray(v) ? v.length > 0 : v && v !== '' && v !== 'all'
+        );
+
+        if (hasSearchQuery || hasActiveFilters) {
+            return filtered.reduce(
+                (total, card) => total + 1 + (card.relatedResults?.length || 0), 0
+            );
+        }
+
         if (!msgData?.template?.results) return 0;
         if (selectedSource.id === 'all') {
             return Object.values(msgData.template.results).reduce(
@@ -199,7 +221,13 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         }
     };
 
-    const handleSearch = (e: any) => setSearchQuery(e.target.value);
+    const handleSearch = (e: any) => {
+        const value = e.target.value;
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        isSearchLoadingRef.current = true;
+        setIsLoading(true);
+        searchDebounceRef.current = setTimeout(() => setSearchQuery(value), 300);
+    };
 
     const getFilteredResultsData = (): ResultCard[] => {
         const query = searchQuery.trim().toLowerCase();
@@ -221,7 +249,21 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     };
 
     const handleMoreFilters = () => setShowFilters(true);
-    const handleCloseFilters = () => setShowFilters(false);
+    const handleCloseFilters = () => {
+        if (pendingFilterResultsRef.current !== null) {
+            const results = pendingFilterResultsRef.current;
+            pendingFilterResultsRef.current = null;
+            // Show spinner in main view first, then apply results
+            setIsLoading(true);
+            setShowFilters(false);
+            setTimeout(() => {
+                setResultsData(results);
+                setIsLoading(false);
+            }, 0);
+        } else {
+            setShowFilters(false);
+        }
+    };
 
     const filterResultsByFacets = (filters: FilterState): ResultCard[] => {
         if (!msgData?.template?.chunk_result) return [];
@@ -249,15 +291,15 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const handleApplyFilters = (filters: FilterState) => {
         setActiveFilters(filters);
         if (msgData?.template) {
-            setIsLoading(true);
-            setTimeout(() => {
-                setResultsData(filterResultsByFacets(filters));
-                setIsLoading(false);
-            }, 0);
+            pendingFilterResultsRef.current = filterResultsByFacets(filters);
         }
     };
 
     const handleClearFilters = () => {
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        isSearchLoadingRef.current = false;
+        pendingFilterResultsRef.current = null;
+        if (searchInputRef.current) searchInputRef.current.value = '';
         setSearchQuery('');
         setIsLoading(true);
         setActiveFilters({});
@@ -439,7 +481,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         <div className="sa-answer-search-results-slider kwsdk-w-100 kwsdk-d-flex kwsdk-flex-column kwsdk-overflow-hidden kwsdk-h-100">
             {/* Header */}
             <div className="sa-answer-slider-header kwsdk-w-100 kwsdk-d-flex kwsdk-justify-content-between kwsdk-align-items-center kwsdk-p-4">
-                <h3 className="sa-answer-header-title kwsdk-text-sm semibold kwsdk-text-truncate">Relevant Results ({getTotalResultCount()})</h3>
+                <h3 className="sa-answer-header-title kwsdk-text-sm semibold kwsdk-text-truncate">Relevant Results ({getTotalResultCount(filteredResults)})</h3>
                 <button className="sa-answer-close-button kwsdk-btn-link" onClick={handleClose}>
                     <ImageCarouselSvgIcons type="close-button" />
                 </button>
@@ -450,10 +492,11 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                 <div className="sa-answer-search-input kwsdk-position-relative kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2">
                     <ImageCarouselSvgIcons type="search-icon" className="sa-answer-search-icon" />
                     <input
+                        ref={searchInputRef}
                         type="text"
                         placeholder="Search"
                         className="sa-answer-search-field kwsdk-w-100 kwsdk-text-sm medium kwsdk-border kwsdk-rounded-1"
-                        onChange={handleSearch}
+                        onInput={handleSearch}
                     />
                 </div>
                 <div className="sa-answer-filters-container kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-justify-content-between" style={{ display: 'none' }}>
