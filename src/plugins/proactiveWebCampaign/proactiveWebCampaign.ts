@@ -140,8 +140,11 @@ class ProactiveWebCampaignPlugin {
                 let url = event.data.url;
                 let socketUrl = url.replace('&isReconnect=true', '');
                 socketUrl = socketUrl + "&pwe=" + me.isPWEChatTriggered;
-                if (me.isPWEChatTriggered === 'quickchat' && me.pwcFlowId) {
-                    socketUrl = socketUrl + "&pwcflowId=" + encodeURIComponent(me.pwcFlowId);
+                if (me.isPWEChatTriggered === 'quickchat') {
+                    if (me.pwcFlowId) {
+                        socketUrl = socketUrl + "&pwcflowId=" + encodeURIComponent(me.pwcFlowId);
+                    }
+                    socketUrl = socketUrl + "&isSkipOnConnect=true";
                 }
                 event.data.url = socketUrl;
                 me.isPWEChatTriggered = '';
@@ -1833,22 +1836,12 @@ class ProactiveWebCampaignPlugin {
         const me: any = this;
         const data = responseData.response;
         
-        // QuickChat Template - Handle first (special case that auto-opens chat)
-        // Note: Backend sends "quickchat" (lowercase)
         if (data.type == 'pwe_message' && data.body.campInfo?.webCampaignType && 
             data.body.campInfo?.webCampaignType == 'quickchat' && 
             this.enablePWC) {
             // QuickChat directly opens the chat window and triggers experience flow
             me.hostInstance.generateMessageDOM(data);
-            // We don't append to DOM as quickChat directly opens chat window
-            // The template component handles everything internally
-            
-            // Note: We don't persist quickChat templates as they immediately open the chat
-            // and there's no intermediate UI to restore
-            
-            // Start cooldown timer for this campaign trigger
             this.startCooldown();
-            // Reset the flag to allow the next campaign template to be rendered
             this.isPendingSendAPIEvent = false;
         }
         // Banner, Post, Button Templates
