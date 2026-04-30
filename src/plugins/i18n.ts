@@ -44,6 +44,7 @@ class Korei18nPlugin {
                 sent: "مرسلة",
                 you: "أنت",
                 uploaded: "تم الرفع",
+                uploadFailed: "فشل التحميل",
                 download: "تحميل"
             },
             ja: {
@@ -86,6 +87,7 @@ class Korei18nPlugin {
                 sent: "送信",
                 you: "あなた",
                 uploaded: "アップロード",
+                uploadFailed: "アップロード失敗",
                 download: "ダウンロード"
             },
             ko: {
@@ -128,6 +130,7 @@ class Korei18nPlugin {
                 sent: "전송",
                 you: "당신",
                 uploaded: "업로드",
+                uploadFailed: "업로드 실패",
                 download: "다운로드"
             },
             zh: {
@@ -170,6 +173,7 @@ class Korei18nPlugin {
                 sent: "已发送",
                 you: "你",
                 uploaded: "已上传",
+                uploadFailed: "上传失败",
                 download: "下载"
             },
             de: {
@@ -212,6 +216,7 @@ class Korei18nPlugin {
                 sent: "Gesendet",
                 you: "Sie",
                 uploaded: "Hochgeladen",
+                uploadFailed: "Hochladen fehlgeschlagen",
                 download: "Herunterladen"
             }
         }
