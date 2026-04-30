@@ -50,20 +50,19 @@ export function QuickChat(props: any) {
                     messageSent = true;
 
                     try {
+
+                        hostInstance.config.botOptions.botInfo.customData =
+                            {
+                                callFlowId: experienceFlowId,
+                                state: "published"
+                            };
                         hostInstance.bot.sendMessage({
                             type: 'event',
                             eventType: 'quickChatTrigger',
                             flowId: experienceFlowId,
-                            campInstanceId: msgData.body.campInfo.campInstId,
-                            botInfo: {
-                                customData: [
-                                    {
-                                        callFlowId: experienceFlowId,
-                                        state: "published"
-                                    }
-                                ]
-                            }
+                            campInstanceId: msgData.body.campInfo.campInstId
                         });
+                        delete hostInstance.config.botOptions.botInfo.customData;
                     } catch (error) {
                         console.error('PWC QuickChat: Error triggering experience flow', error);
                     }
