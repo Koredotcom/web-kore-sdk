@@ -1,8 +1,6 @@
 import { h, Fragment } from 'preact';
 import { useEffect } from 'preact/hooks';
 import BaseChatTemplate from '../../../../templatemanager/templates/baseChatTemplate';
-import './pwcQuickChatTemplate.scss';
-
 export function QuickChat(props: any) {
     const msgData = props.msgData;
     const hostInstance = props.hostInstance;
