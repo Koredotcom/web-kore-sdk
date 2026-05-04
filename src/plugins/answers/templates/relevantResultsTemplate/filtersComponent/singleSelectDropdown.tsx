@@ -70,42 +70,30 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
     const selectedOption = options.find(option => option.value === selectedValue);
 
     return (
-        <div className="sa-answer-single-select-dropdown-wrapper" onClick={(e) => e.stopPropagation()} ref={dropdownRef}>
+        <div className="sa-answer-single-select-dropdown-wrapper kwsdk-w-100 kwsdk-position-relative" onClick={(e) => e.stopPropagation()} ref={dropdownRef}>
             {/* Main dropdown button */}
-            <div 
-                className={`sa-answer-single-select-dropdown kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border kwsdk-bg-white ${isOpen ? 'sa-answer-open' : ''}`}
+            <button role={'button'} className={`sa-answer-single-select-dropdown kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border kwsdk-bg-white ${isOpen ? 'sa-answer-open' : ''}`}
                 onClick={handleToggle}
             >
-                <div className="sa-answer-dropdown-content">
-                    <span className="sa-answer-dropdown-text">
+                <div className="sa-answer-dropdown-content kwsdk-flex-grow-1 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-justify-content-between kwsdk-overflow-hidden">
+                    <span className="kwsdk-text-sm kwsdk-text-truncate kwsdk-w-100">
                          {selectedOption?.label || placeholder}
                     </span>
-                    <div className="sa-answer-chevron-icon">
-                        <svg 
-                            width="16" 
-                            height="16" 
-                            viewBox="0 0 16 16" 
-                            fill="none"
-                        >
-                            <path 
-                                d="M4 6L8 10L12 6" 
-                                stroke="#98A2B3" 
-                                strokeWidth="1.4" 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                            />
+                    <div className="sa-answer-chevron-icon kwsdk-flex-shrink-0 kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center">
+                        <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
+                            <path d="M1 1L7 7L13 1" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                 </div>
-            </div>
+            </button>
 
             {/* Dropdown menu */}
             {isOpen && (
-                <div className="sa-answer-dropdown-menu kwsdk-rounded kwsdk-border kwsdk-bg-white kwsdk-w-100">
+                <div className="sa-answer-dropdown-menu kwsdk-rounded kwsdk-border kwsdk-bg-white kwsdk-w-100 kwsdk-position-absolute kwsdk-top-100 kwsdk-left-0 kwsdk-right-0 kwsdk-mt-2 kwsdk-p-4 kwsdk-z-1000">
                     {/* Search input */}
-                    <div className="sa-answer-search-section">
-                        <div className="sa-answer-search-input kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border">
-                            <div className="sa-answer-search-icon">
+                    <div className="sa-answer-search-section kwsdk-mb-2">
+                        <div className="sa-answer-search-input kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-rounded kwsdk-border">
+                            <div className="sa-answer-search-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0">
                                 <svg 
                                     width="16" 
                                     height="16" 
@@ -126,26 +114,24 @@ export function SingleSelectDropdown(props: SingleSelectDropdownProps): any {
                                 placeholder={searchPlaceholder}
                                 value={searchTerm}
                                 onInput={handleSearchChange}
-                                className="sa-answer-search-field"
+                                className="sa-answer-search-field kwsdk-flex-grow-1 kwsdk-border-0 kwsdk-bg-transparent kwsdk-text-sm"
                             />
                         </div>
                     </div>
 
                     {/* Options list */}
-                    <div className="sa-answer-options-list">
+                    <div className="sa-answer-options-list kwsdk-overflow-y-auto">
                         {filteredOptions.map(option => (
                             <div 
                                 key={option.id}
-                                className={`sa-answer-option-item ${selectedValue === option.value ? 'sa-answer-selected' : ''}`}
+                                className={`sa-answer-option-item kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-justify-content-between kwsdk-py-2 kwsdk-px-3 kwsdk-rounded-1 ${selectedValue === option.value ? 'sa-answer-selected' : ''}`}
                                 onClick={() => handleOptionSelect(option.value)}
                             >
-                                <div className="sa-answer-option-content">
-                                    <span className={`sa-answer-option-label ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
-                                        {option.label}
-                                    </span>
+                                <div className={`kwsdk-flex-grow-1 sa-answer-option-label kwsdk-text-sm kwsdk-text-truncate kwsdk-fw-normal ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
+                                    {option.label}
                                 </div>
                                 {selectedValue === option.value && (
-                                    <div className="sa-answer-check-icon">
+                                    <div className="sa-answer-check-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0">
                                         <svg 
                                             width="20" 
                                             height="20" 

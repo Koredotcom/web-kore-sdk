@@ -1,36 +1,18 @@
-@import '../mixins';
-
 .sa-answer-multi-select-dropdown-wrapper {
-    position: relative;
-    width: 100%;
-
     .sa-answer-multi-select-dropdown {
-        @include flexRow($gap: 8px);
-        padding: 8px 12px;
         cursor: pointer;
-        @include easeTransition;
-        width: 100%;
+        transition: all 0.2s ease;
 
-        &:hover { border-color: #D0D5DD; }
-        &.sa-answer-open  { border-color: #84ADFF; }
+        &:hover { border-color: var(--sdk-gloabl-border-color)  ; }
+        &.sa-answer-open  { border-color: var(--sdk-global-theme-color); }
 
-        .sa-answer-dropdown-content {
-            flex: 1;
-            @include flexRow($gap: 8px, $justify: space-between);
-
-            .sa-answer-dropdown-text {
-                @include dynamicText(400, 14px, 18px, #101828);
-                @include textEllipsis;
-                flex: 1;
-
-                &.sa-answer-truncated { max-width: 200px; }
-            }
-        }
+        .sa-answer-dropdown-content .sa-answer-dropdown-text.sa-answer-truncated { max-width: 200px; }
 
         .sa-answer-chevron-icon {
-            @include iconBox(16px);
+            width: 16px;
+            height: 16px;
 
-            svg { @include easeTransition(transform); }
+            svg { transition: transform 0.2s ease; }
         }
 
         &.sa-answer-open .sa-answer-chevron-icon svg { transform: rotate(180deg); }
@@ -39,70 +21,49 @@
     // ─── Selected Tags ─────────────────────────────────────────────────────────
 
     .sa-answer-selected-tags-container {
-        margin-top: 4px;
-
         .sa-answer-tags-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 4px;
-
             .sa-answer-selected-tag {
-                @include flexRow($gap: 4px);
-                padding: 2px 8px;
-                background: #FFFFFF;
-                border: 1px solid #D0D5DD;
-                border-radius: 4px;
                 max-width: 200px;
 
                 .sa-answer-tag-text {
-                    @include dynamicText(400, 12px, 16px, #344054);
-                    @include textEllipsis;
-
+                    color: var(--theme-panel-wigdet-primary-text-color);
                     &.sa-answer-truncated { max-width: 150px; }
                 }
 
                 .sa-answer-tag-remove-btn {
-                    @include flexCenter;
                     width: 12px;
                     height: 12px;
-                    @include btnReset;
                     padding: 2px;
                     border-radius: 2px;
-                    @include easeTransition(background-color);
-
-                    &:hover { background-color: #F2F4F7; }
-
+                    transition: background-color 0.2s ease;
+                    cursor: pointer;
+                    &:hover { background-color: var(--sdk-gloabl-bg-secondary); }
                     svg { width: 12px; height: 12px; }
                 }
             }
         }
 
         .sa-answer-tags-actions {
-            @include flexRow($gap: 4px, $justify: space-between);
-
             .sa-answer-show-hide-btn {
-                @include flexRow($gap: 4px);
-                padding: 4px;
-                @include btnReset;
-                @include interText(400, 12px, 1.33, #155EEF);
-                @include easeTransition(color);
+                color: var(--sdk-global-theme-color);
+                transition: color 0.2s ease;
+                cursor: pointer;
 
-                &:hover { color: #0F4CD1; }
+                &:hover { color: var(--sdk-global-theme-color); }
 
                 svg {
-                    @include easeTransition(transform);
+                    transition: transform 0.2s ease;
 
                     &.sa-answer-rotated { transform: rotate(180deg); }
                 }
             }
 
             .sa-answer-clear-all-btn {
-                @include btnReset;
-                @include interText(400, 12px, 1.33, #667085);
-                @include easeTransition(color);
+                color: var(--theme-panel-wigdet-secondary-text-color);
+                transition: color 0.2s ease;
+                cursor: pointer;
 
-                &:hover { color: #344054; }
+                &:hover { color: var(--theme-panel-wigdet-primary-text-color); }
             }
         }
     }
@@ -110,119 +71,92 @@
     // ─── Dropdown Menu ─────────────────────────────────────────────────────────
 
     .sa-answer-dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin-top: 4px;
         box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.08), 0px 4px 8px -2px rgba(16, 24, 40, 0.08);
-        z-index: 1000;
-        padding: 12px;
-        width: 100%;
 
         .sa-answer-search-section {
-            margin-bottom: 8px;
-
             .sa-answer-search-input {
-                @include flexRow($gap: 8px);
                 padding: 10px 14px;
 
-                .sa-answer-search-icon { @include iconBox(16px); }
+                .sa-answer-search-icon { width: 16px; height: 16px; }
 
                 .sa-answer-search-field {
-                    flex: 1;
-                    border: none;
                     outline: none;
-                    background: transparent;
-                    @include interText(400, 14px, 1.43, #101828);
 
-                    &::placeholder { color: #98A2B3; }
+                    &::placeholder { color: var(--theme-panel-wigdet-secondary-text-color); }
                 }
             }
         }
 
         .sa-answer-action-buttons {
-            @include flexRow($justify: space-between);
-            padding: 6px;
-            margin-bottom: 4px;
-
             .sa-answer-select-all-btn,
             .sa-answer-clear-btn {
-                @include btnReset;
-                @include interText(500, 12px, 1.33, #155EEF);
-                padding: 0;
+                color: var(--sdk-global-theme-color);
+                font-weight: 500;
+                cursor: pointer;
 
                 &:hover { text-decoration: underline; }
             }
 
-            .sa-answer-clear-btn { color: #98A2B3; }
+            .sa-answer-clear-btn { color: var(--theme-panel-wigdet-secondary-text-color); }
         }
 
         .sa-answer-options-list {
             max-height: 200px;
-            overflow-y: auto;
 
             .sa-answer-option-item {
-                @include flexRow($gap: 8px);
-                padding: 8px 12px;
-                border-radius: 4px;
                 cursor: pointer;
-                @include easeTransition(background-color);
+                transition: background-color 0.2s ease;
 
-                &:hover { background-color: #F9FAFB; }
+                &:hover { background-color: var(--sdk-gloabl-bg-secondary); }
 
                 &.sa-answer-selected {
-                    background-color: #F9FAFB;
+                    background-color: var(--sdk-gloabl-bg-secondary);
 
                     .sa-answer-checkbox {
-                        background-color: #155EEF;
-                        border-color: #155EEF;
+                        background-color: var(--sdk-global-theme-color);
+                        border-color: var(--sdk-global-theme-color);
                     }
                 }
 
                 .sa-answer-checkbox {
-                    @include iconBox(16px);
-                    border: 1px solid #D0D5DD;
+                    width: 16px;
+                    height: 16px;
+                    border: 1px solid var(--sdk-gloabl-border-color);
                     border-radius: 4px;
-                    background-color: #FFFFFF;
+                    background-color: var(--sdk-global-white-bg);
                 }
 
                 .sa-answer-option-label {
-                    @include interText(400, 14px, 1.43, #101828);
-                    @include textEllipsis;
-                    flex: 1;
-
                     &.sa-answer-truncated { max-width: 200px; }
                 }
             }
         }
 
         .sa-answer-footer-buttons {
-            @include flexRow($gap: 8px, $justify: flex-end);
-            padding: 16px 0 0;
-            border-top: 1px solid #EAECF0;
-            margin-top: 8px;
-
             .sa-answer-cancel-btn,
             .sa-answer-apply-btn {
-                @include actionBtnBase;
-                @include interText(500, 12px, 1.33, inherit);
+                padding: 4px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                border: 1px solid;
+                transition: all 0.2s ease;
+                font-weight: 500;
             }
 
             .sa-answer-cancel-btn {
-                background: #FFFFFF;
-                border-color: #D0D5DD;
-                color: #344054;
+                background: var(--sdk-global-white-bg);
+                border-color: var(--sdk-gloabl-border-color);
+                color: var(--theme-panel-wigdet-primary-text-color);
 
-                &:hover { background: #F9FAFB; }
+                &:hover { background: var(--sdk-gloabl-bg-secondary); }
             }
 
             .sa-answer-apply-btn {
-                background: #155EEF;
-                border-color: #155EEF;
-                color: #FFFFFF;
+                background: var(--sdk-global-theme-color);
+                border-color: var(--sdk-global-theme-color);
+                color: var(--sdk-global-white);
 
-                &:hover { background: #0F4CD1; }
+                &:hover { background: var(--sdk-global-theme-color); }
             }
         }
     }

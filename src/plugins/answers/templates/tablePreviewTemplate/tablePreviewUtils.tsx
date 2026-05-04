@@ -189,7 +189,7 @@ export function TableContentBlock({
 
             {/* Table preview bar shown below text when table has >20 rows */}
             {hasTable && isLargeTable && (
-                <div className="sa-answer-table-preview-bar kwsdk-mt-2 kwsdk-rounded-2 kwsdk-border kwsdk-bg-white kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-w-100">
+                <div className="sa-answer-table-preview-bar kwsdk-mt-2 kwsdk-rounded-2 kwsdk-border kwsdk-bg-white kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-gap-2 kwsdk-w-100">
                     <span className="sa-answer-table-preview-label kwsdk-text-xs kwsdk-text-truncate">Table Preview</span>
                     <span className="sa-answer-table-preview-sep kwsdk-flex-shrink-0"/>
                     <span className="sa-answer-table-preview-meta kwsdk-text-xs kwsdk-text-truncate">{rowCount} Rows - {colCount} Columns</span>

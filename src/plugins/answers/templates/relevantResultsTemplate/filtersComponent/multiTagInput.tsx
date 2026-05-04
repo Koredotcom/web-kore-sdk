@@ -35,15 +35,15 @@ export function MultiTagInput(props: MultiTagInputProps): any {
         onChange?.(e.target.value);
     };
 
-    return h('div', { className: "sa-answer-multi-tag-input-wrapper" }, [
+    return h('div', { className: "sa-answer-multi-tag-input-wrapper kwsdk-w-100" }, [
         h('div', { 
-            className: `sa-answer-multi-tag-input ${isFocused ? 'sa-answer-focused' : ''}`,
+            className: `sa-answer-multi-tag-input kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-py-2 kwsdk-px-3 kwsdk-border kwsdk-rounded kwsdk-bg-white ${isFocused ? 'sa-answer-focused' : ''}`,
             onClick: handleFocus
         }, [
-            h('div', { className: "sa-answer-input-content" }, [
-                h('span', { className: "sa-answer-input-text" }, value || placeholder)
+            h('div', { className: "sa-answer-input-content kwsdk-flex-grow-1 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2" }, [
+                h('span', { className: "sa-answer-input-text kwsdk-text-sm kwsdk-fw-normal" }, value || placeholder)
             ]),
-            h('div', { className: "sa-answer-chevron-icon" }, [
+            h('div', { className: "sa-answer-chevron-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0" }, [
                 h('svg', { 
                     width: "16", 
                     height: "16", 
@@ -52,7 +52,7 @@ export function MultiTagInput(props: MultiTagInputProps): any {
                 }, [
                     h('path', { 
                         d: "M4 6L8 10L12 6", 
-                        stroke: "#98A2B3", 
+                        stroke: "var(--theme-panel-wigdet-secondary-text-color)", 
                         strokeWidth: "1.4", 
                         strokeLinecap: "round", 
                         strokeLinejoin: "round" 

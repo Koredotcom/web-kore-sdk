@@ -91,17 +91,17 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
     const hiddenTagsCount = selectedOptions.length - 4;
 
     return (
-        <div className="sa-answer-multi-select-dropdown-wrapper" ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
+        <div className="sa-answer-multi-select-dropdown-wrapper kwsdk-position-relative kwsdk-w-100" ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
             {/* Main dropdown button */}
             <div 
-                className={`sa-answer-multi-select-dropdown kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border kwsdk-bg-white ${isOpen ? 'sa-answer-open' : ''}`}
+                className={`sa-answer-multi-select-dropdown kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-py-2 kwsdk-px-3 kwsdk-rounded kwsdk-border kwsdk-bg-white ${isOpen ? 'sa-answer-open' : ''}`}
                 onClick={handleToggle}
             >
-                <div className="sa-answer-dropdown-content">
-                    <span className="sa-answer-dropdown-text">
+                <div className="sa-answer-dropdown-content kwsdk-flex-grow-1 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-justify-content-between">
+                    <span className="sa-answer-dropdown-text kwsdk-text-sm kwsdk-text-truncate kwsdk-fw-normal kwsdk-w-100">
                     {`${placeholder}`}
                     </span>
-                    <div className="sa-answer-chevron-icon">
+                    <div className="sa-answer-chevron-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0">
                         <svg 
                             width="16" 
                            height="16" 
@@ -122,21 +122,21 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
 
             {/* Selected Tags Display */}
             {selectedOptions.length > 0 && (
-                <div className="sa-answer-selected-tags-container">
-                    <div className="sa-answer-tags-wrapper">
+                <div className="sa-answer-selected-tags-container kwsdk-mt-1">
+                    <div className="sa-answer-tags-wrapper kwsdk-d-flex kwsdk-flex-wrap kwsdk-gap-1 kwsdk-mb-1">
                         {visibleTags.map(option => (
-                            <div key={option.id} className="sa-answer-selected-tag">
-                                <span className={`sa-answer-tag-text ${option.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
+                            <div key={option.id} className="sa-answer-selected-tag kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1 kwsdk-py-0 kwsdk-px-2 kwsdk-bg-white kwsdk-border kwsdk-rounded-1">
+                                <span className={`sa-answer-tag-text kwsdk-text-xs kwsdk-text-truncate kwsdk-fw-normal ${option.label.length > 15 ? 'sa-answer-truncated' : ''}`}>
                                     {option.label}
                                 </span>
                                 <button 
-                                    className="sa-answer-tag-remove-btn"
+                                    className="sa-answer-tag-remove-btn kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-bg-transparent kwsdk-border-0"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleRemoveTag(option.value);
                                     }}
                                 >
-                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                                         <path d="M7.5 2.5L2.5 7.5M2.5 2.5L7.5 7.5" stroke="#98A2B3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </button>
@@ -145,10 +145,10 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
                     
                     {/* Show/Hide and Clear All Actions */}
-                    <div className="sa-answer-tags-actions">
+                    <div className="sa-answer-tags-actions kwsdk-d-flex kwsdk-gap-1 kwsdk-justify-content-between">
                         {hiddenTagsCount > 0 && (
                             <button 
-                                className="sa-answer-show-hide-btn"
+                                className="sa-answer-show-hide-btn kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-1 kwsdk-p-1 kwsdk-bg-transparent kwsdk-border-0 kwsdk-text-xs kwsdk-fw-normal"
                                 onClick={() => setShowAllTags(!showAllTags)}
                             >
                                 <svg 
@@ -171,7 +171,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                         )}
                         {!hiddenTagsCount && <span />}
                         <button
-                            className="sa-answer-clear-all-btn"
+                            className="sa-answer-clear-all-btn kwsdk-bg-transparent kwsdk-border-0 kwsdk-text-xs kwsdk-fw-normal"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleClearAll();
@@ -185,11 +185,11 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
 
             {/* Dropdown menu */}
             {isOpen && (
-                <div className="sa-answer-dropdown-menu kwsdk-rounded kwsdk-border kwsdk-bg-white kwsdk-w-100">
+                <div className="sa-answer-dropdown-menu kwsdk-rounded kwsdk-border kwsdk-bg-white kwsdk-w-100 kwsdk-position-absolute kwsdk-top-100 kwsdk-left-0 kwsdk-right-0 kwsdk-mt-1 kwsdk-z-1000 kwsdk-p-3">
                     {/* Search input */}
-                    <div className="sa-answer-search-section">
-                        <div className="sa-answer-search-input kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-rounded kwsdk-border">
-                            <div className="sa-answer-search-icon">
+                    <div className="sa-answer-search-section kwsdk-mb-2">
+                        <div className="sa-answer-search-input kwsdk-w-100 kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-rounded kwsdk-border">
+                            <div className="sa-answer-search-icon kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0">
                                 <svg 
                                     width="16" 
                                     height="16" 
@@ -210,21 +210,21 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                 placeholder={searchPlaceholder}
                                 value={searchTerm}
                                 onInput={handleSearchChange}
-                                className="sa-answer-search-field"
+                                className="sa-answer-search-field kwsdk-flex-grow-1 kwsdk-border-0 kwsdk-bg-transparent kwsdk-text-sm"
                             />
                         </div>
                     </div>
 
                     {/* Select All / Clear buttons */}
-                    <div className="sa-answer-action-buttons">
+                    <div className="sa-answer-action-buttons kwsdk-d-flex kwsdk-justify-content-between kwsdk-p-1 kwsdk-mb-1">
                         <button 
-                            className="sa-answer-select-all-btn"
+                            className="sa-answer-select-all-btn kwsdk-bg-transparent kwsdk-border-0 kwsdk-text-xs"
                             onClick={handleSelectAll}
                         >
                             Select all
                         </button>
                         <button 
-                            className="sa-answer-clear-btn"
+                            className="sa-answer-clear-btn kwsdk-bg-transparent kwsdk-border-0 kwsdk-text-xs"
                             onClick={handleClearAll}
                         >
                             Clear
@@ -232,14 +232,14 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
 
                     {/* Options list */}
-                    <div className="sa-answer-options-list">
+                    <div className="sa-answer-options-list kwsdk-overflow-y-auto">
                         {filteredOptions.map(option => (
                             <div 
                                 key={option.id}
-                                className={`sa-answer-option-item ${selectedValues.includes(option.value) ? 'sa-answer-selected' : ''}`}
+                                className={`sa-answer-option-item kwsdk-d-flex kwsdk-align-items-center kwsdk-gap-2 kwsdk-py-2 kwsdk-px-3 kwsdk-rounded-1 ${selectedValues.includes(option.value) ? 'sa-answer-selected' : ''}`}
                                 onClick={() => handleOptionToggle(option.value)}
                             >
-                                <div className="sa-answer-checkbox">
+                                <div className="sa-answer-checkbox kwsdk-d-flex kwsdk-align-items-center kwsdk-justify-content-center kwsdk-flex-shrink-0">
                                     {selectedValues.includes(option.value) && (
                                         <svg 
                                             width="12" 
@@ -257,7 +257,7 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                                         </svg>
                                     )}
                                 </div>
-                                <span className={`sa-answer-option-label ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
+                                <span className={`sa-answer-option-label kwsdk-text-sm kwsdk-fw-normal kwsdk-text-truncate kwsdk-flex-grow-1 ${option.label.length > 20 ? 'sa-answer-truncated' : ''}`}>
                                     {option.label}
                                 </span>
                             </div>
@@ -265,15 +265,15 @@ export function MultiSelectDropdown(props: MultiSelectDropdownProps): any {
                     </div>
 
                     {/* Footer buttons */}
-                    <div className="sa-answer-footer-buttons">
+                    <div className="sa-answer-footer-buttons kwsdk-d-flex kwsdk-gap-2 kwsdk-justify-content-end kwsdk-pt-4 kwsdk-mt-2 kwsdk-border-top">
                         <button 
-                            className="sa-answer-cancel-btn"
+                            className="sa-answer-cancel-btn kwsdk-text-xs"
                             onClick={() => setIsOpen(false)}
                         >
                             Cancel
                         </button>
                         <button 
-                            className="sa-answer-apply-btn"
+                            className="sa-answer-apply-btn kwsdk-text-xs"
                             onClick={() => setIsOpen(false)}
                         >
                             Apply
