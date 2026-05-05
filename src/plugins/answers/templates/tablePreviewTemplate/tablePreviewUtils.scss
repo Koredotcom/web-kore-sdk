@@ -1,0 +1,223 @@
+// ─── Shared table container – inline (compact) view ─────────────────────────
+
+.sa-answer-search-results-table-container {
+    .sa-answer-result-text,
+    .sa-answer-result-snippet {
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        pre code,
+        code {
+            text-wrap: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+    }
+
+    // ── Compact table layout when a table is detected ──────────────────────
+    &.sa-answer-has-table {
+        .sa-answer-result-text,
+        .sa-answer-result-snippet {
+            width: 100%;
+            box-sizing: border-box;
+            flex: none !important;
+        }
+
+        // Remove default browser <p> margins that ReactMarkdown injects inside
+        // the text-wrapper div, which would otherwise push content down
+        .sa-answer-result-text p,
+        .sa-answer-result-snippet p {
+            margin: 0;
+        }
+    }
+
+    // ── Table element (compact / inline view) ──────────────────────────────
+    table {
+        border-collapse: collapse;
+        width: max-content;
+        min-width: 100%;
+        font-size: 11px;
+
+        th {
+            font-weight: 500;
+            font-size: 11px;
+            line-height: 16px;
+            color: var(--sdk-gloabl-text-color) !important;
+            background-color: var(--sdk-gloabl-bg-secondary);
+            padding: 6px 10px;
+            border: 1px solid var(--sdk-gloabl-border-color);
+            text-align: left;
+            // nowrap keeps each header on one line, making the table wider than the wrapper
+            white-space: nowrap;
+        }
+
+        td {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 16px;
+            color: var(--sdk-gloabl-text-color) !important;
+            padding: 6px 10px;
+            border: 1px solid var(--sdk-gloabl-border-color);
+            vertical-align: top;
+            // nowrap in compact view forces overflow → horizontal scrollbar
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background-color: var(--sdk-gloabl-bg-secondary);
+        }
+    }
+
+    // ── Hidden table (large tables – kept in DOM for popup HTML) ──────────
+    .sa-answer-table-hidden {
+        display: none !important;
+    }
+
+    // ── Table preview bar (shown below text when table has >20 rows) ───────
+    .sa-answer-table-preview-bar {
+        padding: 6px 12px;
+        .sa-answer-table-preview-sep {
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+        }
+        .sa-answer-table-preview-view-btn {
+            color: var(--sdk-global-theme-color);
+            svg {
+                path{
+                    stroke: var(--sdk-global-theme-color);
+                }
+            }
+        }
+    }
+
+    // ── Expand button ──────────────────────────────────────────────────────
+    .sa-answer-table-expand-btn {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        background: var(--sdk-global-white-bg);
+        border: 1px solid var(--sdk-gloabl-border-color);
+        border-radius: 6px;
+        padding: 4px 8px;
+        cursor: pointer;
+        transition: background 0.15s ease, box-shadow 0.15s ease;
+        outline: none;
+        margin-top: 4px;
+        align-self: flex-end;
+
+        span {
+            font-weight: 500;
+            font-size: 11px;
+            line-height: 16px;
+            color: var(--sdk-global-theme-color);
+        }
+
+        svg {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            background: #F0F4FF;
+            box-shadow: 0 1px 4px rgba(21, 94, 239, 0.15);
+        }
+
+        &:active {
+            background: #E0EAFF;
+        }
+    }
+}
+
+// ─── Table preview popup (full-screen overlay) ───────────────────────────────
+
+#sa-table-popup-container {
+    background: rgba(32, 33, 36, 0.4);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 999999;
+    overflow: hidden;
+    *{
+        box-sizing: border-box;
+    }
+    .sa-answer-table-preview {
+        background-color: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        .sa-answer-table-preview-header {
+            background-color: var(--sdk-gloabl-bg-secondary);
+            .sa-answer-table-header-left{
+                .sa-answer-table-back-btn{
+                    svg{
+                        path{
+                            stroke: var(--sdk-gloabl-text-color);
+                        }
+                    }
+                }
+            }
+        }
+        .sa-answer-table-preview-body {
+            .sa-answer-table-wrapper {
+                background: var(--sdk-global-white-bg);
+                border-radius: 8px;
+                padding: 16px;
+                scrollbar-width: thin;
+                scrollbar-color: var(--sdk-gloabl-border-color) transparent;
+                &::-webkit-scrollbar {
+                    height: 4px;
+                }
+                &::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                &::-webkit-scrollbar-thumb {
+                    background: var(--sdk-gloabl-border-color);
+                    border-radius: 2px;
+                    &:hover { background: var(--sdk-gloabl-border-color); }
+                }
+                table {
+                    border-collapse: collapse;
+                    width: max-content;
+                    min-width: 100%;
+                    th {
+                        font-weight: 600;
+                        font-size: 12px;
+                        line-height: 20px;
+                        color: var(--sdk-gloabl-text-color);
+                        background: var(--sdk-gloabl-bg-secondary);
+                        padding: 10px 14px;
+                        border: 1px solid var(--sdk-gloabl-border-color);
+                        text-align: left;
+                        white-space: nowrap;
+                    }
+
+                    td {
+                        font-weight: 400;
+                        font-size: 12px;
+                        line-height: 20px;
+                        color: var(--sdk-gloabl-text-color);
+                        padding: 10px 14px;
+                        border: 1px solid var(--sdk-gloabl-border-color);
+                        vertical-align: top;
+                        white-space: nowrap;
+                    }
+
+                    tr:nth-child(even) td {
+                        background-color: var(--sdk-gloabl-bg-secondary);
+                    }
+
+                    tr:hover td {
+                        background-color: var(--sdk-global-white-bg);
+                    }
+                }
+            }
+        }
+    }
+}

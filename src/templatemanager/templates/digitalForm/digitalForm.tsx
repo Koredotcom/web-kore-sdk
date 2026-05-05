@@ -31,8 +31,8 @@ export function DigitalFormExtension(props: any) {
                     </svg>
                 </button>
             </div>
-            <div className="iner-data-scroll-wraper">
-                <iframe style={{ height: '100%', width: '100%' }} src={props.msgData.message[0].component.formData.formLink}></iframe>
+            <div className="iner-data-scroll-wraper" role="region" aria-label="Digital form content" tabIndex={0}>
+                <iframe title="Digital form" style={{ height: '100%', width: '100%' }} src={props.msgData.message[0].component.formData.formLink}></iframe>
 
             </div>
         </div>
@@ -79,7 +79,7 @@ export function DigitalForm(props: any) {
                     </div>
                 </div>
                 {msgData?.message?.[0]?.component?.formData && msgData?.message?.[0]?.component?.formData.renderType == 'inline' && <div className={`inline-iframe-container inline-iframe-${msgData.messageId}`} style={{ display: 'none' }}>
-                    <iframe className="iframe-section" src={props.msgData.message[0].component.formData.formLink}></iframe>
+                    <iframe className="iframe-section" title="Digital form" src={props.msgData.message[0].component.formData.formLink}></iframe>
                 </div>}
             </div>
         );
