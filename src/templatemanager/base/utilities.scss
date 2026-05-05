@@ -1,5 +1,5 @@
-// Kore SDK utility classes (Bootstrap-inspired, no Bootstrap dependency).
-// All classes use the `kwsdk-` prefix to avoid collisions in host applications.
+// Kore Web SDK utility classes
+// All classes use the `kwsdk-` prefix
 
 $kr-prefix: 'kwsdk-' !default;
 // One step = 4px at 16px root; tokens 1–5 → 4, 8, 12, 16, 20px.
