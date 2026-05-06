@@ -1074,10 +1074,18 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
     var keys = Object.keys(columnsInfo);
     keys.forEach(function (d) {
         var cloloCode = z(d);
-        $("#Legend_" + mainDivName).append("<span class='team-graph team1' style='display: inline-block; margin-right:10px;margin-left: 20px;'>\
-        <span style='background:" + cloloCode + ";width: 10px;height: 10px;display: inline-block;vertical-align: middle;'>&nbsp;</span>\
-        <span title="+columnsInfo[d].replace(/[ ]/g,"\u00a0") +" style='padding-top: 0;font-family:Source Sans Pro, sans-serif;font-size: 13px;display: inline;'>" + ((columnsInfo[d].length > 10)?(columnsInfo[d].slice(0, 7) + "..."):(columnsInfo[d])) + " </span>\
-    </span>");
+        var label = columnsInfo[d];
+        var displayLabel = label.length > 10 ? label.slice(0, 7) + "..." : label;
+        var $row = $("<span>", { "class": "team-graph team1" })
+            .css({ display: "inline-block", marginRight: "10px", marginLeft: "20px" });
+        var $swatch = $("<span>")
+            .css({ background: cloloCode, width: "10px", height: "10px", display: "inline-block", verticalAlign: "middle" })
+            .text("\u00a0");
+        var $text = $("<span>", { title: label })
+            .css({ paddingTop: 0, fontFamily: "Source Sans Pro, sans-serif", fontSize: "13px", display: "inline" })
+            .text(displayLabel + " ");
+        $row.append($swatch).append($text);
+        $("#Legend_" + mainDivName).append($row);
     });
 
 }
@@ -1138,7 +1146,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             });
         });*/
 
-        maxTicks = 10;
+        var maxTicks = 10;
 
         var element = g.append("g")
             .selectAll("g")
@@ -1169,9 +1177,9 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
             .attr("height", y1.bandwidth())
             .on("mouseover", function() { tooltip.style("display", null); })
     .on("mouseout", function() { tooltip.style("display", "none"); })
-    .on("mousemove", function(d) {
+    .on("mousemove", function(e, d) {
 
-// D3 v4
+// D3 v7
 
         if($('#myPreviewModal').css('display') === 'block') {
            var x = e.pageX - document.querySelector('.chartContainerDiv').getBoundingClientRect().x + 10;
@@ -1302,7 +1310,7 @@ function createhorizontalGroupBarChartLegend(mainDiv, columnsInfo, colorRange) {
                     return pie.cssPrefix + "tooltips" + "_" + i
                 });
 
-            tooltips = element.selectAll("g")
+            var tooltips = element.selectAll("g")
                 .data(function (d, i) {
                     return keys.map(function (key) {
                         return { key: key, value: d[key], index: key + "_" + i + "_" + d[pie.yAxis] };
