@@ -406,6 +406,15 @@ class AgentDesktopPlugin {
         });
     }
 
+    applyHiddenMediaAccessibility(videoElement: HTMLVideoElement, ariaLabel: string, title: string) {
+        // Utility stream elements should not be exposed to AT or keyboard navigation.
+        videoElement.controls = false;
+        videoElement.setAttribute('aria-label', ariaLabel);
+        videoElement.setAttribute('aria-hidden', 'true');
+        videoElement.setAttribute('title', title);
+        videoElement.setAttribute('tabindex', '-1');
+    }
+
     appendVideoAudioElemnts() {
         let me: any = this;
         let cwInstance = me.hostInstance;
@@ -421,12 +430,14 @@ class AgentDesktopPlugin {
         localVideoElement.height = 1;
         localVideoElement['autoplay'] = true;
         localVideoElement['playsInline'] = true;
+        me.applyHiddenMediaAccessibility(localVideoElement, 'Local video preview for voice and video chat', 'Local video preview');
         let remoteVideoElement = document.createElement('video');
         remoteVideoElement.id = 'kore_remote_video';
         remoteVideoElement.width = 1;
         remoteVideoElement.height = 1;
         remoteVideoElement['autoplay'] = true;
         remoteVideoElement['playsInline'] = true;
+        me.applyHiddenMediaAccessibility(remoteVideoElement, 'Remote agent video stream for voice and video chat', 'Remote agent video stream');
         // keep elements out of layout and interaction without affecting existing layout
         localVideoElement.style.position = 'absolute';
         localVideoElement.style.zIndex = '-999';
