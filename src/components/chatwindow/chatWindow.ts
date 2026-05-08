@@ -10,6 +10,8 @@ import './sass/chatWindow.scss';
 import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
+// @ts-ignore — plain JS module
+import SecureChannel from '../secureChannel/secureChannel.js';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
@@ -1329,6 +1331,102 @@ sendWebhookOnConnectEvent  () {
   });
 };
 
+// ─────────────────────────────────────────────────────────────────────
+// Secure channel — handshake / decrypt / encrypt hooks.
+// Activated only when the server sends a `protocol_capabilities`
+// message with encryption: 'required' (because the SDK app has the
+// duplexEncryptionEnabled flag set).
+// ─────────────────────────────────────────────────────────────────────
+async _handleSecureChannelFrame (msg: any) {
+  const me: any = this;
+  if (!msg || typeof msg !== 'object') return { consumed: false };
+
+  // Server announces it requires encryption — initiate handshake.
+  if (msg.type === 'protocol_capabilities' && msg.encryption === 'required') {
+    const sc = me.config.botOptions && me.config.botOptions.secureChannel;
+    const pinnedPublicKeyPem = sc && sc.pinnedPublicKeyPem;
+    if (!pinnedPublicKeyPem) {
+      console.error('[secureChannel] server requires encryption but no pinnedPublicKeyPem in chatConfig.botOptions.secureChannel');
+      return { consumed: true };
+    }
+    try {
+      me._secureChannel = new SecureChannel({
+        pinnedPublicKeyPem,
+        expectedSigningKeyId: sc && sc.expectedSigningKeyId,
+      } as any);
+      const init = await me._secureChannel.initiateHandshake();
+      me.bot.sendMessage(init);
+    } catch (e) {
+      console.error('[secureChannel] init failed:', e);
+    }
+    return { consumed: true };
+  }
+
+  // Server response to our init.
+  if (msg.type === 'key_exchange_response' && me._secureChannel) {
+    try {
+      const complete = await me._secureChannel.handleResponse(msg);
+      me.bot.sendMessage(complete);
+    } catch (e) {
+      console.error('[secureChannel] response handling failed:', e);
+    }
+    return { consumed: true };
+  }
+
+  // Server's handshake ack — channel becomes SECURE here.
+  if (msg.type === 'key_exchange_ack' && me._secureChannel) {
+    try {
+      await me._secureChannel.handleAck(msg);
+      console.log('[secureChannel] channel SECURE');
+      // Wrap outgoing sendMessage exactly once now that we're secure.
+      me._wrapBotSendMessageForEncryption();
+    } catch (e) {
+      console.error('[secureChannel] ack handling failed:', e);
+    }
+    return { consumed: true };
+  }
+
+  // Encrypted message envelope — decrypt and pass through as plaintext.
+  if (msg.type === 'secure_envelope' && me._secureChannel && me._secureChannel.isSecure()) {
+    try {
+      const plain = await me._secureChannel.decryptIncoming(msg);
+      return { consumed: false, decrypted: plain };
+    } catch (e) {
+      console.error('[secureChannel] decrypt failed:', e);
+      return { consumed: true };
+    }
+  }
+
+  return { consumed: false };
+}
+
+_wrapBotSendMessageForEncryption () {
+  const me: any = this;
+  if (me._botSendMessageWrapped) return;
+  const original = me.bot.sendMessage.bind(me.bot);
+  me.bot.sendMessage = (messageToBot: any, callback?: any) => {
+    if (me._secureChannel && me._secureChannel.isSecure()
+        && messageToBot && messageToBot.type !== 'key_exchange_init'
+        && messageToBot.type !== 'key_exchange_complete') {
+      me._secureChannel.encryptOutgoing(messageToBot)
+        .then((envelope: any) => original(envelope, callback))
+        .catch((err: any) => {
+          // Fail closed. The server requires encryption on this channel
+          // (it sent protocol_capabilities: required). Falling back to
+          // plaintext would leak sensitive message content. Drop the
+          // message and surface the error to the caller.
+          console.error('[secureChannel] encrypt outgoing failed — dropping message to avoid plaintext leak:', err);
+          if (typeof callback === 'function') {
+            try { callback(err); } catch (_) { /* noop */ }
+          }
+        });
+      return;
+    }
+    return original(messageToBot, callback);
+  };
+  me._botSendMessageWrapped = true;
+}
+
 bindSDKEvents  () {
   // hook to add custom events
   const me:any = this;
@@ -1342,13 +1440,24 @@ bindSDKEvents  () {
     me.isSocketOpened = true;
   });
 
-  me.bot.on('message', (response: { data: string; }) => {
+  me.bot.on('message', async (response: { data: string; }) => {
     // actual implementation starts here
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
     let tempData = JSON.parse(response.data);
+
+    // Secure channel: intercept handshake frames and decrypt envelopes.
+    // No-op when the SDK app does not have duplexEncryptionEnabled.
+    const intercepted = await me._handleSecureChannelFrame(tempData);
+    if (intercepted.consumed) {
+      return; // handshake / control message — nothing more to do
+    }
+    if (intercepted.decrypted) {
+      tempData = intercepted.decrypted;
+    }
+
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
       messageData:tempData,
