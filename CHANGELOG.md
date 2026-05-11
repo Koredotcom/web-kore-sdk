@@ -1,3 +1,11 @@
+### 11.24.1
+* Release May 09, 2026
+* Features
+  * added search results support in answers plugin
+  * proactive quick chat support added in proactive web campaigns plugin
+* Bug fixes
+  * digital form template WCAG issues fix
+
 ### 11.24.0
 * Release Apr 25, 2026
 * Bug fixes
