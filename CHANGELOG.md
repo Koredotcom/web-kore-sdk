@@ -1,3 +1,8 @@
+### 10.25.1
+- SDK Release May 09, 2026
+* Bug fixes
+  * fixed security vulnerability in KoreGrapAdapter.js file
+
 ### 10.25.0
 - SDK Release Apr 25, 2026
 * Stable release
