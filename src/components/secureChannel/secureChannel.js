@@ -187,6 +187,14 @@ class SecureChannel {
         if (!pinnedPublicKeyPem) {
             throw new Error('SecureChannel: pinnedPublicKeyPem is required');
         }
+        // Fail fast on malformed PEM so callers see a clear error at
+        // construction time rather than an opaque importKey() rejection
+        // mid-handshake (which kills the channel after a network round-trip).
+        if (typeof pinnedPublicKeyPem !== 'string'
+            || !/-----BEGIN [A-Z ]*PUBLIC KEY-----/.test(pinnedPublicKeyPem)
+            || !/-----END [A-Z ]*PUBLIC KEY-----/.test(pinnedPublicKeyPem)) {
+            throw new Error('SecureChannel: pinnedPublicKeyPem is not a valid PEM SPKI public key');
+        }
         this.pinnedPublicKeyPem = pinnedPublicKeyPem;
         this.expectedSigningKeyId = expectedSigningKeyId || null;
         this.sessionId = sessionId || self.crypto.randomUUID();
