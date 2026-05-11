@@ -343,6 +343,10 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.25.1 [Minor] on 09-May-2026: Master branch
+        Bugfixes
+               1.Fixed security vulnerability in KoreGrapAdapter.js file
+
 v10.25.0 [Minor] on 25-Apr-2026: Master branch
         Stable release
 
