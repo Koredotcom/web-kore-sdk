@@ -1,3 +1,8 @@
+### 10.9.0-1
+- SDK Release May 12, 2026
+* Bug fixes
+  * CWE-80(XSS) vulnerability in KoreGraphAdapter.js fixed
+
 ### 10.9.0
 - SDK Release Dec 09, 2024
 * Bug fixes
