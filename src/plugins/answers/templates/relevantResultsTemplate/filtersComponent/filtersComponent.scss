@@ -1,0 +1,21 @@
+
+
+.sa-answer-filters-content {
+    .sa-answer-filters-sections {
+        .sa-answer-filter-section{
+            .sa-answer-filter-section-header{
+                .sa-answer-chevron-down{
+                    svg{
+                        path{
+                            stroke: var(--sdk-gloabl-text-color);
+                        }
+                    }
+                    &.sa-answer-expanded{
+                        rotate: 180deg;
+                    }
+                }
+            }
+        }
+    }
+}
+

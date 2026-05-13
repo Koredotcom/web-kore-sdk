@@ -1,0 +1,466 @@
+// Kore Web SDK utility classes
+// All classes use the `kwsdk-` prefix
+
+$kr-prefix: 'kwsdk-' !default;
+// One step = 4px at 16px root; tokens 1–5 → 4, 8, 12, 16, 20px.
+$kr-spacer: 0.25rem !default;
+$kr-spacers: (
+	0: 0,
+	1: $kr-spacer * 1,
+	2: $kr-spacer * 2,
+	3: $kr-spacer * 3,
+	4: $kr-spacer * 4,
+	5: $kr-spacer * 5,
+	auto: auto,
+) !default;
+
+// ---- Display ----
+$kr-displays: (
+	none: none,
+	inline: inline,
+	'inline-block': inline-block,
+	block: block,
+	flex: flex,
+	'inline-flex': inline-flex,
+	grid: grid,
+	'inline-grid': inline-grid,
+	table: table,
+	'table-row': table-row,
+	'table-cell': table-cell,
+) !default;
+
+@each $key, $val in $kr-displays {
+	.#{$kr-prefix}d-#{$key} {
+		display: $val !important;
+	}
+}
+
+// ---- Flex ----
+$kr-flex-directions: (
+	row: row,
+	column: column,
+	'row-reverse': row-reverse,
+	'column-reverse': column-reverse,
+) !default;
+
+@each $key, $val in $kr-flex-directions {
+	.#{$kr-prefix}flex-#{$key} {
+		flex-direction: $val;
+	}
+}
+
+$kr-justify: (
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	between: space-between,
+	around: space-around,
+	evenly: space-evenly,
+) !default;
+
+@each $key, $val in $kr-justify {
+	.#{$kr-prefix}justify-content-#{$key} {
+		justify-content: $val;
+	}
+}
+
+$kr-align-items: (
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	baseline: baseline,
+	stretch: stretch,
+) !default;
+
+@each $key, $val in $kr-align-items {
+	.#{$kr-prefix}align-items-#{$key} {
+		align-items: $val;
+	}
+}
+
+$kr-align-content: (
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	between: space-between,
+	around: space-around,
+	stretch: stretch,
+) !default;
+
+@each $key, $val in $kr-align-content {
+	.#{$kr-prefix}align-content-#{$key} {
+		align-content: $val;
+	}
+}
+
+$kr-align-self: (
+	auto: auto,
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	baseline: baseline,
+	stretch: stretch,
+) !default;
+
+@each $key, $val in $kr-align-self {
+	.#{$kr-prefix}align-self-#{$key} {
+		align-self: $val;
+	}
+}
+
+$kr-flex-wrap: (
+	wrap: wrap,
+	nowrap: nowrap,
+	'wrap-reverse': wrap-reverse,
+) !default;
+
+@each $key, $val in $kr-flex-wrap {
+	.#{$kr-prefix}flex-#{$key} {
+		flex-wrap: $val;
+	}
+}
+
+.#{$kr-prefix}flex-fill {
+	flex: 1 1 auto;
+}
+.#{$kr-prefix}flex-grow-0 {
+	flex-grow: 0;
+}
+.#{$kr-prefix}flex-grow-1 {
+	flex-grow: 1;
+}
+.#{$kr-prefix}flex-shrink-0 {
+	flex-shrink: 0;
+}
+.#{$kr-prefix}flex-shrink-1 {
+	flex-shrink: 1;
+}
+
+@for $i from 0 through 5 {
+	.#{$kr-prefix}order-#{$i} {
+		order: $i;
+	}
+}
+.#{$kr-prefix}order-first {
+	order: -1;
+}
+.#{$kr-prefix}order-last {
+	order: 6;
+}
+
+@each $size, $value in $kr-spacers {
+	@if $size != auto {
+		.#{$kr-prefix}gap-#{$size} {
+			gap: $value;
+		}
+		.#{$kr-prefix}row-gap-#{$size} {
+			row-gap: $value;
+		}
+		.#{$kr-prefix}column-gap-#{$size} {
+			column-gap: $value;
+		}
+	}
+}
+
+// ---- Spacing (margin & padding) ----
+@mixin kr-spacing-utils($prop-short, $properties, $allow-auto: false) {
+	@each $size, $value in $kr-spacers {
+		@if $allow-auto or $size != auto {
+			.#{$kr-prefix}#{$prop-short}-#{$size} {
+				@each $p in $properties {
+					#{$p}: $value !important;
+				}
+			}
+		}
+	}
+}
+
+@include kr-spacing-utils('m', (margin), true);
+@include kr-spacing-utils('mt', (margin-top), true);
+@include kr-spacing-utils('mb', (margin-bottom), true);
+@include kr-spacing-utils('ms', (margin-inline-start), true);
+@include kr-spacing-utils('me', (margin-inline-end), true);
+@include kr-spacing-utils('p', (padding), false);
+@include kr-spacing-utils('pt', (padding-top), false);
+@include kr-spacing-utils('pb', (padding-bottom), false);
+@include kr-spacing-utils('ps', (padding-inline-start), false);
+@include kr-spacing-utils('pe', (padding-inline-end), false);
+
+@each $size, $value in $kr-spacers {
+	@if $size != auto {
+		.#{$kr-prefix}px-#{$size} {
+			padding-inline-start: $value !important;
+			padding-inline-end: $value !important;
+		}
+		.#{$kr-prefix}py-#{$size} {
+			padding-top: $value !important;
+			padding-bottom: $value !important;
+		}
+	}
+	.#{$kr-prefix}mx-#{$size} {
+		margin-inline-start: $value !important;
+		margin-inline-end: $value !important;
+	}
+	.#{$kr-prefix}my-#{$size} {
+		margin-top: $value !important;
+		margin-bottom: $value !important;
+	}
+}
+
+// ---- Text ----
+.#{$kr-prefix}text-start {
+	text-align: start !important;
+}
+.#{$kr-prefix}text-end {
+	text-align: end !important;
+}
+.#{$kr-prefix}text-center {
+	text-align: center !important;
+}
+
+.#{$kr-prefix}text-lowercase {
+	text-transform: lowercase !important;
+}
+.#{$kr-prefix}text-uppercase {
+	text-transform: uppercase !important;
+}
+.#{$kr-prefix}text-capitalize {
+	text-transform: capitalize !important;
+}
+
+.#{$kr-prefix}fw-bold {
+	font-weight: 700 !important;
+}
+.#{$kr-prefix}fw-semibold {
+	font-weight: 600 !important;
+}
+.#{$kr-prefix}fw-normal {
+	font-weight: 400 !important;
+}
+.#{$kr-prefix}fw-light {
+	font-weight: 300 !important;
+}
+
+.#{$kr-prefix}fst-italic {
+	font-style: italic !important;
+}
+.#{$kr-prefix}fst-normal {
+	font-style: normal !important;
+}
+
+.#{$kr-prefix}text-wrap {
+	white-space: normal !important;
+}
+.#{$kr-prefix}text-nowrap {
+	white-space: nowrap !important;
+}
+.#{$kr-prefix}text-truncate {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap !important;
+}
+
+@for $i from 1 through 5 {
+	.#{$kr-prefix}line-clamp-#{$i} {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		line-clamp: $i;
+		-webkit-line-clamp: $i;
+		overflow: hidden;
+	}
+}
+
+.#{$kr-prefix}text-decoration-none {
+	text-decoration: none !important;
+}
+.#{$kr-prefix}text-decoration-underline {
+	text-decoration: underline !important;
+}
+.#{$kr-prefix}text-decoration-line-through {
+	text-decoration: line-through !important;
+}
+
+// ---- Overflow ----
+$kr-overflows: auto, hidden, visible, scroll;
+@each $o in $kr-overflows {
+	.#{$kr-prefix}overflow-#{$o} {
+		overflow: $o !important;
+	}
+	.#{$kr-prefix}overflow-x-#{$o} {
+		overflow-x: $o !important;
+	}
+	.#{$kr-prefix}overflow-y-#{$o} {
+		overflow-y: $o !important;
+	}
+}
+
+// ---- Position & inset ----
+.#{$kr-prefix}position-static {
+	position: static !important;
+}
+.#{$kr-prefix}position-relative {
+	position: relative !important;
+}
+.#{$kr-prefix}position-absolute {
+	position: absolute !important;
+}
+.#{$kr-prefix}position-fixed {
+	position: fixed !important;
+}
+.#{$kr-prefix}position-sticky {
+	position: sticky !important;
+}
+
+$kr-positions: top, bottom, start, end;
+@each $edge in $kr-positions {
+	$prop: $edge;
+	@if $edge == start {
+		$prop: inset-inline-start;
+	} @else if $edge == end {
+		$prop: inset-inline-end;
+	}
+	@each $key, $val in (
+		0: 0,
+		50: 50%,
+		100: 100%,
+		auto: auto,
+	) {
+		@if $edge == start or $edge == end {
+			.#{$kr-prefix}#{$edge}-#{$key} {
+				#{$prop}: $val !important;
+			}
+		} @else {
+			.#{$kr-prefix}#{$edge}-#{$key} {
+				#{$edge}: $val !important;
+			}
+		}
+	}
+}
+
+// ---- Sizing ----
+@each $key, $val in (
+	25: 25%,
+	50: 50%,
+	75: 75%,
+	100: 100%,
+	auto: auto,
+) {
+	.#{$kr-prefix}w-#{$key} {
+		width: $val !important;
+	}
+	.#{$kr-prefix}h-#{$key} {
+		height: $val !important;
+	}
+}
+
+.#{$kr-prefix}mw-100 {
+	max-width: 100% !important;
+}
+.#{$kr-prefix}mh-100 {
+	max-height: 100% !important;
+}
+
+
+
+
+
+// ---- Border ----
+.#{$kr-prefix}border {
+	border: 1px solid var(--sdk-gloabl-border-color) !important;
+}
+.#{$kr-prefix}border-0 {
+	border: 0 !important;
+}
+.#{$kr-prefix}border-top {
+	border-top: 1px solid var(--sdk-gloabl-border-color) !important;
+}
+.#{$kr-prefix}border-bottom {
+	border-bottom: 1px solid var(--sdk-gloabl-border-color) !important;
+}
+
+.#{$kr-prefix}rounded {
+	border-radius: 0.375rem !important;
+}
+.#{$kr-prefix}rounded-0 {
+	border-radius: 0 !important;
+}
+.#{$kr-prefix}rounded-1 {
+	border-radius: 0.25rem !important;
+}
+.#{$kr-prefix}rounded-2 {
+	border-radius: 0.375rem !important;
+}
+.#{$kr-prefix}rounded-3 {
+	border-radius: 0.5rem !important;
+}
+.#{$kr-prefix}rounded-circle {
+	border-radius: 50% !important;
+}
+.#{$kr-prefix}rounded-pill {
+	border-radius: 50rem !important;
+}
+
+// ---- Shadow ----
+.#{$kr-prefix}shadow-none {
+	box-shadow: none !important;
+}
+.#{$kr-prefix}shadow-sm {
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+.#{$kr-prefix}shadow {
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+.#{$kr-prefix}shadow-lg {
+	box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+// ---- Visibility ----
+.#{$kr-prefix}visible {
+	visibility: visible !important;
+}
+.#{$kr-prefix}invisible {
+	visibility: hidden !important;
+}
+
+// ---- Z-index ----
+@each $z in (0, 1, 2, 3, 4, 5, 10, 50, 100, 1000, 1020, 1030, 1040, 1050) {
+	.#{$kr-prefix}z-#{$z} {
+		z-index: $z !important;
+	}
+}
+
+// ---- Pointer / user select ----
+.#{$kr-prefix}user-select-all {
+	user-select: all !important;
+}
+.#{$kr-prefix}user-select-auto {
+	user-select: auto !important;
+}
+.#{$kr-prefix}user-select-none {
+	user-select: none !important;
+}
+
+.#{$kr-prefix}pe-none {
+	pointer-events: none !important;
+}
+.#{$kr-prefix}pe-auto {
+	pointer-events: auto !important;
+}
+
+
+.#{$kr-prefix}btn-link{
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--sdk-global-theme-color);
+	padding: 0;
+	margin: 0;
+}
+
+.#{$kr-prefix}bg-white{
+	background-color: var(--sdk-global-white-bg);
+}
+
+.#{$kr-prefix}bg-transparent{
+	background-color: transparent;
+}

@@ -1,0 +1,163 @@
+.sa-answer-multi-select-dropdown-wrapper {
+    .sa-answer-multi-select-dropdown {
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover { border-color: var(--sdk-gloabl-border-color)  ; }
+        &.sa-answer-open  { border-color: var(--sdk-global-theme-color); }
+
+        .sa-answer-dropdown-content .sa-answer-dropdown-text.sa-answer-truncated { max-width: 200px; }
+
+        .sa-answer-chevron-icon {
+            width: 16px;
+            height: 16px;
+
+            svg { transition: transform 0.2s ease; }
+        }
+
+        &.sa-answer-open .sa-answer-chevron-icon svg { transform: rotate(180deg); }
+    }
+
+    // ─── Selected Tags ─────────────────────────────────────────────────────────
+
+    .sa-answer-selected-tags-container {
+        .sa-answer-tags-wrapper {
+            .sa-answer-selected-tag {
+                max-width: 200px;
+
+                .sa-answer-tag-text {
+                    color: var(--theme-panel-wigdet-primary-text-color);
+                    &.sa-answer-truncated { max-width: 150px; }
+                }
+
+                .sa-answer-tag-remove-btn {
+                    width: 12px;
+                    height: 12px;
+                    padding: 2px;
+                    border-radius: 2px;
+                    transition: background-color 0.2s ease;
+                    cursor: pointer;
+                    &:hover { background-color: var(--sdk-gloabl-bg-secondary); }
+                    svg { width: 12px; height: 12px; }
+                }
+            }
+        }
+
+        .sa-answer-tags-actions {
+            .sa-answer-show-hide-btn {
+                color: var(--sdk-global-theme-color);
+                transition: color 0.2s ease;
+                cursor: pointer;
+
+                &:hover { color: var(--sdk-global-theme-color); }
+
+                svg {
+                    transition: transform 0.2s ease;
+
+                    &.sa-answer-rotated { transform: rotate(180deg); }
+                }
+            }
+
+            .sa-answer-clear-all-btn {
+                color: var(--theme-panel-wigdet-secondary-text-color);
+                transition: color 0.2s ease;
+                cursor: pointer;
+
+                &:hover { color: var(--theme-panel-wigdet-primary-text-color); }
+            }
+        }
+    }
+
+    // ─── Dropdown Menu ─────────────────────────────────────────────────────────
+
+    .sa-answer-dropdown-menu {
+        box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.08), 0px 4px 8px -2px rgba(16, 24, 40, 0.08);
+
+        .sa-answer-search-section {
+            .sa-answer-search-input {
+                padding: 10px 14px;
+
+                .sa-answer-search-icon { width: 16px; height: 16px; }
+
+                .sa-answer-search-field {
+                    outline: none;
+
+                    &::placeholder { color: var(--theme-panel-wigdet-secondary-text-color); }
+                }
+            }
+        }
+
+        .sa-answer-action-buttons {
+            .sa-answer-select-all-btn,
+            .sa-answer-clear-btn {
+                color: var(--sdk-global-theme-color);
+                font-weight: 500;
+                cursor: pointer;
+
+                &:hover { text-decoration: underline; }
+            }
+
+            .sa-answer-clear-btn { color: var(--theme-panel-wigdet-secondary-text-color); }
+        }
+
+        .sa-answer-options-list {
+            max-height: 200px;
+
+            .sa-answer-option-item {
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+
+                &:hover { background-color: var(--sdk-gloabl-bg-secondary); }
+
+                &.sa-answer-selected {
+                    background-color: var(--sdk-gloabl-bg-secondary);
+
+                    .sa-answer-checkbox {
+                        background-color: var(--sdk-global-theme-color);
+                        border-color: var(--sdk-global-theme-color);
+                    }
+                }
+
+                .sa-answer-checkbox {
+                    width: 16px;
+                    height: 16px;
+                    border: 1px solid var(--sdk-gloabl-border-color);
+                    border-radius: 4px;
+                    background-color: var(--sdk-global-white-bg);
+                }
+
+                .sa-answer-option-label {
+                    &.sa-answer-truncated { max-width: 200px; }
+                }
+            }
+        }
+
+        .sa-answer-footer-buttons {
+            .sa-answer-cancel-btn,
+            .sa-answer-apply-btn {
+                padding: 4px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                border: 1px solid;
+                transition: all 0.2s ease;
+                font-weight: 500;
+            }
+
+            .sa-answer-cancel-btn {
+                background: var(--sdk-global-white-bg);
+                border-color: var(--sdk-gloabl-border-color);
+                color: var(--theme-panel-wigdet-primary-text-color);
+
+                &:hover { background: var(--sdk-gloabl-bg-secondary); }
+            }
+
+            .sa-answer-apply-btn {
+                background: var(--sdk-global-theme-color);
+                border-color: var(--sdk-global-theme-color);
+                color: var(--sdk-global-white);
+
+                &:hover { background: var(--sdk-global-theme-color); }
+            }
+        }
+    }
+}

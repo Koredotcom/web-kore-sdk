@@ -5,6 +5,8 @@ import { useEffect, useState } from 'preact/hooks';
 import {ImagePreviewTemplate} from '../imagePreviewTemplate/imagePreviewTemplate';
 import KoreHelpers from '../../../../utils/helpers';
 import FeedbackTemplate from '../feedbackTemplate/feedbackTemplate';
+import SearchResultsTemplate from '../SearchResultsTemplate/searchResultsTemplate';
+import { getSearchResults } from '../relevantResultsTemplate/searchResultsData';
 import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons';
 import { StreamingAnswersTemplate } from '../streamingAnswerTemplate/streamingAnswerTemplate';
 
@@ -40,6 +42,9 @@ export function Answers(props: any) {
     const [exactMatch, setExactMatch] = useState<boolean>(false);
 
     useEffect(() => {
+        if(messageObj?.msgData?.message[0]?.component?.payload?.answer_payload) {
+            messageObj.msgData.message[0].component.payload =  {...messageObj?.msgData?.message[0]?.component?.payload}
+        }
         const results = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0]?.snippet_content;
         const templateType = messageObj?.msgData?.message[0]?.component?.payload?.answer_payload?.center_panel?.data[0].snippet_type;
         setModelType(templateType);
@@ -80,6 +85,28 @@ export function Answers(props: any) {
         });
         setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
     }
+
+    const renderSearchResults = () => {
+        const payload = messageObj?.msgData?.message[0]?.component?.payload;
+        const searchResults = getSearchResults(payload);
+        const totalResults = payload.totalSearchResults||0;
+        if (!searchResults?.length) return null;
+        return (
+            <div class="sa-answer-relevant-results-wrap kwsdk-w-100 kwsdk-pt-2 kwsdk-pb-2 kwsdk-ps-4 kwsdk-pe-4">
+                <SearchResultsTemplate
+                    results={searchResults}
+                    totalResults={totalResults}
+                    hostInstance={hostInstance}
+                    msgData={{ template: payload, searchRequestId: payload?.searchRequestId }}
+                    onResultClick={(result: any) => {
+                        if (result.source.url) {
+                            window.open(result.source.url, '_blank');
+                        }
+                    }}
+                />
+            </div>
+        );
+    };
 
     //redirect to specific url
     const redirectToURL=(url:string)=>{
@@ -133,9 +160,6 @@ export function Answers(props: any) {
 
         const renderCitationList=(sourceIndex:any,hasSource:any,isSelected:any)=>
             {
-
-            
-            
             return <div className={`sa-tooltip-container ${isSelected && 'position-class'} `}>
                 { 
                 
@@ -175,8 +199,8 @@ export function Answers(props: any) {
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
-                        <div class="sa-answer-result-block">
-
+                        <div class="sa-answer-generative-stack kwsdk-d-flex kwsdk-flex-column kwsdk-gap-3 kwsdk-flex-grow-1 kwsdk-w-100 kwsdk-align-items-stretch">
+                            <div class="sa-answer-result-block sa-answer-ai-card kwsdk-pb-3">
                             <div className="sa-answer-header-block">
                                 <div className="sa-answer-left">
                                 {modelType === 'generative_model'&& <Fragment>
@@ -219,18 +243,24 @@ export function Answers(props: any) {
                             {
                                 (!isPlatform && hostInstance['saFeedback']?.enable && !messageObj?.msgData?.fromHistory && !messageObj?.msgData?.fromHistorySync) && <FeedbackTemplate data={hostInstance} searchRequestId={messageObj?.msgData?.message[0]?.component?.payload?.searchRequestId}/>
                             }
-                            
+                            </div>
+
+                            {renderSearchResults()}
                         </div>
 
                     </Fragment>
                 ) : (
                     <Fragment>
+                        <div class="sa-answer-generative-stack kwsdk-d-flex kwsdk-flex-column kwsdk-gap-3 kwsdk-flex-grow-1 kwsdk-w-100 kwsdk-align-items-stretch">
                         <div class="sa-answer-result-block">
                             <div class="sa-answer-result-heading">{answersObj?.extractive?.snippet_title}</div>
                             <div class="sa-answer-result-desc">{answersObj?.extractive?.snippet_content}</div>
 
                             <div class="sa-answer-result-footer">1. {answersObj?.extractive?.source}</div>
                         </div>
+                        {renderSearchResults()}
+                        </div>
+                        
                     </Fragment>
                 )
             }
