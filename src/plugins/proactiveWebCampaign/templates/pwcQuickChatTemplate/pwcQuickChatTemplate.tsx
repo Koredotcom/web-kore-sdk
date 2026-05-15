@@ -50,10 +50,10 @@ export function QuickChat(props: any) {
                     try {
 
                         hostInstance.config.botOptions.botInfo.customData =
-                            {
+                            [{
                                 callFlowId: experienceFlowId,
                                 state: "published"
-                            };
+                            }];
                         hostInstance.bot.sendMessage({
                             type: 'event',
                             eventType: 'quickChatTrigger',
