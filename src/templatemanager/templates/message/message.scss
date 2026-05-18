@@ -687,3 +687,9 @@
         }
     }
 }
+
+.bot-bubble-comp .time-stamp,
+.agent-bubble-comp .time-stamp {
+    direction: ltr;
+    unicode-bidi: isolate;
+}
