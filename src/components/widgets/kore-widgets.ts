@@ -452,7 +452,6 @@ class KoreWidgetSDK {
   // this.bot = requireKr('/KoreBot.js').instance();
   // //this.config.botOptions.
   constructor(config: any){
-    // Load precompiled widget templates into cache
     ($ as any).installPreCompiledTemplates(widgetTemplates);
     this.init(config);
   this.initVariables();
