@@ -39,7 +39,7 @@ class MessageTemplate {
     }
 
     getTemplateString() {
-        var msgTemplate = '<script id="chat_message_tmpl" type="text/x-jqury-tmpl"> \
+        var msgTemplate = '<script id="v2_chat_message_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             {{each(key, msgItem) msgData.message}} \
                 {{if msgItem.cInfo && msgItem.type === "text"}} \

@@ -25,7 +25,7 @@ class SystemTemplate {
 
     }
     getTemplateString() {
-        var systemTemplate = '<script id="chat_system_tmpl" type="text/x-jqury-tmpl"> \
+        var systemTemplate = '<script id="v2_chat_system_tmpl" type="text/x-jqury-tmpl"> \
                     {{if msgData.message}} \
                         {{each(key, msgItem) msgData.message}} \
                             {{if msgItem.cInfo && msgItem.type === "text"}} \

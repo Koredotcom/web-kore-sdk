@@ -138,7 +138,7 @@ class ListViewTemplate {
 
     }
     getTemplateString(type: any) {
-        var listViewTemplate = '<script id="chat_list_view_tmpl" type="text/x-jqury-tmpl"> \
+        var listViewTemplate = '<script id="v2_chat_list_view_tmpl" type="text/x-jqury-tmpl"> \
         {{if msgData.message}} \
             <li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon listView"> \
                 <div class="listViewTmplContent {{if msgData.message[0].component.payload.boxShadow}}noShadow{{/if}}"> \
@@ -160,7 +160,7 @@ class ListViewTemplate {
                                     <li class="listViewTmplContentChild"> \
                                         {{if msgItem.image_url}} \
                                             <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                                <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+                                                <img alt="image" src="${msgItem.image_url}" data-fallback-src="../libs/img/no_image.png"/> \
                                             </div> \
                                         {{/if}} \
                                         <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \
@@ -184,7 +184,7 @@ class ListViewTemplate {
             </li> \
         {{/if}} \
      </script>';
-        var listActionSheetTemplate = '<script id="chat_listview_actionsheet" type="text/x-jqury-tmpl">\
+        var listActionSheetTemplate = '<script id="v2_chat_listview_actionsheet" type="text/x-jqury-tmpl">\
      <div class="list-template-sheet hide">\
       {{if msgData.message}} \
         <div class="sheetHeader">\
@@ -202,7 +202,7 @@ class ListViewTemplate {
                         <li class="listViewTmplContentChild"> \
                               {{if msgItem.image_url}} \
                                   <div class="listViewRightContent" {{if msgItem.default_action && msgItem.default_action.url}}url="${msgItem.default_action.url}"{{/if}} {{if msgItem.default_action && msgItem.default_action.title}}data-value="${msgItem.default_action.title}"{{/if}} {{if msgItem.default_action && msgItem.default_action.type}}type="${msgItem.default_action.type}"{{/if}} {{if msgItem.default_action && msgItem.default_action.payload}} value="${msgItem.default_action.payload}"{{/if}}> \
-                                     <img alt="image" src="${msgItem.image_url}" onerror="this.onerror=null;this.src=\'../libs/img/no_image.png\';"/> \
+                                     <img alt="image" src="${msgItem.image_url}" data-fallback-src="../libs/img/no_image.png"/> \
                                  </div> \
                              {{/if}} \
                                  <div class="listViewLeftContent" data-url="${msgItem.default_action.url}" data-title="${msgItem.default_action.title}" data-value="${msgItem.default_action.title}"> \

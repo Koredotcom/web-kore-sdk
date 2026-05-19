@@ -2329,7 +2329,17 @@ getChatTemplate (tempType: string) {
              <ul class="chat-container"></ul> \
          </div> \
          <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-         <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
+         <div class="kore-chat-footer disableFooter">\
+         <div class="footerContainer pos-relative"> \
+             {{if userAgentIE}} \
+             <div role="textbox" class="chatInputBox inputCursor" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
+             {{else}} \
+             <div role="textbox" class="chatInputBox" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
+             {{/if}} \
+         <div class="attachment"></div> \
+         {{if !(isSendButton)}}<div class="chatSendMsg">${botMessages.entertosend}</div>{{/if}} \
+         </div>\
+         {{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
           <div id="myModal" class="modalImagePreview">\
                <span class="closeImagePreview">&times;</span>\
                <img class="modal-content-imagePreview" id="img01">\

@@ -459,7 +459,7 @@ class AdvancedListTemplate {
 			}
 
 			function buildPreviewModalTemplate(listItem: any) {
-				var modalPreview = '<script id="chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
+				var modalPreview = '<script id="v2_chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
 				<div class="advanced-list-wrapper img-with-title with-accordion if-multiple-accordions-list">\
 					<div class="multiple-accor-rows">\
 							<div class="accor-inner-content">\
@@ -578,7 +578,7 @@ class AdvancedListTemplate {
 		});
     }
     getTemplateString() {
-		var advancedListTemplate = '<script id="chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
+		var advancedListTemplate = '<script id="v2_chat_adv_list_tmpl" type="text/x-jqury-tmpl"> \
 		{{if msgData.message}} \
 		<li {{if msgData.type !== "bot_response"}}id="msg_${msgItem.clientMessageId}"{{/if}} class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} with-icon"> \
 		<div class="advanced-list-wrapper {{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType !="button"}}img-with-title with-accordion if-multiple-accordions-list{{/if}}{{if msgData && msgData.message[0] && msgData.message[0].component && msgData.message[0].component.payload && msgData.message[0].component.payload.listViewType ==="button"}}if-multiple-tags{{/if}} {{if msgData.message[0].component.payload.fromHistory}}fromHistory{{/if}}">\

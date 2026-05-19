@@ -198,77 +198,59 @@ function recordWorker() {
       }
     }
     compileInterpolationFunction() {
-      var toCompile = "var bufferLength = Math.min(buffer.length, this.outputBufferSize);\
-if ((bufferLength % " + this.channels + ") == 0) {\
-if (bufferLength > 0) {\
-var ratioWeight = this.ratioWeight;\
-var weight = 0;";
-      for (var channel = 0; channel < this.channels; ++channel) {
-        toCompile += "var output" + channel + " = 0;"
-      }
-      toCompile += "var actualPosition = 0;\
-var amountToNext = 0;\
-var alreadyProcessedTail = !this.tailExists;\
-this.tailExists = false;\
-var outputBuffer = this.outputBuffer;\
-var outputOffset = 0;\
-var currentPosition = 0;\
-do {\
-  if (alreadyProcessedTail) {\
-    weight = ratioWeight;";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "output" + channel + " = 0;"
-      }
-      toCompile += "}\
-  else {\
-    weight = this.lastWeight;";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "output" + channel + " = this.lastOutput[" + channel + "];"
-      }
-      toCompile += "alreadyProcessedTail = true;\
-  }\
-  while (weight > 0 && actualPosition < bufferLength) {\
-    amountToNext = 1 + actualPosition - currentPosition;\
-    if (weight >= amountToNext) {";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "output" + channel + " += buffer[actualPosition++] * amountToNext;"
-      }
-      toCompile += "currentPosition = actualPosition;\
-      weight -= amountToNext;\
-    }\
-    else {";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "output" + channel + " += buffer[actualPosition" + ((channel > 0) ? (" + " + channel) : "") + "] * weight;"
-      }
-      toCompile += "currentPosition += weight;\
-      weight = 0;\
-      break;\
-    }\
-  }\
-  if (weight == 0) {";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "outputBuffer[outputOffset++] = output" + channel + " / ratioWeight;"
-      }
-      toCompile += "}\
-  else {\
-    this.lastWeight = weight;";
-      for (channel = 0; channel < this.channels; ++channel) {
-        toCompile += "this.lastOutput[" + channel + "] = output" + channel + ";"
-      }
-      toCompile += "this.tailExists = true;\
-    break;\
-  }\
-} while (actualPosition < bufferLength);\
-return this.bufferSlice(outputOffset);\
-}\
-else {\
-return (this.noReturn) ? 0 : [];\
-}\
-}\
-else {\
-throw(new Error(\"Buffer was of incorrect sample length.\"));\
-}";
-      this.interpolate = Function("buffer", toCompile);
+      var self = this;
+      this.interpolate = function interpolate(buffer: any) {
+        var bufferLength = Math.min(buffer.length, self.outputBufferSize);
+        if ((bufferLength % self.channels) !== 0) {
+          throw new Error("Buffer was of incorrect sample length.");
+        }
+        if (bufferLength <= 0) {
+          return self.noReturn ? 0 : [];
+        }
+        var channels = self.channels;
+        var ratioWeight = self.ratioWeight;
+        var weight = 0;
+        var output = new Float64Array(channels);
+        var actualPosition = 0;
+        var amountToNext = 0;
+        var alreadyProcessedTail = !self.tailExists;
+        self.tailExists = false;
+        var outputBuffer = self.outputBuffer;
+        var outputOffset = 0;
+        var currentPosition = 0;
+        do {
+          if (alreadyProcessedTail) {
+            weight = ratioWeight;
+            for (var ch = 0; ch < channels; ++ch) { output[ch] = 0; }
+          } else {
+            weight = self.lastWeight;
+            for (var ch = 0; ch < channels; ++ch) { output[ch] = self.lastOutput[ch]; }
+            alreadyProcessedTail = true;
+          }
+          while (weight > 0 && actualPosition < bufferLength) {
+            amountToNext = 1 + actualPosition - currentPosition;
+            if (weight >= amountToNext) {
+              for (var ch = 0; ch < channels; ++ch) { output[ch] += buffer[actualPosition++] * amountToNext; }
+              currentPosition = actualPosition;
+              weight -= amountToNext;
+            } else {
+              for (var ch = 0; ch < channels; ++ch) { output[ch] += buffer[actualPosition + ch] * weight; }
+              currentPosition += weight;
+              weight = 0;
+              break;
+            }
+          }
+          if (weight === 0) {
+            for (var ch = 0; ch < channels; ++ch) { outputBuffer[outputOffset++] = output[ch] / ratioWeight; }
+          } else {
+            self.lastWeight = weight;
+            for (var ch = 0; ch < channels; ++ch) { self.lastOutput[ch] = output[ch]; }
+            self.tailExists = true;
+            break;
+          }
+        } while (actualPosition < bufferLength);
+        return self.bufferSlice(outputOffset);
+      };
     }
     bypassResampler(buffer: any) {
       if (this.noReturn) {

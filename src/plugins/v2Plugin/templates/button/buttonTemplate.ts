@@ -107,7 +107,7 @@ class ButtonTemplate {
 
     }
     getTemplateString() {
-        var buttonTemplate = '<script id="chat_button_tmpl" type="text/x-jqury-tmpl"> \
+        var buttonTemplate = '<script id="v2_chat_button_tmpl" type="text/x-jqury-tmpl"> \
             {{if msgData.message}} \
                 <li data-time="${msgData.createdOnTimemillis}" id="${msgData.messageId || msgItem.clientMessageId}"\
                     class="{{if msgData.type === "bot_response"}}fromOtherUsers{{else}}fromCurrentUser{{/if}} {{if msgData.icon}}with-icon{{/if}}"> \
