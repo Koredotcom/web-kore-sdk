@@ -612,14 +612,15 @@
 // Typing Indicator
 .typing-indicator-wraper{
     position: absolute;
-    top: -30px;
-    left: 16px;
+    top: -28px;
+    left: 0;
     width: auto;
-    min-width: 120px;
+    min-width: 116px;
     display: none;
     align-items: center;
     gap: 20px;
-    padding: 4px 0;
+    padding: 4px 0 4px 16px;
+    border-radius: 0px 6px 6px 0px;
     background: var(--sdk-global-white-bg);
     z-index: 9;
     p{

@@ -1942,6 +1942,10 @@ showTypingIndicator  () {
     $('.typingIndicatorContent').css('display', 'block');
   } else {
     me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'flex';
+    const chatBodyWrapper = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (chatBodyWrapper) {
+      chatBodyWrapper.style.paddingBottom = '30px';
+    }
   }
 };
 hideTypingIndicator  () {
@@ -1950,6 +1954,10 @@ hideTypingIndicator  () {
     $('.typingIndicatorContent').css('display', 'none');
   } else {
     me.chatEle.querySelector('.typing-indicator-wraper').style.display = 'none';
+    const chatBodyWrapper = me.chatEle.querySelector('.chat-widget-body-wrapper');
+    if (chatBodyWrapper) {
+      chatBodyWrapper.style.paddingBottom = '';
+    }
   }
 };
 renderMessage  (msgData: { createdOnTimemillis: number; createdOn: string | number | Date; type: string; icon: any; message: { component: { payload: { fromHistory: any; }; }; }[]; messageId: any; renderType: string; fromHistorySync: any; } | any) {
