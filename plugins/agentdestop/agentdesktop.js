@@ -89,11 +89,17 @@ function AgentDesktop(uuId, aResponse, botOptions) {
         },
         version: '18-Nov-2020'
     }
+    this.isVideoCallRecording = false;
+    this.isVideoCallRecordingPaused = false;
+
     this.callTerminated = function() {
         var callContainer = koreJquery("#callcontainer");
         callContainer.empty();
         this.removeAudoVideoContainer();
         this.disableMinimizeButton(false);
+        this.isVideoCallRecording = false;
+        this.isVideoCallRecordingPaused = false;
+        this.updateVideoCallRecordingUI();
     }
     this.showFooterButtons = function(callConnected, videoCall) {
         var footerButtonsHTML = null;
@@ -180,6 +186,13 @@ function AgentDesktop(uuId, aResponse, botOptions) {
         `<div id="video_view" class="video-view-">
             <video id="remote_video_tmp" autoplay="autoplay" playsinline style="display: block;"></video>
             <div class="action-minimize-audio-control">
+                <div id="recordingVideoInfo" class="recording-video-info" style="display: none;">
+                    <div class="recording-tooltip">This call is being recorded.</div>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M6 0.5C2.96243 0.5 0.5 2.96243 0.5 6C0.5 9.03757 2.96243 11.5 6 11.5C9.03757 11.5 11.5 9.03757 11.5 6C11.5 2.96243 9.03757 0.5 6 0.5Z" fill="#D92D20"/>
+                    </svg>
+                    <p>Rec</p>
+                </div>
                 <div id="maximizevideo" class="maximize-video">
                     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNC44NTQ4IDEwLjQwMTRDMTUuMTkxNCAxMC40MDE0IDE1LjQ2NzcgMTAuNjU5MSAxNS40OTc0IDEwLjk4NzlMMTUuNSAxMS4wNDY2VjEzLjMzMTVDMTUuNSAxNC40OTk5IDE0LjU3NTkgMTUuNDUyNSAxMy40MTg4IDE1LjQ5ODNMMTMuMzMxNSAxNS41SDExLjA0NjZDMTAuNjkwMyAxNS41IDEwLjQwMTQgMTUuMjExMiAxMC40MDE0IDE0Ljg1NDhDMTAuNDAxNCAxNC41MTgzIDEwLjY1OTEgMTQuMjQyIDEwLjk4NzkgMTQuMjEyM0wxMS4wNDY2IDE0LjIwOTdIMTMuMzMxNUMxMy43OTU0IDE0LjIwOTcgMTQuMTc1MyAxMy44NSAxNC4yMDc1IDEzLjM5NDNMMTQuMjA5NyAxMy4zMzE1VjExLjA0NjZDMTQuMjA5NyAxMC42OTAzIDE0LjQ5ODUgMTAuNDAxNCAxNC44NTQ4IDEwLjQwMTRaTTEuMTQ1MTYgMTAuNDAxNEMxLjQ4MTY4IDEwLjQwMTQgMS43NTgwMiAxMC42NTkxIDEuNzg3NjkgMTAuOTg3OUwxLjc5MDMyIDExLjA0NjZWMTMuMzMxNUMxLjc5MDMyIDEzLjc5NTQgMi4xNTAwMyAxNC4xNzUzIDIuNjA1NzUgMTQuMjA3NUwyLjY2ODQ2IDE0LjIwOTdINC45NTM0MUM1LjMwOTcyIDE0LjIwOTcgNS41OTg1NyAxNC40OTg1IDUuNTk4NTcgMTQuODU0OEM1LjU5ODU3IDE1LjE5MTQgNS4zNDA5MiAxNS40Njc3IDUuMDEyMTMgMTUuNDk3NEw0Ljk1MzQxIDE1LjVIMi42Njg0NkMxLjUwMDA2IDE1LjUgMC41NDc0OTQgMTQuNTc1OSAwLjUwMTcyMiAxMy40MTg4TDAuNSAxMy4zMzE1VjExLjA0NjZDMC41IDEwLjY5MDMgMC43ODg4NDkgMTAuNDAxNCAxLjE0NTE2IDEwLjQwMTRaTTQuOTUzNDEgMC41QzUuMzA5NzIgMC41IDUuNTk4NTcgMC43ODg4NDkgNS41OTg1NyAxLjE0NTE2QzUuNTk4NTcgMS40ODE2OCA1LjM0MDkyIDEuNzU4MDIgNS4wMTIxMyAxLjc4NzY5TDQuOTUzNDEgMS43OTAzMkgyLjY2ODQ2QzIuMjA0NTYgMS43OTAzMiAxLjgyNDY4IDIuMTUwMDMgMS43OTI1MyAyLjYwNTc1TDEuNzkwMzIgMi42Njg0NlY0Ljk1MzQxQzEuNzkwMzIgNS4zMDk3MiAxLjUwMTQ3IDUuNTk4NTcgMS4xNDUxNiA1LjU5ODU3QzAuODA4NjQ0IDUuNTk4NTcgMC41MzIzMDMgNS4zNDA5MiAwLjUwMjYzNyA1LjAxMjEzTDAuNSA0Ljk1MzQxVjIuNjY4NDZDMC41IDEuNTAwMDYgMS40MjQwNyAwLjU0NzQ5NCAyLjU4MTI0IDAuNTAxNzIyTDIuNjY4NDYgMC41SDQuOTUzNDFaTTEzLjMzMTUgMC41QzE0LjQ5OTkgMC41IDE1LjQ1MjUgMS40MjQwNyAxNS40OTgzIDIuNTgxMjRMMTUuNSAyLjY2ODQ2VjQuOTUzNDFDMTUuNSA1LjMwOTcyIDE1LjIxMTIgNS41OTg1NyAxNC44NTQ4IDUuNTk4NTdDMTQuNTE4MyA1LjU5ODU3IDE0LjI0MiA1LjM0MDkyIDE0LjIxMjMgNS4wMTIxM0wxNC4yMDk3IDQuOTUzNDFWMi42Njg0NkMxNC4yMDk3IDIuMjA0NTYgMTMuODUgMS44MjQ2OCAxMy4zOTQzIDEuNzkyNTNMMTMuMzMxNSAxLjc5MDMySDExLjA0NjZDMTAuNjkwMyAxLjc5MDMyIDEwLjQwMTQgMS41MDE0NyAxMC40MDE0IDEuMTQ1MTZDMTAuNDAxNCAwLjgwODY0NCAxMC42NTkxIDAuNTMyMzAzIDEwLjk4NzkgMC41MDI2MzdMMTEuMDQ2NiAwLjVIMTMuMzMxNVoiIGZpbGw9IiMyMDIxMjQiLz4KPC9zdmc+Cg==" />
                 </div>
@@ -241,6 +254,7 @@ function AgentDesktop(uuId, aResponse, botOptions) {
             audiovideocallcontainer.empty();
             if (_self.callDetails.videoCall) {
                 audiovideocallcontainer.append(videoContainerHTML);
+                _self.updateVideoCallRecordingUI();
                 koreJquery("#agentyou").hide()
                 var gLocalVideo = document.getElementById('local_video');
                 gLocalVideo["srcObject"] = gLocalVideo["srcObject"]
@@ -538,6 +552,30 @@ function AgentDesktop(uuId, aResponse, botOptions) {
             console.log("sent and received ack", ack)
         })
     }
+
+    this.updateVideoCallRecordingUI = function () {
+        var $el = koreJquery('#recordingVideoInfo');
+        if (!$el.length) { return; }
+    
+        if (!_self.isVideoCallRecording) {
+            $el.hide().removeClass('recording-info-paused');
+            $el.find('.recording-tooltip').text('This call is being recorded.');
+            $el.find('p').text('Rec');
+            return;
+        }
+    
+        $el.show();
+        if (_self.isVideoCallRecordingPaused) {
+            $el.addClass('recording-info-paused');
+            $el.find('.recording-tooltip').text('Recording paused');
+            $el.find('p').text('Rec Paused');
+        } else {
+            $el.removeClass('recording-info-paused');
+            $el.find('.recording-tooltip').text('This call is being recorded.');
+            $el.find('p').text('Rec');
+        }
+    };
+
     if (window && window.KoreSDK && window.KoreSDK.dependencies && window.KoreSDK.dependencies.jQuery) {
         //load kore's jquery version
         koreJquery = window.KoreSDK.dependencies.jQuery;
@@ -629,6 +667,9 @@ function AgentDesktop(uuId, aResponse, botOptions) {
             _self.removeAudoVideoContainer()
             _self.showPhonePanel = false;
             _self.showVideo = false;
+            _self.isVideoCallRecording = false;
+            _self.isVideoCallRecordingPaused = false;
+            _self.updateVideoCallRecordingUI();
             if (_self.activeCall) {
                 _self.activeCall.terminate();
                 _self.phone.deinit();
@@ -680,6 +721,71 @@ function AgentDesktop(uuId, aResponse, botOptions) {
                 timestamp : new moment()
             });
             localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
+        } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request') {
+            var videoCallRecordingTemplate = `
+            <div class="recording-session-started-info-bottomslider active">
+                <div class="recording-session-backdrop"></div>
+                <div class="recording-session-data"> 
+                    <div class="recording-session-data-inner-content"> 
+                        <div class="data-wrapper-content">
+                            <div class="warning-block-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M11.9998 8.99999V13M11.9998 17H12.0098M10.6151 3.89171L2.39019 18.0983C1.93398 18.8863 1.70588 19.2803 1.73959 19.6037C1.769 19.8857 1.91677 20.142 2.14613 20.3088C2.40908 20.5 2.86435 20.5 3.77487 20.5H20.2246C21.1352 20.5 21.5904 20.5 21.8534 20.3088C22.0827 20.142 22.2305 19.8857 22.2599 19.6037C22.2936 19.2803 22.0655 18.8863 21.6093 18.0983L13.3844 3.89171C12.9299 3.10654 12.7026 2.71396 12.4061 2.58211C12.1474 2.4671 11.8521 2.4671 11.5935 2.58211C11.2969 2.71396 11.0696 3.10655 10.6151 3.89171Z" stroke="#DC6803" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <h1>Recording Started</h1>
+                            <p>This video call will now be recorded to help improve our services. Please do not share sensitive information like passwords or OTPs. If you’re not comfortable with recording, let the agent know or you may end the call.</p>
+                        </div>
+                        <div class="footer-button-record-session">
+                            <button id="rejectRecording" class="cancel-button">Decline</button>
+                            <button id="acceptRecording" class="proceed-button">Proceed</button>
+                        </div>
+                    </div> 
+                </div>
+            </div>`;
+
+            koreJquery('.kore-chat-window').append(videoCallRecordingTemplate);
+
+            var rejectRecordingCall = koreJquery("#rejectRecording");
+            var acceptRecordingCall = koreJquery("#acceptRecording");
+            rejectRecordingCall.off('click').on('click', function (event) {
+                var payload = _self.callDetails;
+                payload['type'] = "video_call_recording_declined";
+                var messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": _self.callDetails,
+                    "type": ""
+                };
+                events.sendMessage(messageToBot, function (err) { });
+                koreJquery('.kore-chat-window').find('.recording-session-started-info-bottomslider').remove();
+                _self.isVideoCallRecording = false;
+                _self.isVideoCallRecordingPaused = false;
+                _self.updateVideoCallRecordingUI();
+            });
+            acceptRecordingCall.off('click').on('click', function (event) {
+                var payload = _self.callDetails;
+                payload['type'] = "video_call_recording_accepted";
+                var messageToBot = {};
+                messageToBot["event"] = "event";
+                messageToBot["message"] = {
+                    "body": _self.callDetails,
+                    "type": ""
+                };
+                events.sendMessage(messageToBot, function (err) { });
+                koreJquery('.kore-chat-window').find('.recording-session-started-info-bottomslider').remove();
+                _self.isVideoCallRecording = true;
+                _self.isVideoCallRecordingPaused = false;
+                _self.updateVideoCallRecordingUI();
+            });
+        } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request_timeout') {
+            koreJquery('.kore-chat-window').find('.recording-session-started-info-bottomslider').remove();
+        } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_resume') {
+            _self.isVideoCallRecordingPaused = false;
+            _self.updateVideoCallRecordingUI();
+        } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_pause') {
+            _self.isVideoCallRecordingPaused = true;
+            _self.updateVideoCallRecordingUI();
         }
     });
     this.getPageTitle = function() {

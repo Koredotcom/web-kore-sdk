@@ -3035,3 +3035,149 @@
 #kr_chatContainer{
     display: none;/*remove this minimizeMode false*/
 }
+
+@keyframes slideUpBottomSlider {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInBackdrop {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider {
+    position: absolute;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: none;
+    animation: fadeInBackdrop 0.3s ease-out;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider[style*="display: block"],
+.kore-chat-window .recording-session-started-info-bottomslider[style*="display:block"],
+.kore-chat-window .recording-session-started-info-bottomslider.active {
+    display: block;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-backdrop {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content {
+    width: 100%;
+    max-height: 75%;
+    border-radius: 12px 12px var(--none, 0) var(--none, 0);
+    background: var(--sdk-chat-widow-default-white);
+    box-shadow: 0 20px 24px -4px var(--Focus-Ring-Neutral-8-pg, rgba(16, 24, 40, 0.08)), 0 8px 8px -4px var(--Focus-Ring-Neutral-4-pg, rgba(16, 24, 40, 0.04));
+    overflow: auto;
+    animation: slideUpBottomSlider 0.3s ease-out;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .data-wrapper-content {
+    display: flex;
+    padding: var(--xl, 24px) var(--xl, 24px) var(--default, 24px) var(--xl, 24px);
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .data-wrapper-content .warning-block-icon {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--full, 9999px);
+    background: var(--colors-background-bg-warning-secondary, #FEF0C7);
+    margin-bottom: 16px;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .data-wrapper-content h1 {
+    color: var(--sdk-chat-widow-primary-font-color);
+    font-size: var(--font-size-text-lg, 18px);
+    font-weight: var(--font-weight-normal-Semibold, 600);
+    line-height: var(--font-line-height-text-lg, 28px);
+    margin: 0 0 4px 0;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .data-wrapper-content p {
+    color: var(--colors-text-text-tertiary-600, #475467);
+    font-size: var(--font-size-text-sm, 14px);
+    font-style: normal;
+    font-weight: var(--font-weight-normal-Regular, 400);
+    line-height: var(--font-line-height-text-sm, 20px);
+    margin: 0;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .footer-button-record-session {
+    display: flex;
+    padding: var(--md, 12px) var(--default, 24px);
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: var(--Gutter-CTA, 8px);
+    align-self: stretch;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .footer-button-record-session button {
+    display: flex;
+    padding: var(--default, 8px) var(--lg, 16px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: var(--default, 8px);
+    font-size: var(--font-size-text-sm, 14px);
+    font-weight: var(--font-weight-normal-Medium, 500);
+    line-height: var(--font-line-height-text-sm, 20px);
+    height: 40px;
+    cursor: pointer;
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .footer-button-record-session button.cancel-button {
+    border: var(--Border-Stroke-Default, 1px) solid var(--component-colors-components-buttons-secondary-button-secondary-border, #D0D5DD);
+    background: var(--component-colors-components-buttons-secondary-button-secondary-bg, #FFF);
+    color: var(--component-colors-components-buttons-secondary-button-secondary-fg, #344054);
+}
+
+.kore-chat-window .recording-session-started-info-bottomslider .recording-session-data .recording-session-data-inner-content .footer-button-record-session button.proceed-button {
+    border: var(--Border-Stroke-Default, 1px) solid var(--component-colors-components-buttons-primary-button-primary-border, #155EEF);
+    background: var(--component-colors-components-buttons-primary-button-primary-bg, #155EEF);
+    color: var(--component-colors-components-buttons-primary-button-primary-fg, #FFF);
+}
