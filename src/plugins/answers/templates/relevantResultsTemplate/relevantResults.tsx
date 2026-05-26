@@ -111,9 +111,9 @@ export const showFileUrl = (image_urls: any, title: string) => {
 };
 
 export const renderImageWithZoom = (src: string, title: string, onClick: () => void) => (
-    <div className="sa-answer-image-thumbnail-wrapper kwsdk-overflow-hidden kwsdk-position-relative" onClick={onClick}>
-        <img className="sa-answer-result-text-image-img kwsdk-d-block kwsdk-w-100 kwsdk-h-100" src={src} alt="Result" />
-        <div className="sa-answer-image-zoom-overlay kwsdk-position-absolute kwsdk-z-10 kwsdk-pe-none kwsdk-top-50 kwsdk-start-50 kwsdk-flex kwsdk-align-items-center kwsdk-justify-content-center">
+    <div className="sa-answer-image-thumbnail-wrapper kwsdk-rounded-1 kwsdk-overflow-hidden kwsdk-position-relative kwsdk-flex-shrink-1" onClick={onClick}>
+        <img className="sa-answer-result-text-image-img kwsdk-rounded-1 kwsdk-d-block kwsdk-w-100 kwsdk-h-100" src={src} alt="Result" />
+        <div className="sa-answer-image-zoom-overlay kwsdk-rounded-1 kwsdk-position-absolute kwsdk-z-10 kwsdk-pe-none kwsdk-top-50 kwsdk-start-50 kwsdk-flex kwsdk-align-items-center kwsdk-justify-content-center">
             <RelevantResultsSvgIcons type="zoom-icon" />
         </div>
     </div>
