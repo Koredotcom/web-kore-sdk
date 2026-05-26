@@ -299,7 +299,7 @@ class RatingTemplate {
                       {{each(key, msgItem) msgData.message[0].component.payload.numbersArrays}}\
                       <div class="ratingValue emoji-rating" value="${msgItem.value}" data-id="${msgItem.numberId}">\
                          <div class="rating" id="rating_${msgItem.numberId}"  value="${msgItem.value}">${msgItem.numberId}</div>\
-                         <div class="emoji-desc" title="${msgItem.reviewText}">${msgItem.reviewText}</div>\</div>\
+                         <div class="emoji-desc" title="${msgItem.reviewText}">${msgItem.reviewText}</div></div>\
                       {{/each}}\
                       </div>\
                       {{/if}}\
