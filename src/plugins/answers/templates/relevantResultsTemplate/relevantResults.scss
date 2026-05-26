@@ -87,6 +87,8 @@
         .sa-answer-result-text-section{
             .sa-answer-text-container{
                 .kwsdk-line-clamp-3{
+                    word-break: break-word;
+                    overflow-wrap: break-word;
                     &.sa-answer-expanded{
                         display: block !important;
                     }
@@ -107,6 +109,40 @@
             .sa-answer-divider{
                 border: 1px solid var(--sdk-gloabl-border-color);
             }
+        }
+    }
+}
+.sa-answer-image-thumbnail-wrapper{
+    width: 64px;
+    height: 48px;
+    cursor: pointer;
+
+    .sa-answer-result-text-image-img {
+        object-fit: cover;
+    }
+
+    .sa-answer-image-zoom-overlay {
+        transform: translate(-50%, -50%);
+        width: 24px;
+        height: 24px;
+        background: transparent;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    &:hover {
+        border: 1px solid var(--sdk-global-theme-color);
+        &::after {
+            position: absolute;
+            content: '';
+            top: 0;
+            background-color: #10182894;
+            width: 100%;
+            height: 100%;
+        }
+        .sa-answer-image-zoom-overlay {
+            opacity: 1;
+            visibility: visible;
         }
     }
 }
