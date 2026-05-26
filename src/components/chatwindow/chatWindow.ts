@@ -2329,7 +2329,17 @@ getChatTemplate (tempType: string) {
              <ul class="chat-container"></ul> \
          </div> \
          <div class="typingIndicatorContent"><div class="typingIndicator"></div><div class="movingDots"></div></div> \
-         <div class="kore-chat-footer disableFooter">' + chatFooterTemplate + '{{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
+         <div class="kore-chat-footer disableFooter">\
+         <div class="footerContainer pos-relative"> \
+             {{if userAgentIE}} \
+             <div role="textbox" class="chatInputBox inputCursor" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
+             {{else}} \
+             <div role="textbox" class="chatInputBox" aria-label="Message" contenteditable="true" placeholder="${botMessages.message}"></div> \
+             {{/if}} \
+         <div class="attachment"></div> \
+         {{if !(isSendButton)}}<div class="chatSendMsg">${botMessages.entertosend}</div>{{/if}} \
+         </div>\
+         {{if isSendButton}}<div class="sendBtnCnt"><button class="sendButton disabled" type="button">${botMessages.sendText}</button></div>{{/if}}</div> \
           <div id="myModal" class="modalImagePreview">\
                <span class="closeImagePreview">&times;</span>\
                <img class="modal-content-imagePreview" id="img01">\
@@ -2763,7 +2773,7 @@ showError (response:any) {
   }
 };
 
-bottomSliderAction(action: any, appendElement: any, fullSlide?: any) {
+bottomSliderAction(action: any, appendElement: any, fullSlide?: any, customClass?: string, parentCustomClass?: string) {
   const me: any = this;
   if (me.config.UI.version == 'v2') {
     $(".kore-action-sheet").animate({ height: 'toggle' });
@@ -2781,6 +2791,12 @@ bottomSliderAction(action: any, appendElement: any, fullSlide?: any) {
     const actionSlider: any = getHTML(ActionsBottomSlider, '', me);
     if (fullSlide) {
       actionSlider.querySelector('.actions-contnet-data').classList.add('actions-contnet-full-height');
+    }
+    if (customClass) {
+      actionSlider.querySelector('.actions-contnet-data').classList.add(customClass);
+    }
+    if (parentCustomClass) {
+      actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').parentElement.classList.add(parentCustomClass);
     }
     actionSlider.querySelector('.chat-actions-bottom-wraper > .actions-contnet-data').appendChild(appendElement);
     me.chatEle.appendChild(actionSlider);

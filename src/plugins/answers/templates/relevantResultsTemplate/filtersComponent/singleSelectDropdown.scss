@@ -1,0 +1,79 @@
+.sa-answer-single-select-dropdown-wrapper {
+    .sa-answer-single-select-dropdown {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        svg{
+            path{
+                stroke: var(--sdk-gloabl-text-color);
+            }
+        }
+        &.sa-answer-open {
+            .sa-answer-chevron-icon {
+                svg { 
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+
+    // ─── Dropdown Menu ─────────────────────────────────────────────────────────
+
+    .sa-answer-dropdown-menu {
+        box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.08), 0px 4px 8px -2px rgba(16, 24, 40, 0.08);
+        .sa-answer-search-section {
+            .sa-answer-search-input {
+                padding: 10px 14px;
+                .sa-answer-search-icon {
+                    width: 16px;
+                    height: 16px;
+                    svg{
+                        path{
+                            stroke: var(--sdk-gloabl-text-color);
+                        }
+                    }
+                }
+                .sa-answer-search-field {
+                    outline: none;
+                    &::placeholder { 
+                        color: var(--sdk-gloabl-text-color); 
+                    }
+                }
+            }
+        }
+
+        .sa-answer-options-list {
+            max-height: 200px;
+
+            .sa-answer-option-item {
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+
+                &:hover { 
+                    background-color: var(--sdk-gloabl-bg-secondary); 
+                }
+                &.sa-answer-selected { 
+                    background-color: var(--sdk-gloabl-bg-secondary); 
+                }
+
+                .sa-answer-option-content {
+                    .sa-answer-option-label {
+                        &.sa-answer-truncated { 
+                            max-width: 200px; 
+                        }
+                    }
+                }
+
+                .sa-answer-check-icon {
+                    width: 20px;
+                    height: 20px;
+                    svg{
+                        path{
+                            stroke: var(--sdk-global-theme-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

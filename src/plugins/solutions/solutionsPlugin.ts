@@ -1,5 +1,6 @@
 import QuickRepliesWelcome from './templates/quickRepliesWelcomeTemplate/quick-replies-welcome';
-import searchResultsTemplate from './templates/SearchResultsTemplate/searchResults'
+import searchResultsTemplate from './templates/SearchResultsTemplate/searchResults';
+import solutionsTemplates from './precompiled-templates-solutions';
 
 /**
  *  Solutions template plugin class
@@ -37,6 +38,7 @@ class SolutionsTemplatesPlugin {
     onInit() {
         let me = this;
         let $ = me.hostInstance.$;
+        $.installPreCompiledTemplates(solutionsTemplates);
         me.installPickerTemplates();
         $('.kore-chat-window').addClass('solutions');
 

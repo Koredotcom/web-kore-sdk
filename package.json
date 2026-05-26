@@ -1,11 +1,12 @@
 {
   "name": "kore-web-sdk",
-  "version": "11.23.1",
+  "version": "11.24.1",
   "description": "Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore.ai Bots chat capability into custom applications",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-umd": "webpack --env=kore_env=prod --env=target_module=umd",
-    "build-esm": "webpack --env=kore_env=prod  --env=target_module=esm",
+    "precompile-templates": "node scripts/precompile-templates.js",
+    "build-umd": "npm run precompile-templates && webpack --env=kore_env=prod --env=target_module=umd",
+    "build-esm": "npm run precompile-templates && webpack --env=kore_env=prod  --env=target_module=esm",
     "build": "npm run-script build-umd && npm run-script build-esm",
     "serve-umd": "webpack-dev-server --env=kore_env=dev  --env=component=chat  --env=target_module=umd",
     "serve": "webpack-dev-server --env=kore_env=dev --env=component=chat --env=target_module=esm --mode development",
@@ -29,7 +30,7 @@
   "module": "dist/esm/exports.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v3/11.23.1"
+    "url": "git@github.com:Koredotcom/web-kore-sdk.git#v3/11.24.1"
   },
   "author": "Rajasekhar Balla",
   "license": "MIT",

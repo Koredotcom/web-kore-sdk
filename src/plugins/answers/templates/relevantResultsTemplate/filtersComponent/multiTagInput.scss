@@ -1,0 +1,28 @@
+.sa-answer-multi-tag-input-wrapper {
+    .sa-answer-multi-tag-input {
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover { border-color: var(--sdk-global-theme-color); }
+
+        &.sa-answer-focused {
+            border-color: var(--sdk-global-theme-color);
+            box-shadow: 0px 0px 0px 4px rgba(41, 112, 255, 0.24), 0px 1px 2px 0px rgba(16, 24, 40, 0.04);
+        }
+
+        .sa-answer-input-content {
+            .sa-answer-input-text {
+                color: var(--theme-panel-wigdet-primary-text-color);
+            }
+        }
+
+        .sa-answer-chevron-icon {
+            width: 16px;
+            height: 16px;
+
+            svg { transition: transform 0.2s ease; }
+        }
+
+        &.sa-answer-focused .sa-answer-chevron-icon svg { transform: rotate(180deg); }
+    }
+}

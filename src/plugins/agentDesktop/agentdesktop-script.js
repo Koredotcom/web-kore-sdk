@@ -38,7 +38,7 @@
                                     n.o = function (t, e) { 
                                         return Object.prototype.hasOwnProperty.call(t, e) }, 
                                         n.p = "", n(n.s = 18) }([function (t, e) { 
-                                            t.exports = "undefined" != typeof self ? self : "undefined" != typeof window ? window : Function("return this")() }, 
+                                            t.exports = "undefined" != typeof self ? self : "undefined" != typeof window ? window : globalThis }, 
                                             function (t, e, n) { 
                                                 var r = n(24), o = n(25), i = String.fromCharCode(30); 
                                                 t.exports = { protocol: 4, encodePacket: r, encodePayload: function (t, e) { 
@@ -8340,6 +8340,8 @@ rrwebInit = function (exports) {
             var _this = this;
             var _a, _b;
             var d = e.data;
+            if (!d || typeof d !== 'object') return;
+            if (Object.prototype.hasOwnProperty.call(d, '__proto__') || Object.prototype.hasOwnProperty.call(d, 'constructor') || Object.prototype.hasOwnProperty.call(d, 'prototype')) return;
             switch (d.source) {
                 case exports.IncrementalSource.Mutation: {
                     if (isSync) {
@@ -8671,6 +8673,8 @@ rrwebInit = function (exports) {
         Replayer.prototype.applyMutation = function (d, useVirtualParent) {
             var e_11, _a;
             var _this = this;
+            if (!d || typeof d !== 'object') return;
+            if (Object.prototype.hasOwnProperty.call(d, '__proto__') || Object.prototype.hasOwnProperty.call(d, 'constructor') || Object.prototype.hasOwnProperty.call(d, 'prototype')) return;
             d.removes.forEach(function (mutation) {
                 var target = _this.mirror.getNode(mutation.id);
                 if (!target) {
