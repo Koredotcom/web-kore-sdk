@@ -105,8 +105,8 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
                         <TableContentBlock
                             text={result.snippet}
                             title={result.source.title}
-                            textClassName="sa-answer-result-snippet"
-                            className="sa-answer-result-text-image kwsdk-line-clamp-3 kwsdk-text-xs"
+                            textClassName="sa-answer-result-snippet kwsdk-line-clamp-3 kwsdk-text-xs"
+                            className="sa-answer-result-text-image"
                             extraChildren={result.source.imageUrls?.[0]
                                 ? renderImageWithZoom(
                                     result.source.imageUrls[0],
