@@ -63,14 +63,38 @@ export function Message(props: any) {
         }, 800);
     }
 
-    const download = (url: any, filename: any) => {
+    const download = (url: any, filename: any, base64Data?: any) => {
         let link = document.createElement("a");
         link.download = filename;
         link.target = "_blank";
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        
+        if (base64Data && base64Data.startsWith('data:')) {
+            // Handle base64 data URL
+            const base64String = base64Data.split(',')[1];
+            const mimeType = base64Data.split(',')[0].split(':')[1].split(';')[0];
+            const byteCharacters = atob(base64String);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: mimeType });
+            const blobUrl = URL.createObjectURL(blob);
+            link.href = blobUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            // Clean up the object URL after a short delay
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+        } else if (url) {
+            // Handle regular URL
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            console.warn('No download URL or base64 data available');
+        }
     }
 
     let botStyles = {
@@ -232,7 +256,7 @@ export function Message(props: any) {
                                                     <h2>{attachment.fileName}</h2>
                                                     <p>{`${attachment.size} MB`}</p>
                                                 </div>
-                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>{hostInstance.config.botMessages.download}</button>
+                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName || 'file', attachment.fileContentBase64)}>Download</button>
                                             </div>
                                         </div>
                                     </section>
@@ -254,8 +278,8 @@ export function Message(props: any) {
                                             <div className="attchment-details">
                                                 <div className="content-info">
                                                     { attachment.fileType == 'video' && 
-                                                        <video width="240" height="145" controls>
-                                                            <source src={attachment.fileContentBase64 || attachment.fileUrl}></source>
+                                                        <video width="240" height="145" controls playsInline>
+                                                            <source src={attachment.fileContentBase64 || attachment.fileUrl} type={attachment.fileContentBase64 ? attachment.fileContentBase64.split(';')[0].split(':')[1] : 'video/mp4'}></source>
                                                         </video>
                                                     }
                                                     <h1>{attachment.fileName}</h1>
@@ -265,7 +289,7 @@ export function Message(props: any) {
                                                         </audio> }
                                                     <p>{`${attachment.size} MB`}</p>
                                                 </div>
-                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName?.split('.')?.[0] || 'file')}>{hostInstance.config.botMessages.download}</button>
+                                                <button className="kr-button-blue-light" onClick={() => download(attachment.fileUrl, attachment.fileName || 'file', attachment.fileContentBase64)}>Download</button>
                                             </div>
                                         </div>
                                     </div>
