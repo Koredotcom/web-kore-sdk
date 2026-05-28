@@ -148,7 +148,7 @@ export function TableContentBlock({
     };
 
     const containerClass = [
-        'sa-answer-search-results-table-container',
+        'sa-answer-search-results-table-container kwsdk-d-flex kwsdk-gap-2',
         hasTable ? 'sa-answer-has-table' : '',
         isLargeTable ? 'sa-answer-has-large-table' : '',
         className,

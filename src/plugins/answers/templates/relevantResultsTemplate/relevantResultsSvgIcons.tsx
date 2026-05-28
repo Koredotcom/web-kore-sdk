@@ -3,8 +3,10 @@ import React from 'preact/compat';
 export const renderConnectorIcons = (icon: string, hostInstance: any) => {
     let baseUrl = hostInstance?.config?.botOptions?.koreAPIUrl?.replace(/\/?$/, "/") || '';
     if (baseUrl.includes('/api/')) {
-        baseUrl = baseUrl.replace('/api/', '/');
+        baseUrl = baseUrl.replace('/api/', '/1.1/');
     }
+    // Remove any trailing version-like segment (e.g., '/1.1/', '/2/', '/3.0/', etc.) at the end of the baseUrl
+    baseUrl = baseUrl.replace(/\/\d+(\.\d+)?\/$/, '/');
     let connectorIcon = baseUrl + 'static/sa/img/connectors/' + icon + '.png';
     return <img width="12" height="12" src={connectorIcon} alt={icon} />;
 }

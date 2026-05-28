@@ -3,6 +3,7 @@
 .sa-answer-search-results-table-container {
     .sa-answer-result-text,
     .sa-answer-result-snippet {
+         flex: 1;
         pre {
             white-space: pre-wrap;
             word-break: break-word;
