@@ -140,7 +140,7 @@ export function TableContentBlock({
     const { textBefore, tableMarkdown } = splitMarkdownAtFirstTable(text);
     const hasTable = !!tableMarkdown;
     const { rowCount, colCount } = hasTable ? getTableDimensions(tableMarkdown) : { rowCount: 0, colCount: 0 };
-    const isLargeTable = rowCount > 1;
+    const isLargeTable = (rowCount>0 || colCount > 0);
 
     const handleExpandTable = () => {
         const tableEl = tableRef.current?.querySelector('table');
@@ -149,7 +149,7 @@ export function TableContentBlock({
 
     const containerClass = [
         'sa-answer-search-results-table-container kwsdk-d-flex kwsdk-gap-2',
-        hasTable ? 'sa-answer-has-table' : '',
+        hasTable ? 'sa-answer-has-table '+ (!textBefore ? ' sa-answer-has-no-text' : '') : '',
         isLargeTable ? 'sa-answer-has-large-table' : '',
         className,
     ].filter(Boolean).join(' ');
@@ -158,7 +158,7 @@ export function TableContentBlock({
         <div className={containerClass}>
             {extraChildren}
             {/* Text-only div – lineClamp / overflow:hidden applies only here */}
-            <div className={`${textClassName} ${isExpanded ? 'sa-answer-expanded' : 'sa-answer-truncated'}`}>
+            <div className={`${textClassName} ${isExpanded ? 'sa-answer-expanded' : 'sa-answer-truncated'} ${(hasTable && !textBefore && !inlineChildren) ? 'kwsdk-d-none' : ''}`}>
                 {CMHelpers(hasTable ? textBefore : text)}
                 {inlineChildren}
 

@@ -40,7 +40,7 @@ export function Answers(props: any) {
     const [modelType, setModelType] = useState('');
     const [selectedIndex, setSelectedIndex] = useState<any>([]);
     const [exactMatch, setExactMatch] = useState<boolean>(false);
-
+    const [indexObj, setIndexObj] = useState<any>({});
     useEffect(() => {
         if(messageObj?.msgData?.message[0]?.component?.payload?.answer_payload) {
             messageObj.msgData.message[0].component.payload =  {...messageObj?.msgData?.message[0]?.component?.payload}
@@ -65,25 +65,36 @@ export function Answers(props: any) {
                         "title": source?.title, 
                         "id": source?.doc_id, 
                         "url": source?.url, 
-                        "image_url": source?.image_url || [] 
+                        "image_url": source?.image_url || []
                     });
                 }
             });
         });
         
         // Process answer fragments and map them to all relevant sources
+       let indexObj:any = {};
         data?.forEach((answer: any) => {
             let indexes:any = [];
             answer?.sources?.forEach((source: any) => {
                 const index = sources_data.findIndex((existingSource: any) => existingSource.url === source?.url);
                 if (index !== -1) {
                     indexes.push(index);
+                    indexObj[index] = {"title":source?.title, "url": source?.url, index:index};
                 }
             });
 
             answer_fragment.push({ "title": answer?.answer_fragment, "indexes": indexes });
         });
-        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data} }));
+        setIndexObj(indexObj);
+        // Filter duplicate titles from sources_data and store in sourceNamesArr
+        let sourceNamesArr: any = sources_data.reduce((uniqueSources: any[], source: any) => {
+            if (!uniqueSources.some(item => item.title === source.title)) {
+                uniqueSources.push(source);
+            }
+            return uniqueSources;
+        }, []);
+        
+        setAnswersObj((prevState: any) => ({ ...prevState, "generative": { "answerFragment": answer_fragment,  "sources": sources_data, "sourceNamesArr": sourceNamesArr } }));
     }
 
     const renderSearchResults = () => {
@@ -123,6 +134,15 @@ export function Answers(props: any) {
             document.body.appendChild(tempDiv);
             const sourceData = {"image_urls":Array.isArray(image_urls) ? image_urls : [image_urls],"title":title}
             render(<ImagePreviewTemplate data={sourceData}/>,tempDiv);
+    }
+    const onMouseOverSelectedIndex = (source:any) => {
+        let selectedArr:any = [];
+        answersObj?.generative?.sources.forEach((item: any, index: number) => {
+        if(item.title === source.title){
+                selectedArr.push(index);
+        }
+        });
+        setSelectedIndex(selectedArr);
     }
 
     const  extractShortDomainOrFile=(link:string) =>{
@@ -217,11 +237,11 @@ export function Answers(props: any) {
                             </div>
                             <div className="sa-answer-gen-footer">
                                     {
-                                        answersObj?.generative?.sources?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
+                                        answersObj?.generative?.sourceNamesArr?.filter((source: any) => source?.title?.length > 0)?.map((source: any, index: number) => (
                                             <div className='sa-tooltip-container'>
 
-                                            <div className={`sa-answer-result-footer  ${(selectedIndex.includes(index))&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
-                                                    onMouseOver={() => setSelectedIndex([index])}
+                                            <div className={`sa-answer-result-footer  ${([source?.title , source?.url].includes(indexObj?.[selectedIndex[0]]?.title))&&'selected'} ${!source?.url && 'pointer-events-none'}`} 
+                                                    onMouseOver={() => onMouseOverSelectedIndex(source)}
                                                     onMouseOut={() => setSelectedIndex([])}>
                                             <span onClick={()=>redirectToURL(source?.url)}>{index + 1}. <span>{ extractShortDomainOrFile(source?.title || source?.url)}</span></span>
                                                     {(source?.image_url?.length > 0)&&
