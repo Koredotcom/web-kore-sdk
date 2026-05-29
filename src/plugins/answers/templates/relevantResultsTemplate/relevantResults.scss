@@ -98,6 +98,9 @@
         .sa-answer-has-table + .sa-answer-see-more-link {
             inset-block-end: 37px;
         }
+        .sa-answer-has-table.sa-answer-has-no-text + .sa-answer-see-more-link {
+            display: none;
+        }
    
         .sa-answer-see-more-link , .sa-answer-see-less-link{
             inset-inline-end: 0px;

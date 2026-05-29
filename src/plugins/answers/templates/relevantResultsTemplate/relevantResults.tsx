@@ -405,7 +405,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                             <span className="sa-answer-file-name kwsdk-text-truncate kwsdk-mw-100" onClick={() => openUrl(card?.fileInfo?.recordUrl || '')}>
                                 {card.fileInfo.name}
                             </span>
-                            <button className="sa-answer-link-icon-hover kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-flex-shrink-0 kwsdk-p-0 kwsdk-d-flex">
+                            <button onClick={() => openUrl(card?.fileInfo?.recordUrl || '')} className="sa-answer-link-icon-hover kwsdk-p-0 kwsdk-border-0 kwsdk-outline-none kwsdk-bg-transparent kwsdk-flex-shrink-0 kwsdk-p-0 kwsdk-d-flex">
                                 <RenderFileIcons type="link-icon" />
                             </button>
                         </span>
