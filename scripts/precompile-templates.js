@@ -110,9 +110,10 @@ function extractDataVariables(markup) {
   }
 
   // {{tag expr}} patterns — extract the target expression from each tag
-  const tagRegex = /\{\{(?:\/?)(?:\w+|.)(?:\((?:[^\}]|\}(?!\}))*?\))?\s+(.*?)(?:\((?:[^\}]|\}(?!\}))*?\))?\s*\}\}/g;
+  const tagRegex = /\{\{(?:\/?)(?:\w+|.)(?:\((?:[^\}]|\}(?!\}))*?\))?\s+(.*?)(?:\(((?:[^\}]|\}(?!\}))*?)\))?\s*\}\}/g;
   while ((m = tagRegex.exec(markup)) !== null) {
     if (m[1]) expressions.push(m[1].trim());
+    if (m[2]) expressions.push(m[2].trim());
   }
 
   // Extract root identifiers from each expression
