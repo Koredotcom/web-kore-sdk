@@ -1,3 +1,16 @@
+### 11.25.0
+* Release May 30, 2026
+* Breaking Changes (for CSP compliance)
+  * jQuery templates (widgets, v2 templates, and v2 widgets) are now precompiled at build time, removing the dependency on new Function() in korejquery.js. Runtime compilation of custom or inline templates using $.tmpl() is no longer supported. 
+  * changes for widgets, v2 templates, and v2 widgets — replaced inline onerror with data-fallback-src image fallback, moved inline on*
+  handlers to addEventListener.
+* Bug fixes
+  * typing indicator enhancements
+  * timestamp metadata issue fix in RTL for Arabic language
+  * added hidden attributes to local/remote utility video elements in agent desktop plugin
+  * bug fixes for search results in answers plugin
+  * fixed customData type in quick chat template in proactive web campaign plugin
+
 ### 11.24.1
 * Release May 09, 2026
 * Features
