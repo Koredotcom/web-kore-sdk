@@ -13,7 +13,7 @@ custom-templates.js                 script (Node)            custom-precompiled-
                         Web SDK installs it via installPreCompiledTemplates
 ```
 
-## Step 1 — List your templates in one file
+### Step 1 — List your templates in one file
 
 Create `custom-templates.js` exporting an array of templates. Each entry has an `id` (which must match the `<script id="...">` in your template's `getTemplateString()`) and the template `markup`:
 
@@ -27,7 +27,7 @@ module.exports = [
 ];
 ```
 
-## Step 2 — Generate the pre-compiled file
+### Step 2 — Generate the pre-compiled file
 
 The script compiles every template in your file and writes a single output file, `custom-precompiled-templates.js`.
 
@@ -47,7 +47,7 @@ By default the script reads `./custom-templates.js` and writes `./custom-precomp
 
 The output exports an object of pre compiled templates and also assigns it to `window.koreCustomPrecompiledTemplates` for CDN use. Re-run the script when a template changes.
 
-## Step 3 — Install the templates on the chat window instance
+### Step 3 — Install the templates on the chat window instance
 
 Install the precompiled templates by calling `installCustomPrecompiledTemplates(...)` on the chat window instance with the generated object, **before the chat window renders** (i.e. before `show()`). The Web SDK installs them via `installPreCompiledTemplates` internally.
 
@@ -74,13 +74,11 @@ chatWindowInstance.show();
 
 No change is needed to your custom template's render code — once installed, `$(...).tmpl(data)` resolves `custom_weather_tmpl` from the pre-compiled file instead of compiling at runtime.
 
-## Notes
-
-- **Match the id.** The `id` in the file must match the `<script id="...">` your `getTemplateString()` returns (and the name you pass to `.tmpl()`)
-- **Regenerate on change.** The pre-compiled file is build output; re-run the script whenever you change a template.
+> [!NOTE]
+> The `id` in the file must match the `<script id="...">` your `getTemplateString()` returns (and the name you pass to `.tmpl()`). The pre-compiled file is build output; re-run the script whenever you change a template.
 
 
-## Example jQuery Template
+### Example jQuery Template
 
 a custom template json message:
 
