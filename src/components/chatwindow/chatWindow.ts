@@ -2843,6 +2843,14 @@ installPlugin  (plugin:any) {
     plugin.onHostCreate();
   }
 };
+
+installCustomPrecompiledTemplates (templates:any) {
+  const me:any = this;
+  if (templates) {
+    me.$.installPreCompiledTemplates(templates);
+  }
+};
+
 scrollTop  () {
   const me:any = this;
   const _chatContainer = me.chatEle;
