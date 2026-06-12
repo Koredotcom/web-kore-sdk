@@ -19,26 +19,26 @@ export function getSearchResults(payload: any): SearchResult[] {
   const searchResults: SearchResult[] = [];
   for (const bucket of Object.values(results)) {
     for (const dataItem of bucket.data) {
-      for (const chunkId of dataItem.chunkResults) {
-        const src = chunkResultMap.get(chunkId);
-        if (src) {
-          const toArray = (val: any): string[] => {
-            if (!val) return [];
-            return Array.isArray(val) ? val : [val];
-          };
-          const imageUrls = toArray(src.page_image_url ?? src.chunkMeta?.imageUrl ?? src.image_url);
-          searchResults.push({
-            id: src.chunkId,
-            snippet: src.chunkText,
-            source: {
-              title: src.recordTitle,
-              type: src.sourceType,
-              url: src.recordUrl,
-              fileType:  src.sys_file_type || src.fileType,
-              imageUrls,
-            },
-          });
-        }
+      const chunkId = dataItem.chunkResults[0];
+      if (!chunkId) continue;
+      const src = chunkResultMap.get(chunkId);
+      if (src) {
+        const toArray = (val: any): string[] => {
+          if (!val) return [];
+          return Array.isArray(val) ? val : [val];
+        };
+        const imageUrls = toArray(src.page_image_url ?? src.chunkMeta?.imageUrl ?? src.image_url);
+        searchResults.push({
+          id: src.chunkId,
+          snippet: src.chunkText,
+          source: {
+            title: src.recordTitle,
+            type: src.sourceType,
+            url: src.recordUrl,
+            fileType: src.sys_file_type || src.fileType,
+            imageUrls,
+          },
+        });
       }
     }
   }
