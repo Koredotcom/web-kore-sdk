@@ -206,9 +206,14 @@ export function Answers(props: any) {
         const isSelected= hasSource && isEqual;
         return   <span className={`sa-answer-result-heading ${(isSelected) &&'sa-answer-result-heading-selected'}`} onMouseOver={()=>{setSelectedIndex(answer?.indexes);setExactMatch(true)}} onMouseOut={()=>{setSelectedIndex([]);setExactMatch(false)}}>
                     {
-                        /<[^>]+>/.test(answer?.title)
-                        ? <span dangerouslySetInnerHTML={{__html: answer?.title}}></span>
-                        : <span dangerouslySetInnerHTML={{__html: helpers.convertMDtoHTML(answer?.title, "bot")}}></span>
+                        (() => {
+                            const addTargetBlank = (html: string) =>
+                                html.replace(/<a\s/gi, '<a target="_blank" rel="noopener noreferrer" ');
+                            const html = /<[^>]+>/.test(answer?.title)
+                                ? addTargetBlank(answer?.title)
+                                : addTargetBlank(helpers.convertMDtoHTML(answer?.title, "bot"));
+                            return <span dangerouslySetInnerHTML={{__html: html}}></span>;
+                        })()
                     }
                    {answer?.indexes?.map((index:any)=>renderCitationList(index,hasSource,exactMatch ? isSelected : selectedIndex.includes(index)))}
                 </span>

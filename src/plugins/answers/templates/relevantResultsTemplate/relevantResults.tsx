@@ -426,7 +426,16 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
                     )}
                 </div>
                 <div className="sa-answer-result-content kwsdk-w-100 kwsdk-bg-white kwsdk-rounded-2 kwsdk-position-relative">
-                    <div className="sa-answer-result-text-section">
+                    <div
+                        className="sa-answer-result-text-section"
+                        onClick={(e: MouseEvent) => {
+                            const anchor = (e.target as HTMLElement).closest('a');
+                            if (anchor?.href) {
+                                e.preventDefault();
+                                window.open(anchor.href, '_blank', 'noopener,noreferrer');
+                            }
+                        }}
+                    >
                         {renderTextContent(card.id, card.text, card.fileInfo.imageUrls, card.fileInfo.name, isTextExpanded, shouldShowBadge)}
                     </div>
                     {card.relatedResults && card.isExpanded && (
