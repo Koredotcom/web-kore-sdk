@@ -1,3 +1,7 @@
+### 11.25.1
+* Release June 13, 2026
+* Stable release
+
 ### 11.25.0
 * Release May 30, 2026
 * Breaking Changes (for CSP compliance)
