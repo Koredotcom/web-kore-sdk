@@ -1158,6 +1158,10 @@ AgentDesktop = function (uuId, aResponse) {
                 localStorage.setItem("pagesVisited", JSON.stringify(pagesVisitedArray))
             } else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'video_call_recording_request') {
                 const cwInstance = this.config.hostInstance;
+                   if (msgJson.message?.showVideoCallRecordingConsentPrompt === false) {
+                    cwInstance.emit('video_call_recording_proceed');
+                    return;
+                }
                 if (!cwInstance?.chatEle?.querySelector('.recording-consent-slider')) {
                     openRecordingConsentSlider(cwInstance);
                 }
