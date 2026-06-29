@@ -343,6 +343,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.27.0 [Minor] on 27-June-2026: Master branch
+        Stable release
+ 
 v10.26.1 [Minor] on 13-June-2026: Master branch
         Stable release
 
