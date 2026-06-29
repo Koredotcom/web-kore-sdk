@@ -1,3 +1,10 @@
+### 11.26.0
+* Release June 27, 2026
+* Bug fixes
+  * updated DOMPurify to 3.4.2
+  * Video Call recording permissions changes in Agent desktop plugin
+  * search results issues fix in answers plugin
+
 ### 11.25.1
 * Release June 13, 2026
 * Stable release
