@@ -1,16 +1,5 @@
-// Browser-side secure channel client.
-// Speaks the same wire protocol as koreserver/services/SecureChannel/.
-//
-// Public API:
-//   const sc = new SecureChannel({ pinnedPublicKeyPem, sessionId });
-//   await sc.initiateHandshake() → returns the key_exchange_init wire object
-//   sc.handleResponse(msg) → returns the key_exchange_complete wire object (Promise)
-//   sc.handleAck(msg) → marks channel SECURE (Promise)
-//   sc.encryptOutgoing(plainObj) → returns secure_envelope wire object
-//   sc.decryptIncoming(envelope) → returns plain object
-//   sc.isSecure() → bool
-//
-// Uses window.crypto.subtle for all cryptography. No dependencies.
+// Browser-side secure channel client: ECDH + AES-GCM via window.crypto.subtle,
+// wire-compatible with koreserver/services/SecureChannel/.
 
 const PROTOCOL_VERSION = 'rtm-ecdh-v1';
 const NONCE_BYTES = 16;

@@ -1331,22 +1331,16 @@ sendWebhookOnConnectEvent  () {
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────
-// Secure channel — handshake / decrypt / encrypt hooks.
-// Activated only when the server sends a `protocol_capabilities`
-// message with encryption: 'required' (because the SDK app has the
-// duplexEncryptionEnabled flag set).
-// ─────────────────────────────────────────────────────────────────────
-async _handleSecureChannelFrame (msg: any) {
+// Secure channel: ECDH+AES-GCM handshake / encrypt / decrypt hooks, active only when
+// the server requires encryption (duplexEncryptionEnabled on the SDK app).
+async handleSecureChannelFrame (msg: any) {
   const me: any = this;
   if (!msg || typeof msg !== 'object') return { consumed: false };
 
-  // Server announces it requires encryption — initiate handshake.
-  if (msg.type === 'protocol_capabilities' && msg.encryption === 'required') {
+  if (msg?.type === 'protocol_capabilities' && msg?.encryption === 'required') {
     const sc = me.config.botOptions && me.config.botOptions.secureChannel;
     const pinnedPublicKeyPem = sc && sc.pinnedPublicKeyPem;
     if (!pinnedPublicKeyPem) {
-      console.error('[secureChannel] server requires encryption but no pinnedPublicKeyPem in chatConfig.botOptions.secureChannel');
       return { consumed: true };
     }
     try {
@@ -1354,78 +1348,59 @@ async _handleSecureChannelFrame (msg: any) {
         pinnedPublicKeyPem,
         expectedSigningKeyId: sc && sc.expectedSigningKeyId,
       } as any);
-      // Arm a handshake timeout: if the server never completes the
-      // 4-step exchange (network issue, server bug, attacker stalling),
-      // tear down the channel state so the next `protocol_capabilities`
-      // can re-initiate cleanly instead of being rejected as
-      // handshake_state_invalid.
+      // Reset if the server never completes the handshake, so a later
+      // protocol_capabilities frame can re-initiate cleanly.
       const HANDSHAKE_TIMEOUT_MS = 10_000;
       me._secureChannelHandshakeTimer = setTimeout(() => {
         if (me._secureChannel && !me._secureChannel.isSecure()) {
-          console.error('[secureChannel] handshake timeout — resetting');
-          me._resetSecureChannel();
+          me.resetSecureChannel();
         }
       }, HANDSHAKE_TIMEOUT_MS);
       const init = await me._secureChannel.initiateHandshake();
       try { me.bot.sendMessage(init); } catch (sendErr) {
-        console.error('[secureChannel] failed to send key_exchange_init:', sendErr);
-        me._resetSecureChannel();
+        me.resetSecureChannel();
       }
     } catch (e) {
-      console.error('[secureChannel] init failed:', e);
-      me._resetSecureChannel();
+      me.resetSecureChannel();
     }
     return { consumed: true };
   }
 
-  // Server response to our init.
-  if (msg.type === 'key_exchange_response' && me._secureChannel) {
+  if (msg?.type === 'key_exchange_response' && me._secureChannel) {
     try {
       const complete = await me._secureChannel.handleResponse(msg);
       try { me.bot.sendMessage(complete); } catch (sendErr) {
-        console.error('[secureChannel] failed to send key_exchange_complete:', sendErr);
-        me._resetSecureChannel();
+        me.resetSecureChannel();
       }
     } catch (e) {
-      console.error('[secureChannel] response handling failed:', e);
-      me._resetSecureChannel();
+      me.resetSecureChannel();
     }
     return { consumed: true };
   }
 
-  // Server's handshake ack — channel becomes SECURE here.
-  if (msg.type === 'key_exchange_ack' && me._secureChannel) {
+  if (msg?.type === 'key_exchange_ack' && me._secureChannel) {
     try {
       await me._secureChannel.handleAck(msg);
       if (me._secureChannelHandshakeTimer) {
         clearTimeout(me._secureChannelHandshakeTimer);
         me._secureChannelHandshakeTimer = null;
       }
-      console.log('[secureChannel] channel SECURE');
-      // Wrap outgoing sendMessage exactly once now that we're secure.
-      me._wrapBotSendMessageForEncryption();
+      me.wrapBotSendMessageForEncryption();
     } catch (e) {
-      console.error('[secureChannel] ack handling failed:', e);
-      me._resetSecureChannel();
+      me.resetSecureChannel();
     }
     return { consumed: true };
   }
 
-  // Encrypted message envelope — decrypt and pass through as plaintext.
-  if (msg.type === 'secure_envelope' && me._secureChannel && me._secureChannel.isSecure()) {
+  if (msg?.type === 'secure_envelope' && me._secureChannel && me._secureChannel.isSecure()) {
     try {
       const plain: any = await me._secureChannel.decryptIncoming(msg);
-      // Decrypted __control frames (e.g. rekey_signal) are protocol
-      // metadata, not user messages. They must not be rendered.
+      // Decrypted control frames (e.g. rekey) are protocol metadata, not user messages.
       if (plain && plain.__control === true) {
-        // Reserved for future client-handled control frames (rekey_ack,
-        // session_invalidate, etc.). Today the server initiates rekey
-        // via its own handler; nothing to do client-side.
         return { consumed: true };
       }
       return { consumed: false, decrypted: plain };
     } catch (e) {
-      console.error('[secureChannel] decrypt failed:', e);
       return { consumed: true };
     }
   }
@@ -1433,12 +1408,9 @@ async _handleSecureChannelFrame (msg: any) {
   return { consumed: false };
 }
 
-// Tear down secure-channel state and restore plaintext sendMessage.
-// Called on handshake failure, handshake timeout, and WS close — these
-// are the points where leaving the wrapped sendMessage in place would
-// either drop user messages (channel_not_secure) or wrap them with a
-// key the server has already discarded.
-_resetSecureChannel () {
+// Tear down secure-channel state and restore plaintext sendMessage
+// (handshake failure / timeout / WS close).
+resetSecureChannel () {
   const me: any = this;
   if (me._secureChannelHandshakeTimer) {
     clearTimeout(me._secureChannelHandshakeTimer);
@@ -1452,14 +1424,11 @@ _resetSecureChannel () {
   me._secureChannel = null;
 }
 
-_wrapBotSendMessageForEncryption () {
+wrapBotSendMessageForEncryption () {
   const me: any = this;
   if (me._botSendMessageWrapped) return;
   const original = me.bot.sendMessage.bind(me.bot);
-  // Stash the original so _resetSecureChannel can restore the plaintext
-  // path on WS close / handshake failure. Without this, a reconnect
-  // would keep the wrapper bound to a dead manager and silently drop
-  // every outbound message.
+  // Stash the original so resetSecureChannel can restore the plaintext path on reset.
   me._botSendMessageOriginal = me.bot.sendMessage;
   me.bot.sendMessage = (messageToBot: any, callback?: any) => {
     if (me._secureChannel && me._secureChannel.isSecure()
@@ -1468,11 +1437,7 @@ _wrapBotSendMessageForEncryption () {
       me._secureChannel.encryptOutgoing(messageToBot)
         .then((envelope: any) => original(envelope, callback))
         .catch((err: any) => {
-          // Fail closed. The server requires encryption on this channel
-          // (it sent protocol_capabilities: required). Falling back to
-          // plaintext would leak sensitive message content. Drop the
-          // message and surface the error to the caller.
-          console.error('[secureChannel] encrypt outgoing failed — dropping message to avoid plaintext leak:', err);
+          // Fail closed: server requires encryption, so drop rather than leak plaintext.
           if (typeof callback === 'function') {
             try { callback(err); } catch (_) { /* noop */ }
           }
@@ -1498,23 +1463,16 @@ bindSDKEvents  () {
   });
 
   me.bot.on('message', async (response: { data: string; }) => {
-    // Outer try/catch: this is an async event handler. Any uncaught
-    // rejection here becomes an unhandledrejection on the page, which
-    // some host applications surface to users as a generic error. Keep
-    // the WS event stream alive even if a single frame is malformed.
-    try {
-    // actual implementation starts here
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
     let tempData = JSON.parse(response.data);
 
-    // Secure channel: intercept handshake frames and decrypt envelopes.
-    // No-op when the SDK app does not have duplexEncryptionEnabled.
-    const intercepted = await me._handleSecureChannelFrame(tempData);
+    // Secure channel: intercept handshake frames / decrypt envelopes (no-op when not enabled).
+    const intercepted = await me.handleSecureChannelFrame(tempData);
     if (intercepted.consumed) {
-      return; // handshake / control message — nothing more to do
+      return;
     }
     if (intercepted.decrypted) {
       tempData = intercepted.decrypted;
@@ -1560,16 +1518,11 @@ bindSDKEvents  () {
       }
       me.chatEle.setAttribute('dir', langDetails?.language == 'ar' || langDetails?.newLanguage == 'ar' ? 'rtl' : 'ltr');
     }
-    } catch (handlerErr) {
-      console.error('[chatWindow] ws message handler error:', handlerErr);
-    }
   });
 
   me.bot.on('close', () => {
-    // WS closed — any subsequent reconnect needs a fresh handshake.
-    // Reset secure-channel state and unwrap sendMessage so plaintext
-    // messages are not encrypted against stale, server-discarded keys.
-    me._resetSecureChannel();
+    // WS closed — reset secure-channel state so a reconnect does a fresh handshake.
+    me.resetSecureChannel();
   });
 
   me.bot.on('webhook_ready', (response: any) => {
