@@ -205,8 +205,8 @@ class SecureChannel {
         // loop, so without these the counters can be read by two concurrent
         // callers before either has incremented — causing IV reuse on encrypt
         // (catastrophic for AES-GCM) and counter desync on decrypt.
-        this._outboundLock = Promise.resolve();
-        this._inboundLock = Promise.resolve();
+        this.outboundLock = Promise.resolve();
+        this.inboundLock = Promise.resolve();
     }
 
     async initiateHandshake() {
@@ -260,7 +260,7 @@ class SecureChannel {
         this.salt = concatBytes(this.c2sNonce, s2cNonce);
         this.s2cNonce = s2cNonce;
         this.sessionId = msg.sessionId;
-        await this._installGeneration(0);
+        await this.installGeneration(0);
 
         // Build the encrypted complete message
         const iv = ivFromCounter(this.c2sSeq);
@@ -284,7 +284,7 @@ class SecureChannel {
         const ct = b64decode(msg.ciphertext);
         const tag = b64decode(msg.tag);
         const expectedIv = ivFromCounter(this.s2cSeq);
-        if (!_buffersEqual(iv, expectedIv)) throw new Error('ack_iv_mismatch');
+        if (!buffersEqual(iv, expectedIv)) throw new Error('ack_iv_mismatch');
         const plainBuf = await aesGcmDecrypt(this.k_s2c, iv, ct, tag);
         const plain = utf8decode(plainBuf);
         if (plain !== HANDSHAKE_TOKEN_S2C) throw new Error('ack_token_mismatch');
@@ -292,12 +292,12 @@ class SecureChannel {
         this.state = STATE.SECURE;
     }
 
-    // Serialized via _outboundLock: each call awaits the previous one. This
+    // Serialized via outboundLock: each call awaits the previous one. This
     // guarantees one outbound encrypt is in-flight at a time, so c2sSeq is
     // never read by two parallel callers — preventing AES-GCM IV reuse, the
     // forbidden-attack condition for confidentiality.
     encryptOutgoing(plainObj) {
-        const result = this._outboundLock.then(async () => {
+        const result = this.outboundLock.then(async () => {
             if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
             const iv = ivFromCounter(this.c2sSeq);
             const plainBuf = utf8encode(JSON.stringify(plainObj));
@@ -312,17 +312,17 @@ class SecureChannel {
             };
         });
         // Chain regardless of outcome so the queue keeps moving on failure.
-        this._outboundLock = result.catch(() => undefined);
+        this.outboundLock = result.catch(() => undefined);
         return result;
     }
 
-    // Serialized via _inboundLock. WebSocket delivers frames in order, but
+    // Serialized via inboundLock. WebSocket delivers frames in order, but
     // when the message handler is async, the JS event loop can dispatch the
     // next frame before the previous decrypt completes. Without this lock the
     // second decrypt would read a stale s2cSeq, fail iv_sequence_mismatch,
     // and permanently desync the channel.
     decryptIncoming(envelope) {
-        const result = this._inboundLock.then(async () => {
+        const result = this.inboundLock.then(async () => {
             if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
             if (!envelope || envelope.type !== MSG.ENVELOPE) throw new Error('expected_envelope');
             if (envelope.gen !== this.generation) {
@@ -332,19 +332,19 @@ class SecureChannel {
             const ct = b64decode(envelope.ciphertext);
             const tag = b64decode(envelope.tag);
             const expectedIv = ivFromCounter(this.s2cSeq);
-            if (!_buffersEqual(iv, expectedIv)) throw new Error('iv_sequence_mismatch');
+            if (!buffersEqual(iv, expectedIv)) throw new Error('iv_sequence_mismatch');
             const plainBuf = await aesGcmDecrypt(this.k_s2c, iv, ct, tag);
             this.s2cSeq += 1n;
             return JSON.parse(utf8decode(plainBuf));
         });
-        this._inboundLock = result.catch(() => undefined);
+        this.inboundLock = result.catch(() => undefined);
         return result;
     }
 
     isSecure() { return this.state === STATE.SECURE; }
     isFailed() { return this.state === STATE.FAILED; }
 
-    async _installGeneration(gen) {
+    async installGeneration(gen) {
         const k_c2s_raw = await hkdfDerive(this.sharedSecret, this.salt, 'c2s|gen' + gen, 32);
         const k_s2c_raw = await hkdfDerive(this.sharedSecret, this.salt, 's2c|gen' + gen, 32);
         this.k_c2s = await importAesGcmKey(k_c2s_raw);
@@ -355,7 +355,7 @@ class SecureChannel {
     }
 }
 
-function _buffersEqual(a, b) {
+function buffersEqual(a, b) {
     if (a.length !== b.length) return false;
     let r = 0;
     for (let i = 0; i < a.length; i += 1) r |= a[i] ^ b[i];

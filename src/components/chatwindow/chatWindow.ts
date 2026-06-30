@@ -1344,19 +1344,19 @@ async handleSecureChannelFrame (msg: any) {
       return { consumed: true };
     }
     try {
-      me._secureChannel = new SecureChannel({
+      me.secureChannel = new SecureChannel({
         pinnedPublicKeyPem,
         expectedSigningKeyId: sc && sc.expectedSigningKeyId,
       } as any);
       // Reset if the server never completes the handshake, so a later
       // protocol_capabilities frame can re-initiate cleanly.
       const HANDSHAKE_TIMEOUT_MS = 10_000;
-      me._secureChannelHandshakeTimer = setTimeout(() => {
-        if (me._secureChannel && !me._secureChannel.isSecure()) {
+      me.secureChannelHandshakeTimer = setTimeout(() => {
+        if (me.secureChannel && !me.secureChannel.isSecure()) {
           me.resetSecureChannel();
         }
       }, HANDSHAKE_TIMEOUT_MS);
-      const init = await me._secureChannel.initiateHandshake();
+      const init = await me.secureChannel.initiateHandshake();
       try { me.bot.sendMessage(init); } catch (sendErr) {
         me.resetSecureChannel();
       }
@@ -1366,9 +1366,9 @@ async handleSecureChannelFrame (msg: any) {
     return { consumed: true };
   }
 
-  if (msg?.type === 'key_exchange_response' && me._secureChannel) {
+  if (msg?.type === 'key_exchange_response' && me.secureChannel) {
     try {
-      const complete = await me._secureChannel.handleResponse(msg);
+      const complete = await me.secureChannel.handleResponse(msg);
       try { me.bot.sendMessage(complete); } catch (sendErr) {
         me.resetSecureChannel();
       }
@@ -1378,12 +1378,12 @@ async handleSecureChannelFrame (msg: any) {
     return { consumed: true };
   }
 
-  if (msg?.type === 'key_exchange_ack' && me._secureChannel) {
+  if (msg?.type === 'key_exchange_ack' && me.secureChannel) {
     try {
-      await me._secureChannel.handleAck(msg);
-      if (me._secureChannelHandshakeTimer) {
-        clearTimeout(me._secureChannelHandshakeTimer);
-        me._secureChannelHandshakeTimer = null;
+      await me.secureChannel.handleAck(msg);
+      if (me.secureChannelHandshakeTimer) {
+        clearTimeout(me.secureChannelHandshakeTimer);
+        me.secureChannelHandshakeTimer = null;
       }
       me.wrapBotSendMessageForEncryption();
     } catch (e) {
@@ -1392,9 +1392,9 @@ async handleSecureChannelFrame (msg: any) {
     return { consumed: true };
   }
 
-  if (msg?.type === 'secure_envelope' && me._secureChannel && me._secureChannel.isSecure()) {
+  if (msg?.type === 'secure_envelope' && me.secureChannel && me.secureChannel.isSecure()) {
     try {
-      const plain: any = await me._secureChannel.decryptIncoming(msg);
+      const plain: any = await me.secureChannel.decryptIncoming(msg);
       // Decrypted control frames (e.g. rekey) are protocol metadata, not user messages.
       if (plain && plain.__control === true) {
         return { consumed: true };
@@ -1412,41 +1412,41 @@ async handleSecureChannelFrame (msg: any) {
 // (handshake failure / timeout / WS close).
 resetSecureChannel () {
   const me: any = this;
-  if (me._secureChannelHandshakeTimer) {
-    clearTimeout(me._secureChannelHandshakeTimer);
-    me._secureChannelHandshakeTimer = null;
+  if (me.secureChannelHandshakeTimer) {
+    clearTimeout(me.secureChannelHandshakeTimer);
+    me.secureChannelHandshakeTimer = null;
   }
-  if (me._botSendMessageOriginal) {
-    me.bot.sendMessage = me._botSendMessageOriginal;
-    me._botSendMessageOriginal = null;
+  if (me.botSendMessageOriginal) {
+    me.bot.sendMessage = me.botSendMessageOriginal;
+    me.botSendMessageOriginal = null;
   }
-  me._botSendMessageWrapped = false;
-  me._secureChannel = null;
+  me.botSendMessageWrapped = false;
+  me.secureChannel = null;
 }
 
 wrapBotSendMessageForEncryption () {
   const me: any = this;
-  if (me._botSendMessageWrapped) return;
+  if (me.botSendMessageWrapped) return;
   const original = me.bot.sendMessage.bind(me.bot);
   // Stash the original so resetSecureChannel can restore the plaintext path on reset.
-  me._botSendMessageOriginal = me.bot.sendMessage;
+  me.botSendMessageOriginal = me.bot.sendMessage;
   me.bot.sendMessage = (messageToBot: any, callback?: any) => {
-    if (me._secureChannel && me._secureChannel.isSecure()
+    if (me.secureChannel && me.secureChannel.isSecure()
         && messageToBot && messageToBot.type !== 'key_exchange_init'
         && messageToBot.type !== 'key_exchange_complete') {
-      me._secureChannel.encryptOutgoing(messageToBot)
+      me.secureChannel.encryptOutgoing(messageToBot)
         .then((envelope: any) => original(envelope, callback))
         .catch((err: any) => {
           // Fail closed: server requires encryption, so drop rather than leak plaintext.
           if (typeof callback === 'function') {
-            try { callback(err); } catch (_) { /* noop */ }
+            try { callback(err); } catch { /* noop */ }
           }
         });
       return;
     }
     return original(messageToBot, callback);
   };
-  me._botSendMessageWrapped = true;
+  me.botSendMessageWrapped = true;
 }
 
 bindSDKEvents  () {
