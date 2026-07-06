@@ -359,5 +359,5 @@ function buffersEqual(a, b) {
     return r === 0;
 }
 
-export { SecureChannel, STATE, MSG };
+export { STATE, MSG };
 export default SecureChannel;
