@@ -10,7 +10,6 @@ import './sass/chatWindow.scss';
 import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
-// @ts-ignore — plain JS module
 import SecureChannel from '../secureChannel/secureChannel.js';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
@@ -1331,8 +1330,7 @@ sendWebhookOnConnectEvent  () {
   });
 };
 
-// Secure channel: ECDH+AES-GCM handshake / encrypt / decrypt hooks, active only when
-// the server requires encryption (duplexEncryptionEnabled on the SDK app).
+// Secure channel: ECDH+AES-GCM handshake / encrypt / decrypt hooks
 async handleSecureChannelFrame (msg: any) {
   const me: any = this;
   if (!msg || typeof msg !== 'object') return { consumed: false };
@@ -1348,8 +1346,7 @@ async handleSecureChannelFrame (msg: any) {
         pinnedPublicKeyPem,
         expectedSigningKeyId: sc && sc.expectedSigningKeyId,
       } as any);
-      // Reset if the server never completes the handshake, so a later
-      // protocol_capabilities frame can re-initiate cleanly.
+
       const HANDSHAKE_TIMEOUT_MS = 10_000;
       me.secureChannelHandshakeTimer = setTimeout(() => {
         if (me.secureChannel && !me.secureChannel.isSecure()) {
@@ -1395,7 +1392,6 @@ async handleSecureChannelFrame (msg: any) {
   if (msg?.type === 'secure_envelope' && me.secureChannel && me.secureChannel.isSecure()) {
     try {
       const plain: any = await me.secureChannel.decryptIncoming(msg);
-      // Decrypted control frames (e.g. rekey) are protocol metadata, not user messages.
       if (plain && plain.__control === true) {
         return { consumed: true };
       }
@@ -1408,8 +1404,6 @@ async handleSecureChannelFrame (msg: any) {
   return { consumed: false };
 }
 
-// Tear down secure-channel state and restore plaintext sendMessage
-// (handshake failure / timeout / WS close).
 resetSecureChannel () {
   const me: any = this;
   if (me.secureChannelHandshakeTimer) {
@@ -1428,7 +1422,6 @@ wrapBotSendMessageForEncryption () {
   const me: any = this;
   if (me.botSendMessageWrapped) return;
   const original = me.bot.sendMessage.bind(me.bot);
-  // Stash the original so resetSecureChannel can restore the plaintext path on reset.
   me.botSendMessageOriginal = me.bot.sendMessage;
   me.bot.sendMessage = (messageToBot: any, callback?: any) => {
     if (me.secureChannel && me.secureChannel.isSecure()
@@ -1437,9 +1430,8 @@ wrapBotSendMessageForEncryption () {
       me.secureChannel.encryptOutgoing(messageToBot)
         .then((envelope: any) => original(envelope, callback))
         .catch((err: any) => {
-          // Fail closed: server requires encryption, so drop rather than leak plaintext.
           if (typeof callback === 'function') {
-            try { callback(err); } catch { /* noop */ }
+            try { callback(err); } catch {}
           }
         });
       return;
@@ -1469,7 +1461,6 @@ bindSDKEvents  () {
 
     let tempData = JSON.parse(response.data);
 
-    // Secure channel: intercept handshake frames / decrypt envelopes (no-op when not enabled).
     const intercepted = await me.handleSecureChannelFrame(tempData);
     if (intercepted.consumed) {
       return;
@@ -1521,7 +1512,6 @@ bindSDKEvents  () {
   });
 
   me.bot.on('close', () => {
-    // WS closed — reset secure-channel state so a reconnect does a fresh handshake.
     me.resetSecureChannel();
   });
 

@@ -1,5 +1,4 @@
-// Browser-side secure channel client: ECDH + AES-GCM via window.crypto.subtle,
-// wire-compatible with koreserver/services/SecureChannel/.
+// Browser-side secure channel client: ECDH + AES-GCM via window.crypto.subtle
 
 const PROTOCOL_VERSION = 'rtm-ecdh-v1';
 const NONCE_BYTES = 16;
@@ -30,7 +29,6 @@ const MSG = {
 const HANDSHAKE_TOKEN_C2S = 'rtm-handshake-ok';
 const HANDSHAKE_TOKEN_S2C = 'rtm-handshake-server-ok';
 
-// ---------- encoding helpers ----------
 function b64encode(buf) {
     const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
     let s = '';
@@ -53,14 +51,12 @@ function concatBytes(...arrays) {
 function utf8encode(s) { return new TextEncoder().encode(s); }
 function utf8decode(b) { return new TextDecoder().decode(b); }
 
-// ---------- IV (counter-based) ----------
-function ivFromCounter(counter /* BigInt */) {
+function ivFromCounter(counter) {
     if (counter < 0n || counter >= (1n << 63n)) {
         throw new Error('counter_overflow_force_rekey');
     }
     const iv = new Uint8Array(IV_BYTES);
     const view = new DataView(iv.buffer);
-    // 4 leading zero bytes already set; write counter as BE uint64 at offset 4
     const hi = Number((counter >> 32n) & 0xffffffffn);
     const lo = Number(counter & 0xffffffffn);
     view.setUint32(IV_BYTES - 8, hi, false);
@@ -68,7 +64,6 @@ function ivFromCounter(counter /* BigInt */) {
     return iv;
 }
 
-// ---------- subtle helpers ----------
 async function importAesGcmKey(rawBytes) {
     return window.crypto.subtle.importKey(
         'raw', rawBytes,
@@ -81,7 +76,6 @@ async function aesGcmEncrypt(aesKey, iv, plainBuf) {
         { name: 'AES-GCM', iv },
         aesKey, plainBuf,
     );
-    // SubtleCrypto AES-GCM returns ciphertext || tag. Split.
     const total = new Uint8Array(out);
     const tag = total.slice(total.length - TAG_BYTES);
     const ct = total.slice(0, total.length - TAG_BYTES);
@@ -108,7 +102,6 @@ async function hkdfDerive(sharedSecret, salt, info, lengthBytes) {
     return new Uint8Array(bits);
 }
 
-// SubjectPublicKeyInfo prefix for an uncompressed P-256 EC raw point.
 const SPKI_PREFIX_P256 = new Uint8Array([
     0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01,
     0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00,
@@ -137,7 +130,7 @@ async function ecdhDeriveSharedSecret(privateKey, peerRawPub) {
 }
 
 async function importEcdsaVerifyKey(pemPublicKey) {
-    // Strip PEM headers; decode base64 to DER bytes
+    //decode base64 to DER bytes
     const b64 = pemPublicKey.replace(/-----BEGIN [^-]+-----|-----END [^-]+-----|\s+/g, '');
     const der = b64decode(b64);
     return window.crypto.subtle.importKey(
@@ -147,10 +140,7 @@ async function importEcdsaVerifyKey(pemPublicKey) {
     );
 }
 
-// ECDSA signatures from Node's crypto come in DER format. Web Crypto wants
-// raw r||s (64 bytes for P-256). Convert.
 function derToJoseEcdsaP256(derBytes) {
-    // DER: 0x30 len 0x02 lenR R 0x02 lenS S
     const view = new Uint8Array(derBytes);
     if (view[0] !== 0x30) throw new Error('bad_der_signature');
     let offset = 2;
@@ -162,7 +152,6 @@ function derToJoseEcdsaP256(derBytes) {
     if (view[offset] !== 0x02) throw new Error('bad_der_signature_s');
     const sLen = view[offset + 1];
     let s = view.slice(offset + 2, offset + 2 + sLen);
-    // Strip leading zeros and left-pad to 32 bytes
     if (r[0] === 0x00 && r.length === 33) r = r.slice(1);
     if (s[0] === 0x00 && s.length === 33) s = s.slice(1);
     const rOut = new Uint8Array(32); rOut.set(r, 32 - r.length);
@@ -170,15 +159,12 @@ function derToJoseEcdsaP256(derBytes) {
     return concatBytes(rOut, sOut);
 }
 
-// ---------- main class ----------
+// Secure channel
 class SecureChannel {
     constructor({ pinnedPublicKeyPem, sessionId, expectedSigningKeyId } = {}) {
         if (!pinnedPublicKeyPem) {
             throw new Error('SecureChannel: pinnedPublicKeyPem is required');
         }
-        // Fail fast on malformed PEM so callers see a clear error at
-        // construction time rather than an opaque importKey() rejection
-        // mid-handshake (which kills the channel after a network round-trip).
         if (typeof pinnedPublicKeyPem !== 'string'
             || !/-----BEGIN [A-Z ]*PUBLIC KEY-----/.test(pinnedPublicKeyPem)
             || !/-----END [A-Z ]*PUBLIC KEY-----/.test(pinnedPublicKeyPem)) {
@@ -201,10 +187,6 @@ class SecureChannel {
         this.c2sSeq = 0n;
         this.s2cSeq = 0n;
 
-        // Serialization locks. SubtleCrypto operations yield to the event
-        // loop, so without these the counters can be read by two concurrent
-        // callers before either has incremented — causing IV reuse on encrypt
-        // (catastrophic for AES-GCM) and counter desync on decrypt.
         this.outboundLock = Promise.resolve();
         this.inboundLock = Promise.resolve();
     }
@@ -213,7 +195,7 @@ class SecureChannel {
         if (this.state !== STATE.INIT) throw new Error('handshake_state_invalid');
         const kp = await window.crypto.subtle.generateKey(
             { name: 'ECDH', namedCurve: 'P-256' },
-            false, // not extractable — keeps private key inside SubtleCrypto
+            false,
             ['deriveBits'],
         );
         this.privateKey = kp.privateKey;
@@ -241,7 +223,7 @@ class SecureChannel {
         const s2cNonce = b64decode(msg.s2cNonce);
         const sigDer = b64decode(msg.sig);
 
-        // Verify the server signature
+        // verify the server signature
         const verifyKey = await importEcdsaVerifyKey(this.pinnedPublicKeyPem);
         const sigInput = concatBytes(
             this.publicKeyRaw, serverPubBuf,
@@ -262,7 +244,7 @@ class SecureChannel {
         this.sessionId = msg.sessionId;
         await this.installGeneration(0);
 
-        // Build the encrypted complete message
+        // build the encrypted complete message
         const iv = ivFromCounter(this.c2sSeq);
         const plainBuf = utf8encode(HANDSHAKE_TOKEN_C2S);
         const { ct, tag } = await aesGcmEncrypt(this.k_c2s, iv, plainBuf);
@@ -292,10 +274,6 @@ class SecureChannel {
         this.state = STATE.SECURE;
     }
 
-    // Serialized via outboundLock: each call awaits the previous one. This
-    // guarantees one outbound encrypt is in-flight at a time, so c2sSeq is
-    // never read by two parallel callers — preventing AES-GCM IV reuse, the
-    // forbidden-attack condition for confidentiality.
     encryptOutgoing(plainObj) {
         const result = this.outboundLock.then(async () => {
             if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
@@ -311,16 +289,10 @@ class SecureChannel {
                 tag: b64encode(tag),
             };
         });
-        // Chain regardless of outcome so the queue keeps moving on failure.
         this.outboundLock = result.catch(() => undefined);
         return result;
     }
 
-    // Serialized via inboundLock. WebSocket delivers frames in order, but
-    // when the message handler is async, the JS event loop can dispatch the
-    // next frame before the previous decrypt completes. Without this lock the
-    // second decrypt would read a stale s2cSeq, fail iv_sequence_mismatch,
-    // and permanently desync the channel.
     decryptIncoming(envelope) {
         const result = this.inboundLock.then(async () => {
             if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
