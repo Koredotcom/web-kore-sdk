@@ -1746,15 +1746,35 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   
   KoreRTMClient.prototype.handleWsMessage = function handleWsMessage(wsMsg) {
+    var _this = this;
     var message;
-    this.emit("message", wsMsg);
-  
+
     try {
       message = JSON.parse(wsMsg);
     } catch (err) {
+      // Non-JSON frame — preserve legacy raw emit and stop.
+      this.emit("message", wsMsg);
       return;
     }
-  
+
+    // Decryption chokepoint. Consume handshake/rekey frames here, and decrypt
+    // secure_envelopes ONCE so the plaintext reaches EVERY listener (chatWindow,
+    // agentDesktop, delivery-ack logic) rather than only chatWindow's listener.
+    if (this._secureChannel && this._secureChannel.isRelevant(message)) {
+      this._secureChannel.processIncoming(message).then(function (res) {
+        if (!res || res.handled) return;               // protocol frame consumed
+        var out = (res.plaintext !== undefined) ? res.plaintext : message;
+        _this.emit("message", JSON.stringify(out));
+        _this._routeParsedMessage(out);
+      }).catch(function () { /* fail-open: drop this frame, never crash the socket */ });
+      return;
+    }
+
+    this.emit("message", wsMsg);
+    this._routeParsedMessage(message);
+  };
+
+  KoreRTMClient.prototype._routeParsedMessage = function _routeParsedMessage(message) {
     if (contains(RTM_CLIENT_INTERNAL_EVENT_TYPES, message.type)) {
       this._handleWsMessageInternal(message.type, message);
     } else {
@@ -1801,8 +1821,12 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
     this.connected = false;
+    // The secure channel's keys belong to this socket session. Drop them so the
+    // next connection performs a fresh handshake instead of encrypting with the
+    // dead session's keys (which the server can no longer decrypt).
+    if (this._secureChannel) { this._secureChannel.reset('ws_close'); }
     this.emit(CLIENT_EVENTS.WS_CLOSE, code, reason);
-  
+
     if (this.autoReconnect) {
       if (!this._connecting) {
         this.reconnect();
@@ -1827,22 +1851,43 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreRTMClient.prototype.sendMessage = function sendMessage(message, optCb) {
     this.send(message, optCb);
   };
-  
+
+  // Encryption chokepoint. If a secure channel is attached and engaged, the
+  // fully-enriched frame is encrypted here before the raw write, so user
+  // messages, delivery acks and plugin sends are all covered uniformly.
+  // Handshake/pre-secure traffic passes through unchanged. Fail-closed: on an
+  // encrypt error we surface it via optCb and never fall back to plaintext.
   KoreRTMClient.prototype.send = function send(message, optCb) {
+    var _this = this;
+    if (this._secureChannel) {
+      Promise.resolve(this._secureChannel.processOutgoing(message)).then(function (frameToSend) {
+        _this._rawSend(frameToSend, optCb);
+      }, function (sendErr) {
+        if (!isUndefined(optCb)) {
+          optCb(sendErr instanceof Error ? sendErr : new Error(String((sendErr && sendErr.message) || sendErr)));
+        }
+      });
+      return;
+    }
+    this._rawSend(message, optCb);
+  };
+
+  // Raw write to the socket (id-stamp + stringify + ws.send). This is the
+  // plaintext path the secure channel uses for handshake/rekey frames.
+  KoreRTMClient.prototype._rawSend = function _rawSend(message, optCb) {
     var wsMsg = cloneDeep(message);
     var jsonMessage;
     var err;
-    var _this = this;
-  
+
     if (this.connected && !this._reconnecting) {
       wsMsg.id = wsMsg.clientMessageId || this.nextMessageId();
       jsonMessage = JSON.stringify(wsMsg);
-  
+
       this._pendingMessages[wsMsg.id] = wsMsg;
       this.ws.send(jsonMessage, undefined, function handleWsMsgResponse(wsRespErr) {
         if (!isUndefined(wsRespErr)) {
         }
-  
+
         if (!isUndefined(optCb)) {
           optCb(wsRespErr);
         }

@@ -313,6 +313,38 @@ class SecureChannel {
         return result;
     }
 
+    // Handle a server-initiated rekey. The server sends {__control:rekey_signal,newGen}
+    // encrypted on the CURRENT generation; decryptIncoming() has already unwrapped it and
+    // passes the control object here. We install the new generation (fresh k_c2s/k_s2c,
+    // counters reset to 0) and return a rekey_ack envelope encrypted on the NEW generation
+    // (client->server key). Mirrors koreserver SecureChannelManager.handleRekeySignal.
+    //
+    // Serialized on the outbound lock so the generation swap + ack encrypt cannot interleave
+    // with a concurrent outgoing encrypt (which would read a half-swapped key/counter).
+    handleRekeySignal(controlMsg) {
+        const result = this.outboundLock.then(async () => {
+            if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
+            const newGen = controlMsg && controlMsg.newGen;
+            if (typeof newGen !== 'number' || newGen !== this.generation + 1) {
+                throw new Error('rekey_invalid_generation');
+            }
+            await this.installGeneration(newGen); // derives new keys, resets c2sSeq/s2cSeq
+            const iv = ivFromCounter(this.c2sSeq);
+            const plainBuf = utf8encode(JSON.stringify({ __control: MSG.REKEY_ACK, acceptedGen: newGen }));
+            const { ct, tag } = await aesGcmEncrypt(this.k_c2s, iv, plainBuf);
+            this.c2sSeq += 1n;
+            return {
+                type: MSG.ENVELOPE,
+                gen: this.generation,
+                iv: b64encode(iv),
+                ciphertext: b64encode(ct),
+                tag: b64encode(tag),
+            };
+        });
+        this.outboundLock = result.catch(() => undefined);
+        return result;
+    }
+
     isSecure() { return this.state === STATE.SECURE; }
     isFailed() { return this.state === STATE.FAILED; }
 

@@ -10,7 +10,8 @@ import './sass/chatWindow.scss';
 import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
-import SecureChannel from '../secureChannel/secureChannel.js';
+// @ts-ignore — plain JS module
+import SecureChannelController from '../secureChannel/secureChannelController.js';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
@@ -1330,115 +1331,24 @@ sendWebhookOnConnectEvent  () {
   });
 };
 
-// Secure channel: ECDH+AES-GCM handshake / encrypt / decrypt hooks
-async handleSecureChannelFrame (msg: any) {
+// Secure channel: create the ECDH+AES-GCM controller and inject it into the RTM
+// transport client, so encrypt/decrypt happen at the socket chokepoint (below
+// message enrichment, above all bot.on('message') listeners). This replaces the
+// old chatWindow sendMessage wrapper + per-listener decrypt. No-op unless the
+// integrator configured botOptions.secureChannel.pinnedPublicKeyPem.
+attachSecureChannelController () {
   const me: any = this;
-  if (!msg || typeof msg !== 'object') return { consumed: false };
-
-  if (msg?.type === 'protocol_capabilities' && msg?.encryption === 'required') {
-    const sc = me.config.botOptions && me.config.botOptions.secureChannel;
-    const pinnedPublicKeyPem = sc && sc.pinnedPublicKeyPem;
-    if (!pinnedPublicKeyPem) {
-      return { consumed: true };
-    }
-    try {
-      me.secureChannel = new SecureChannel({
-        pinnedPublicKeyPem,
-        expectedSigningKeyId: sc && sc.expectedSigningKeyId,
-      } as any);
-
-      const HANDSHAKE_TIMEOUT_MS = 10_000;
-      me.secureChannelHandshakeTimer = setTimeout(() => {
-        if (me.secureChannel && !me.secureChannel.isSecure()) {
-          me.resetSecureChannel();
-        }
-      }, HANDSHAKE_TIMEOUT_MS);
-      const init = await me.secureChannel.initiateHandshake();
-      try { me.bot.sendMessage(init); } catch (sendErr) {
-        me.resetSecureChannel();
-      }
-    } catch (e) {
-      me.resetSecureChannel();
-    }
-    return { consumed: true };
-  }
-
-  if (msg?.type === 'key_exchange_response' && me.secureChannel) {
-    try {
-      const complete = await me.secureChannel.handleResponse(msg);
-      try { me.bot.sendMessage(complete); } catch (sendErr) {
-        me.resetSecureChannel();
-      }
-    } catch (e) {
-      me.resetSecureChannel();
-    }
-    return { consumed: true };
-  }
-
-  if (msg?.type === 'key_exchange_ack' && me.secureChannel) {
-    try {
-      await me.secureChannel.handleAck(msg);
-      if (me.secureChannelHandshakeTimer) {
-        clearTimeout(me.secureChannelHandshakeTimer);
-        me.secureChannelHandshakeTimer = null;
-      }
-      me.wrapBotSendMessageForEncryption();
-    } catch (e) {
-      me.resetSecureChannel();
-    }
-    return { consumed: true };
-  }
-
-  if (msg?.type === 'secure_envelope' && me.secureChannel && me.secureChannel.isSecure()) {
-    try {
-      const plain: any = await me.secureChannel.decryptIncoming(msg);
-      if (plain && plain.__control === true) {
-        return { consumed: true };
-      }
-      return { consumed: false, decrypted: plain };
-    } catch (e) {
-      return { consumed: true };
-    }
-  }
-
-  return { consumed: false };
-}
-
-resetSecureChannel () {
-  const me: any = this;
-  if (me.secureChannelHandshakeTimer) {
-    clearTimeout(me.secureChannelHandshakeTimer);
-    me.secureChannelHandshakeTimer = null;
-  }
-  if (me.botSendMessageOriginal) {
-    me.bot.sendMessage = me.botSendMessageOriginal;
-    me.botSendMessageOriginal = null;
-  }
-  me.botSendMessageWrapped = false;
-  me.secureChannel = null;
-}
-
-wrapBotSendMessageForEncryption () {
-  const me: any = this;
-  if (me.botSendMessageWrapped) return;
-  const original = me.bot.sendMessage.bind(me.bot);
-  me.botSendMessageOriginal = me.bot.sendMessage;
-  me.bot.sendMessage = (messageToBot: any, callback?: any) => {
-    if (me.secureChannel && me.secureChannel.isSecure()
-        && messageToBot && messageToBot.type !== 'key_exchange_init'
-        && messageToBot.type !== 'key_exchange_complete') {
-      me.secureChannel.encryptOutgoing(messageToBot)
-        .then((envelope: any) => original(envelope, callback))
-        .catch((err: any) => {
-          if (typeof callback === 'function') {
-            try { callback(err); } catch {}
-          }
-        });
-      return;
-    }
-    return original(messageToBot, callback);
-  };
-  me.botSendMessageWrapped = true;
+  const sc = me.config.botOptions && me.config.botOptions.secureChannel;
+  const pinnedPublicKeyPem = sc && sc.pinnedPublicKeyPem;
+  if (!pinnedPublicKeyPem) return;
+  const rtm = me.bot && me.bot.RtmClient;
+  if (!rtm || rtm._secureChannel) return; // no client yet, or already attached
+  rtm._secureChannel = new SecureChannelController({
+    config: { pinnedPublicKeyPem, expectedSigningKeyId: sc && sc.expectedSigningKeyId },
+    // Handshake/rekey frames must bypass the encrypt path and go out plaintext.
+    rawSend: (frame: any) => rtm._rawSend(frame),
+    logger: (m: any) => { try { (console.debug || console.log).call(console, m); } catch (e) { /* noop */ } },
+  } as any);
 }
 
 bindSDKEvents  () {
@@ -1459,15 +1369,9 @@ bindSDKEvents  () {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
+    // When the secure channel is enabled, decryption happens at the RTM transport
+    // chokepoint, so response.data is already plaintext here.
     let tempData = JSON.parse(response.data);
-
-    const intercepted = await me.handleSecureChannelFrame(tempData);
-    if (intercepted.consumed) {
-      return;
-    }
-    if (intercepted.decrypted) {
-      tempData = intercepted.decrypted;
-    }
 
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
@@ -1511,8 +1415,12 @@ bindSDKEvents  () {
     }
   });
 
-  me.bot.on('close', () => {
-    me.resetSecureChannel();
+  me.bot.on('rtm_client_initialized', () => {
+    // Attach the secure-channel controller to the RTM transport client once it
+    // exists. Encrypt/decrypt live at the socket chokepoint, and the RTM client
+    // resets the channel on ws_close so reconnect performs a fresh handshake —
+    // no bot-level 'close' reset is needed here.
+    me.attachSecureChannelController();
   });
 
   me.bot.on('webhook_ready', (response: any) => {
