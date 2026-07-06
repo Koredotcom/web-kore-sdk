@@ -168,4 +168,3 @@ class SecureChannelController {
 }
 
 export default SecureChannelController;
-export { SecureChannelController };

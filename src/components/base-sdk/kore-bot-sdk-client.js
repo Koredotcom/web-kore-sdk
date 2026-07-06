@@ -1523,14 +1523,13 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       factor: 2
     };
     this.enableSecureRTM = clientOpts.enableSecureRTM !== false
-    // Secure channel: built from the injected factory when the app requires encryption.
-    this._secureChannel = null;
-    var _scCfg = clientOpts.secureChannel;
-    if (_scCfg && _scCfg.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
-      var _scRtm = this;
-      this._secureChannel = clientOpts.secureChannelFactory({
-        config: { pinnedPublicKeyPem: _scCfg.pinnedPublicKeyPem, expectedSigningKeyId: _scCfg.expectedSigningKeyId },
-        rawSend: function (frame) { return _scRtm._rawSend(frame); },
+    this.secureChannel = null;
+    var scCfg = clientOpts.secureChannel;
+    if (scCfg && scCfg.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
+      var rtmClient = this;
+      this.secureChannel = clientOpts.secureChannelFactory({
+        config: { pinnedPublicKeyPem: scCfg.pinnedPublicKeyPem, expectedSigningKeyId: scCfg.expectedSigningKeyId },
+        rawSend: function (frame) { return rtmClient.rawSend(frame); },
         logger: debug
       });
     }
@@ -1759,14 +1758,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreRTMClient.prototype.handleWsMessage = function handleWsMessage(wsMsg) {
     var _this = this;
 
-    // Decryption chokepoint: browser WS delivers a MessageEvent, so parse .data (JSON.parse(wsMsg) fails on the event) to consume handshake/rekey frames and decrypt envelopes before any listener.
-    if (this._secureChannel) {
+    // Browser WS payload is in wsMsg.data; decrypt/consume secure-channel frames before routing.
+    if (this.secureChannel) {
       var rawData = (wsMsg && typeof wsMsg.data === 'string') ? wsMsg.data
         : (typeof wsMsg === 'string' ? wsMsg : null);
       var parsed = null;
       if (rawData) { try { parsed = JSON.parse(rawData); } catch (e) { parsed = null; } }
-      if (parsed && this._secureChannel.isRelevant(parsed)) {
-        this._secureChannel.processIncoming(parsed).then(function (res) {
+      if (parsed && this.secureChannel.isRelevant(parsed)) {
+        this.secureChannel.processIncoming(parsed).then(function (res) {
           if (!res || res.handled) return;
           var out = (res.plaintext !== undefined) ? res.plaintext : parsed;
           _this.emit("message", { data: JSON.stringify(out) });
@@ -1829,7 +1828,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
     this.connected = false;
     // Drop the secure channel so reconnect re-handshakes with fresh keys.
-    if (this._secureChannel) { this._secureChannel.reset('ws_close'); }
+    if (this.secureChannel) { this.secureChannel.reset('ws_close'); }
     this.emit(CLIENT_EVENTS.WS_CLOSE, code, reason);
 
     if (this.autoReconnect) {
@@ -1857,12 +1856,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.send(message, optCb);
   };
 
-  // Encryption chokepoint: encrypt when secure (fail-closed), else raw-send.
   KoreRTMClient.prototype.send = function send(message, optCb) {
     var _this = this;
-    if (this._secureChannel) {
-      Promise.resolve(this._secureChannel.processOutgoing(message)).then(function (frameToSend) {
-        _this._rawSend(frameToSend, optCb);
+    if (this.secureChannel) {
+      Promise.resolve(this.secureChannel.processOutgoing(message)).then(function (frameToSend) {
+        _this.rawSend(frameToSend, optCb);
       }, function (sendErr) {
         if (!isUndefined(optCb)) {
           optCb(sendErr instanceof Error ? sendErr : new Error(String((sendErr && sendErr.message) || sendErr)));
@@ -1870,11 +1868,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       });
       return;
     }
-    this._rawSend(message, optCb);
+    this.rawSend(message, optCb);
   };
 
-  // Raw write to the socket; also the plaintext path for handshake/rekey frames.
-  KoreRTMClient.prototype._rawSend = function _rawSend(message, optCb) {
+  KoreRTMClient.prototype.rawSend = function rawSend(message, optCb) {
     var wsMsg = cloneDeep(message);
     var jsonMessage;
     var err;
