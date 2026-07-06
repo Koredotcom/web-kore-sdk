@@ -139,6 +139,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const isSearchLoadingRef = useRef(false);
     const pendingFilterResultsRef = useRef<ResultCard[] | null>(null);
+    const resultsContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -168,6 +169,13 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
         isSearchLoadingRef.current = false;
         setIsLoading(false);
     }, [searchQuery]);
+
+    useEffect(() => {
+        resultsContainerRef.current?.querySelectorAll('a').forEach(anchor => {
+            anchor.setAttribute('target', '_blank');
+            anchor.setAttribute('rel', 'noopener noreferrer');
+        });
+    }, [resultsData, searchQuery, expandedTexts]);
 
     const getTotalResultCount = (filtered: ResultCard[]): number => {
         const hasSearchQuery = searchQuery.trim().length > 0;
@@ -537,7 +545,7 @@ export function RelevantResults(props: SearchResultsSliderProps): any {
             </div>
 
             {/* Results List */}
-            <div className="sa-answer-results-container kwsdk-p-4 kwsdk-pt-0 kwsdk-flex-grow-1 kwsdk-overflow-y-auto kwsdk-d-flex kwsdk-flex-column kwsdk-gap-2">
+            <div ref={resultsContainerRef} className="sa-answer-results-container kwsdk-p-4 kwsdk-pt-0 kwsdk-flex-grow-1 kwsdk-overflow-y-auto kwsdk-d-flex kwsdk-flex-column kwsdk-gap-2">
                 {isLoading ? (
                     <div className="sa-answer-results-loading-container kwsdk-d-flex kwsdk-flex-column kwsdk-align-items-center kwsdk-justify-content-center kwsdk-gap-2 kwsdk-h-100 kwsdk-w-100">
                         <div className="sa-answer-spinner-ring"/>

@@ -2,7 +2,7 @@ import { getHTML } from '../../../../templatemanager/base/domManager';
 import { RelevantResults, renderImageWithZoom, showFileUrl } from '../relevantResultsTemplate/relevantResults';
 import './searchResultsTemplate.scss';
 import { h } from 'preact';
-import React from 'preact/compat';
+import React, { useEffect, useRef } from 'preact/compat';
 import { RelevantResultsSvgIcons, RenderFileIcons } from '../relevantResultsTemplate/relevantResultsSvgIcons';
 import { TableContentBlock } from '../tablePreviewTemplate/tablePreviewUtils';
 
@@ -30,6 +30,14 @@ const MAX_VISIBLE_RESULTS = 3;
 export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     const { results, totalResults = 0, onResultClick, hostInstance, msgData } = props;
     const visibleResults = results.slice(0, MAX_VISIBLE_RESULTS);
+    const containerRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        containerRef.current?.querySelectorAll('a').forEach(anchor => {
+            anchor.setAttribute('target', '_blank');
+            anchor.setAttribute('rel', 'noopener noreferrer');
+        });
+    }, [visibleResults]);
 
     const handleResultClick = (result: SearchResult) => {
         if (onResultClick) {
@@ -71,7 +79,7 @@ export function SearchResultsTemplate(props: SearchResultsTemplateProps): any {
     };
 
     return (
-        <section className="sa-answer-search-results-container kwsdk-w-100">
+        <section ref={containerRef} className="sa-answer-search-results-container kwsdk-w-100">
             <header className="sa-answer-search-results-heade kwsdk-w-100 kwsdk-d-flex kwsdk-justify-content-between kwsdk-pb-2">
                 <p className="sa-answer-search-results-title kwsdk-w-100 kwsdk-text-xs semibold kwsdk-text-truncate">Relevant Results</p>
                 {totalResults > 0 && (
