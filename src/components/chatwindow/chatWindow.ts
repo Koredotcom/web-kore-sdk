@@ -1348,7 +1348,7 @@ bindSDKEvents  () {
     me.isSocketOpened = true;
   });
 
-  me.bot.on('message', async (response: { data: string; }) => {
+  me.bot.on('message', (response: { data: string; }) => {
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
