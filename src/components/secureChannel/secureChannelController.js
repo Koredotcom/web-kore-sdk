@@ -4,10 +4,9 @@ import SecureChannel, { MSG } from './secureChannel.js';
 const HANDSHAKE_TIMEOUT_MS = 10000;
 
 class SecureChannelController {
-    constructor({ config, rawSend, logger } = {}) {
+    constructor({ config, rawSend } = {}) {
         this.config = config || {};
         this.rawSend = typeof rawSend === 'function' ? rawSend : function () {};
-        this.logger = typeof logger === 'function' ? logger : function () {};
         this.channel = null;
         this.handshakeTimer = null;
         this._inbound = Promise.resolve();
@@ -41,7 +40,6 @@ class SecureChannelController {
         this._clearTimer();
         this.handshakeTimer = setTimeout(() => {
             if (this.channel && !this.channel.isSecure()) {
-                this.logger('[secureChannel] handshake timed out — resetting');
                 this.reset('handshake_timeout');
             }
         }, HANDSHAKE_TIMEOUT_MS);
@@ -87,10 +85,10 @@ class SecureChannelController {
 
         if (t === MSG.CAPABILITIES) {
             // Ignore a duplicate capabilities frame — never tear down a live channel.
-            if (this.channel) { this.logger('[secureChannel] duplicate capabilities ignored'); return { handled: true }; }
+            if (this.channel) return { handled: true };
             if (frame.encryption !== 'required') return { handled: true };
             const pem = this.config.pinnedPublicKeyPem;
-            if (!pem) { this.logger('[secureChannel] capabilities received but no pinnedPublicKeyPem configured'); return { handled: true }; }
+            if (!pem) return { handled: true };
             try {
                 this.channel = new SecureChannel({
                     pinnedPublicKeyPem: pem,
@@ -100,19 +98,17 @@ class SecureChannelController {
                 const init = await this.channel.initiateHandshake();
                 this.rawSend(init);
             } catch (e) {
-                this.logger('[secureChannel] handshake init failed: ' + (e && e.message));
                 this.reset('init_failed');
             }
             return { handled: true };
         }
 
         if (t === MSG.RESPONSE) {
-            if (!this.channel || this.channel.isSecure()) { return { handled: true }; }
+            if (!this.channel || this.channel.isSecure()) return { handled: true };
             try {
                 const complete = await this.channel.handleResponse(frame);
                 this.rawSend(complete);
             } catch (e) {
-                this.logger('[secureChannel] handleResponse failed: ' + (e && e.message));
                 this.reset('response_failed');
             }
             return { handled: true };
@@ -121,38 +117,30 @@ class SecureChannelController {
         if (t === MSG.ACK) {
             if (!this.channel) return { handled: true };
             // Ignore a duplicate/redelivered ack once SECURE — do not reset to plaintext.
-            if (this.channel.isSecure()) { this.logger('[secureChannel] duplicate ack ignored'); return { handled: true }; }
+            if (this.channel.isSecure()) return { handled: true };
             try {
                 await this.channel.handleAck(frame);
                 this._clearTimer();
                 this._flushOutbound();
-                this.logger('[secureChannel] channel SECURE');
             } catch (e) {
-                this.logger('[secureChannel] handleAck failed: ' + (e && e.message));
                 this.reset('ack_failed');
             }
             return { handled: true };
         }
 
         if (t === MSG.ENVELOPE) {
-            if (!this.channel || !this.channel.isSecure()) {
-                this.logger('[secureChannel] envelope before SECURE — dropping');
-                return { handled: true };
-            }
+            if (!this.channel || !this.channel.isSecure()) return { handled: true };
             let plain;
             try {
                 plain = await this.channel.decryptIncoming(frame);
             } catch (e) {
-                this.logger('[secureChannel] decrypt failed: ' + (e && e.message));
                 return { handled: true };
             }
             if (plain && plain.__control === MSG.REKEY_SIGNAL) {
                 try {
                     const ack = await this.channel.handleRekeySignal(plain);
                     this.rawSend(ack);
-                    this.logger('[secureChannel] rekeyed to gen ' + plain.newGen);
                 } catch (e) {
-                    this.logger('[secureChannel] rekey failed: ' + (e && e.message));
                     this.reset('rekey_failed');
                 }
                 return { handled: true };

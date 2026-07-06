@@ -1529,8 +1529,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       var rtmClient = this;
       this.secureChannel = clientOpts.secureChannelFactory({
         config: { pinnedPublicKeyPem: secureChannelConfig.pinnedPublicKeyPem, expectedSigningKeyId: secureChannelConfig.expectedSigningKeyId },
-        rawSend: function (frame) { return rtmClient.rawSend(frame); },
-        logger: debug
+        rawSend: function (frame) { return rtmClient.rawSend(frame); }
       });
     }
   }
