@@ -1758,32 +1758,30 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsMessage = function handleWsMessage(wsMsg) {
     var _this = this;
-    var message;
 
+    // Decryption chokepoint: browser WS delivers a MessageEvent, so parse .data (JSON.parse(wsMsg) fails on the event) to consume handshake/rekey frames and decrypt envelopes before any listener.
+    if (this._secureChannel) {
+      var rawData = (wsMsg && typeof wsMsg.data === 'string') ? wsMsg.data
+        : (typeof wsMsg === 'string' ? wsMsg : null);
+      var parsed = null;
+      if (rawData) { try { parsed = JSON.parse(rawData); } catch (e) { parsed = null; } }
+      if (parsed && this._secureChannel.isRelevant(parsed)) {
+        this._secureChannel.processIncoming(parsed).then(function (res) {
+          if (!res || res.handled) return;
+          var out = (res.plaintext !== undefined) ? res.plaintext : parsed;
+          _this.emit("message", { data: JSON.stringify(out) });
+        }).catch(function () {});
+        return;
+      }
+    }
+
+    var message;
+    this.emit("message", wsMsg);
     try {
       message = JSON.parse(wsMsg);
     } catch (err) {
-      // Non-JSON frame — preserve legacy raw emit and stop.
-      this.emit("message", wsMsg);
       return;
     }
-
-    // Decryption chokepoint: consume handshake/rekey frames, decrypt envelopes once for all listeners.
-    if (this._secureChannel && this._secureChannel.isRelevant(message)) {
-      this._secureChannel.processIncoming(message).then(function (res) {
-        if (!res || res.handled) return;
-        var out = (res.plaintext !== undefined) ? res.plaintext : message;
-        _this.emit("message", JSON.stringify(out));
-        _this._routeParsedMessage(out);
-      }).catch(function () {});
-      return;
-    }
-
-    this.emit("message", wsMsg);
-    this._routeParsedMessage(message);
-  };
-
-  KoreRTMClient.prototype._routeParsedMessage = function _routeParsedMessage(message) {
     if (contains(RTM_CLIENT_INTERNAL_EVENT_TYPES, message.type)) {
       this._handleWsMessageInternal(message.type, message);
     } else {
