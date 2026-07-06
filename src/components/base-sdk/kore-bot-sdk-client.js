@@ -1524,11 +1524,11 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     };
     this.enableSecureRTM = clientOpts.enableSecureRTM !== false
     this.secureChannel = null;
-    var scCfg = clientOpts.secureChannel;
-    if (scCfg && scCfg.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
+    var secureChannelConfig = clientOpts.secureChannel;
+    if (secureChannelConfig && secureChannelConfig.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
       var rtmClient = this;
       this.secureChannel = clientOpts.secureChannelFactory({
-        config: { pinnedPublicKeyPem: scCfg.pinnedPublicKeyPem, expectedSigningKeyId: scCfg.expectedSigningKeyId },
+        config: { pinnedPublicKeyPem: secureChannelConfig.pinnedPublicKeyPem, expectedSigningKeyId: secureChannelConfig.expectedSigningKeyId },
         rawSend: function (frame) { return rtmClient.rawSend(frame); },
         logger: debug
       });
