@@ -288,9 +288,13 @@ initShow  (config:any) {
   }
   me.config.ttsInterface = me.config.ttsInterface || 'webapi';
   me.setConfig();
+  // Secure channel: give the RTM client a factory so it attaches the controller at construction.
+  if (me.config.botOptions?.secureChannel?.pinnedPublicKeyPem) {
+    me.config.botOptions.secureChannelFactory = (opts: any) => new SecureChannelController(opts);
+  }
   if(!me.config?.mockMode?.enable && me.config.UI.version == 'v3'){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-  }  
+  }
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
     if (!me.config?.autoConnect && !me.isUIInitialized) {
@@ -1331,26 +1335,6 @@ sendWebhookOnConnectEvent  () {
   });
 };
 
-// Secure channel: create the ECDH+AES-GCM controller and inject it into the RTM
-// transport client, so encrypt/decrypt happen at the socket chokepoint (below
-// message enrichment, above all bot.on('message') listeners). This replaces the
-// old chatWindow sendMessage wrapper + per-listener decrypt. No-op unless the
-// integrator configured botOptions.secureChannel.pinnedPublicKeyPem.
-attachSecureChannelController () {
-  const me: any = this;
-  const sc = me.config.botOptions && me.config.botOptions.secureChannel;
-  const pinnedPublicKeyPem = sc && sc.pinnedPublicKeyPem;
-  if (!pinnedPublicKeyPem) return;
-  const rtm = me.bot && me.bot.RtmClient;
-  if (!rtm || rtm._secureChannel) return; // no client yet, or already attached
-  rtm._secureChannel = new SecureChannelController({
-    config: { pinnedPublicKeyPem, expectedSigningKeyId: sc && sc.expectedSigningKeyId },
-    // Handshake/rekey frames must bypass the encrypt path and go out plaintext.
-    rawSend: (frame: any) => rtm._rawSend(frame),
-    logger: (m: any) => { try { (console.debug || console.log).call(console, m); } catch (e) { /* noop */ } },
-  } as any);
-}
-
 bindSDKEvents  () {
   // hook to add custom events
   const me:any = this;
@@ -1369,8 +1353,7 @@ bindSDKEvents  () {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
-    // When the secure channel is enabled, decryption happens at the RTM transport
-    // chokepoint, so response.data is already plaintext here.
+    // Secure channel (when enabled) decrypts at the RTM chokepoint, so response.data is already plaintext.
     let tempData = JSON.parse(response.data);
 
     let chatWindowEvent = {stopFurtherExecution: false};
@@ -1413,14 +1396,6 @@ bindSDKEvents  () {
       }
       me.chatEle.setAttribute('dir', langDetails?.language == 'ar' || langDetails?.newLanguage == 'ar' ? 'rtl' : 'ltr');
     }
-  });
-
-  me.bot.on('rtm_client_initialized', () => {
-    // Attach the secure-channel controller to the RTM transport client once it
-    // exists. Encrypt/decrypt live at the socket chokepoint, and the RTM client
-    // resets the channel on ws_close so reconnect performs a fresh handshake —
-    // no bot-level 'close' reset is needed here.
-    me.attachSecureChannelController();
   });
 
   me.bot.on('webhook_ready', (response: any) => {

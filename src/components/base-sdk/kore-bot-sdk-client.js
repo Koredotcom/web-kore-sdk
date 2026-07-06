@@ -1523,8 +1523,19 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       factor: 2
     };
     this.enableSecureRTM = clientOpts.enableSecureRTM !== false
+    // Secure channel: built from the injected factory when the app requires encryption.
+    this._secureChannel = null;
+    var _scCfg = clientOpts.secureChannel;
+    if (_scCfg && _scCfg.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
+      var _scRtm = this;
+      this._secureChannel = clientOpts.secureChannelFactory({
+        config: { pinnedPublicKeyPem: _scCfg.pinnedPublicKeyPem, expectedSigningKeyId: _scCfg.expectedSigningKeyId },
+        rawSend: function (frame) { return _scRtm._rawSend(frame); },
+        logger: debug
+      });
+    }
   }
-  
+
   inherits(KoreRTMClient, BaseAPIClient);
   
   
@@ -1757,16 +1768,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       return;
     }
 
-    // Decryption chokepoint. Consume handshake/rekey frames here, and decrypt
-    // secure_envelopes ONCE so the plaintext reaches EVERY listener (chatWindow,
-    // agentDesktop, delivery-ack logic) rather than only chatWindow's listener.
+    // Decryption chokepoint: consume handshake/rekey frames, decrypt envelopes once for all listeners.
     if (this._secureChannel && this._secureChannel.isRelevant(message)) {
       this._secureChannel.processIncoming(message).then(function (res) {
-        if (!res || res.handled) return;               // protocol frame consumed
+        if (!res || res.handled) return;
         var out = (res.plaintext !== undefined) ? res.plaintext : message;
         _this.emit("message", JSON.stringify(out));
         _this._routeParsedMessage(out);
-      }).catch(function () { /* fail-open: drop this frame, never crash the socket */ });
+      }).catch(function () {});
       return;
     }
 
@@ -1821,9 +1830,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
     this.connected = false;
-    // The secure channel's keys belong to this socket session. Drop them so the
-    // next connection performs a fresh handshake instead of encrypting with the
-    // dead session's keys (which the server can no longer decrypt).
+    // Drop the secure channel so reconnect re-handshakes with fresh keys.
     if (this._secureChannel) { this._secureChannel.reset('ws_close'); }
     this.emit(CLIENT_EVENTS.WS_CLOSE, code, reason);
 
@@ -1852,11 +1859,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this.send(message, optCb);
   };
 
-  // Encryption chokepoint. If a secure channel is attached and engaged, the
-  // fully-enriched frame is encrypted here before the raw write, so user
-  // messages, delivery acks and plugin sends are all covered uniformly.
-  // Handshake/pre-secure traffic passes through unchanged. Fail-closed: on an
-  // encrypt error we surface it via optCb and never fall back to plaintext.
+  // Encryption chokepoint: encrypt when secure (fail-closed), else raw-send.
   KoreRTMClient.prototype.send = function send(message, optCb) {
     var _this = this;
     if (this._secureChannel) {
@@ -1872,8 +1875,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
     this._rawSend(message, optCb);
   };
 
-  // Raw write to the socket (id-stamp + stringify + ws.send). This is the
-  // plaintext path the secure channel uses for handshake/rekey frames.
+  // Raw write to the socket; also the plaintext path for handshake/rekey frames.
   KoreRTMClient.prototype._rawSend = function _rawSend(message, optCb) {
     var wsMsg = cloneDeep(message);
     var jsonMessage;

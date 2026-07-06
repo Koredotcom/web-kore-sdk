@@ -1,50 +1,21 @@
-// Secure-channel controller — lives at the RTM transport chokepoint.
-//
-// One instance is created by chatWindow (which has the pinned-key config) and
-// injected into the KoreRTMClient as `rtmClient._secureChannel`. The RTM client
-// calls this controller at exactly two places:
-//   - send()           -> processOutgoing(frame)  (encrypt before ws.send)
-//   - handleWsMessage() -> processIncoming(frame)  (decrypt after JSON.parse, before emit)
-// and on socket teardown:
-//   - handleWsClose()  -> reset()                  (drop keys so reconnect re-handshakes)
-//
-// Putting encrypt/decrypt here (instead of in a chatWindow sendMessage wrapper)
-// means EVERY frame — user messages, delivery acks, agentDesktop sends — is
-// encrypted uniformly and encrypted AFTER enrichment; and every inbound frame is
-// decrypted ONCE and the plaintext reaches all bot.on('message') listeners.
-//
-// Handshake frames (key_exchange_*) and rekey control frames are driven here and
-// are never themselves encrypted; they go out via the injected rawSend (the RTM
-// client's plaintext write path).
-
+// Secure-channel controller — encrypt/decrypt at the RTM transport chokepoint.
 import SecureChannel, { MSG } from './secureChannel.js';
 
 const HANDSHAKE_TIMEOUT_MS = 10000;
 
 class SecureChannelController {
-    // config: { pinnedPublicKeyPem, expectedSigningKeyId }
-    // rawSend: (frameObj) => void   — writes a plaintext frame straight to the socket
-    // logger:  (msg) => void        — optional debug sink
     constructor({ config, rawSend, logger } = {}) {
         this.config = config || {};
         this.rawSend = typeof rawSend === 'function' ? rawSend : function () {};
         this.logger = typeof logger === 'function' ? logger : function () {};
         this.channel = null;
         this.handshakeTimer = null;
-        // Serializes inbound handling so a rekey generation-install completes
-        // before the next frame is decrypted (a new-gen envelope must not race
-        // the install and trip generation_mismatch).
         this._inbound = Promise.resolve();
-        // Outbound frames requested while the handshake is mid-flight are held
-        // here and flushed (encrypted) once SECURE — this closes the plaintext
-        // window during (re)handshake instead of leaking them in the clear.
         this._outboundQueue = [];
     }
 
     isSecure() { return !!(this.channel && this.channel.isSecure()); }
 
-    // Is this an inbound frame the secure channel owns? Used by the RTM client
-    // to decide whether to route the frame through processIncoming.
     isRelevant(message) {
         if (!message || typeof message !== 'object') return false;
         const t = message.type;
@@ -52,10 +23,7 @@ class SecureChannelController {
             || t === MSG.INIT || t === MSG.COMPLETE || t === MSG.ENVELOPE;
     }
 
-    // --- lifecycle ---------------------------------------------------------
-
-    // Drop the channel and fail any queued sends. Called on ws close so the
-    // NEXT connection performs a fresh handshake instead of reusing dead keys.
+    // Drop the channel on ws close so the next connection re-handshakes with fresh keys.
     reset(reason) {
         this._clearTimer();
         this.channel = null;
@@ -79,20 +47,13 @@ class SecureChannelController {
         }, HANDSHAKE_TIMEOUT_MS);
     }
 
-    // --- outbound ----------------------------------------------------------
-
-    // Returns a Promise resolving to the frame that should actually be written.
-    // - SECURE + normal frame -> encrypted envelope
-    // - SECURE + handshake/control frame -> unchanged (already an envelope/plaintext handshake)
-    // - handshaking -> queued, resolves with the envelope after SECURE
-    // - not engaged -> unchanged (server has not required encryption)
+    // Encrypt outgoing when SECURE; queue while handshaking so nothing leaks plaintext.
     processOutgoing(frame) {
         if (this.isSecure()) {
             if (this._isProtocolFrame(frame)) return Promise.resolve(frame);
             return this.channel.encryptOutgoing(frame);
         }
         if (this.channel) {
-            // handshake in progress — never leak plaintext; hold until SECURE
             return new Promise((resolve, reject) => {
                 this._outboundQueue.push({ frame, resolve, reject });
             });
@@ -114,12 +75,7 @@ class SecureChannelController {
         });
     }
 
-    // --- inbound -----------------------------------------------------------
-
-    // Returns Promise<{ handled: boolean, plaintext?: object }>.
-    //   handled=true               -> protocol frame consumed; do not emit
-    //   handled=false, plaintext   -> emit the decrypted object to listeners
-    //   handled=false (no plain)   -> not ours; caller emits the original frame
+    // Serialized so a rekey generation-install completes before the next frame is decrypted.
     processIncoming(frame) {
         const run = this._inbound.then(() => this._handleIncoming(frame));
         this._inbound = run.catch(() => undefined);
@@ -129,11 +85,8 @@ class SecureChannelController {
     async _handleIncoming(frame) {
         const t = frame && frame.type;
 
-        // Server advertises "encryption required" -> start the handshake.
         if (t === MSG.CAPABILITIES) {
-            // #3 re-entry guard: a duplicate capabilities frame (e.g. after a
-            // reconnect race) must NOT tear down a live channel and reopen a
-            // plaintext window. Ignore it while a channel already exists.
+            // Ignore a duplicate capabilities frame — never tear down a live channel.
             if (this.channel) { this.logger('[secureChannel] duplicate capabilities ignored'); return { handled: true }; }
             if (frame.encryption !== 'required') return { handled: true };
             const pem = this.config.pinnedPublicKeyPem;
@@ -153,7 +106,6 @@ class SecureChannelController {
             return { handled: true };
         }
 
-        // key_exchange_response -> reply with key_exchange_complete.
         if (t === MSG.RESPONSE) {
             if (!this.channel || this.channel.isSecure()) { return { handled: true }; }
             try {
@@ -166,11 +118,9 @@ class SecureChannelController {
             return { handled: true };
         }
 
-        // key_exchange_ack -> channel becomes SECURE.
         if (t === MSG.ACK) {
             if (!this.channel) return { handled: true };
-            // #2 guard: a duplicate/redelivered ack after we are already SECURE
-            // must be ignored, NOT reset to plaintext.
+            // Ignore a duplicate/redelivered ack once SECURE — do not reset to plaintext.
             if (this.channel.isSecure()) { this.logger('[secureChannel] duplicate ack ignored'); return { handled: true }; }
             try {
                 await this.channel.handleAck(frame);
@@ -184,7 +134,6 @@ class SecureChannelController {
             return { handled: true };
         }
 
-        // secure_envelope -> decrypt (control frames handled here, chat surfaced).
         if (t === MSG.ENVELOPE) {
             if (!this.channel || !this.channel.isSecure()) {
                 this.logger('[secureChannel] envelope before SECURE — dropping');
