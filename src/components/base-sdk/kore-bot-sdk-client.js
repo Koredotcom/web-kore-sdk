@@ -1757,7 +1757,7 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreRTMClient.prototype.handleWsMessage = function handleWsMessage(wsMsg) {
     var _this = this;
 
-    // Browser WS payload is in wsMsg.data; decrypt/consume secure-channel frames before routing.
+    // decrypt secure-channel frames before emitting
     if (this.secureChannel) {
       var rawData = (wsMsg && typeof wsMsg.data === 'string') ? wsMsg.data
         : (typeof wsMsg === 'string' ? wsMsg : null);
@@ -1775,11 +1775,13 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
 
     var message;
     this.emit("message", wsMsg);
+
     try {
       message = JSON.parse(wsMsg);
     } catch (err) {
       return;
     }
+
     if (contains(RTM_CLIENT_INTERNAL_EVENT_TYPES, message.type)) {
       this._handleWsMessageInternal(message.type, message);
     } else {
@@ -1826,7 +1828,6 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
     this.connected = false;
-    // Drop the secure channel so reconnect re-handshakes with fresh keys.
     if (this.secureChannel) { this.secureChannel.reset('ws_close'); }
     this.emit(CLIENT_EVENTS.WS_CLOSE, code, reason);
 

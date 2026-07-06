@@ -288,7 +288,6 @@ initShow  (config:any) {
   }
   me.config.ttsInterface = me.config.ttsInterface || 'webapi';
   me.setConfig();
-  // Secure channel: give the RTM client a factory so it attaches the controller at construction.
   if (me.config.botOptions?.secureChannel?.pinnedPublicKeyPem) {
     me.config.botOptions.secureChannelFactory = (opts: any) => new SecureChannelController(opts);
   }
@@ -1353,9 +1352,7 @@ bindSDKEvents  () {
       $('.kore-auth-popup .close-popup').trigger('click');
     }
 
-    // Secure channel (when enabled) decrypts at the RTM chokepoint, so response.data is already plaintext.
     let tempData = JSON.parse(response.data);
-
     let chatWindowEvent = {stopFurtherExecution: false};
     me.emit(me.EVENTS.ON_WS_MESSAGE,{
       messageData:tempData,

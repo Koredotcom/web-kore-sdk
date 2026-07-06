@@ -22,7 +22,6 @@ class SecureChannelController {
             || t === MSG.INIT || t === MSG.COMPLETE || t === MSG.ENVELOPE;
     }
 
-    // Drop the channel on ws close so the next connection re-handshakes with fresh keys.
     reset(reason) {
         this._clearTimer();
         this.channel = null;
@@ -45,7 +44,6 @@ class SecureChannelController {
         }, HANDSHAKE_TIMEOUT_MS);
     }
 
-    // Encrypt outgoing when SECURE; queue while handshaking so nothing leaks plaintext.
     processOutgoing(frame) {
         if (this.isSecure()) {
             if (this._isProtocolFrame(frame)) return Promise.resolve(frame);
@@ -73,7 +71,6 @@ class SecureChannelController {
         });
     }
 
-    // Serialized so a rekey generation-install completes before the next frame is decrypted.
     processIncoming(frame) {
         const run = this._inbound.then(() => this._handleIncoming(frame));
         this._inbound = run.catch(() => undefined);
@@ -84,7 +81,6 @@ class SecureChannelController {
         const t = frame && frame.type;
 
         if (t === MSG.CAPABILITIES) {
-            // Ignore a duplicate capabilities frame — never tear down a live channel.
             if (this.channel) return { handled: true };
             if (frame.encryption !== 'required') return { handled: true };
             const pem = this.config.pinnedPublicKeyPem;
@@ -116,7 +112,6 @@ class SecureChannelController {
 
         if (t === MSG.ACK) {
             if (!this.channel) return { handled: true };
-            // Ignore a duplicate/redelivered ack once SECURE — do not reset to plaintext.
             if (this.channel.isSecure()) return { handled: true };
             try {
                 await this.channel.handleAck(frame);

@@ -313,7 +313,6 @@ class SecureChannel {
         return result;
     }
 
-    // Install the server-signalled new generation and ack it on the new gen; serialized on outboundLock.
     handleRekeySignal(controlMsg) {
         const result = this.outboundLock.then(async () => {
             if (this.state !== STATE.SECURE) throw new Error('channel_not_secure');
