@@ -1523,8 +1523,17 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
       factor: 2
     };
     this.enableSecureRTM = clientOpts.enableSecureRTM !== false
+    this.secureChannel = null;
+    var secureChannelConfig = clientOpts.secureChannel;
+    if (secureChannelConfig && secureChannelConfig.pinnedPublicKeyPem && typeof clientOpts.secureChannelFactory === 'function') {
+      var rtmClient = this;
+      this.secureChannel = clientOpts.secureChannelFactory({
+        config: { pinnedPublicKeyPem: secureChannelConfig.pinnedPublicKeyPem, expectedSigningKeyId: secureChannelConfig.expectedSigningKeyId },
+        rawSend: function (frame) { return rtmClient.rawSend(frame); }
+      });
+    }
   }
-  
+
   inherits(KoreRTMClient, BaseAPIClient);
   
   
@@ -1746,15 +1755,33 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   
   KoreRTMClient.prototype.handleWsMessage = function handleWsMessage(wsMsg) {
+    var _this = this;
+
+    // decrypt secure-channel frames before emitting
+    if (this.secureChannel) {
+      var rawData = (wsMsg && typeof wsMsg.data === 'string') ? wsMsg.data
+        : (typeof wsMsg === 'string' ? wsMsg : null);
+      var parsed = null;
+      if (rawData) { try { parsed = JSON.parse(rawData); } catch (e) { parsed = null; } }
+      if (parsed && this.secureChannel.isRelevant(parsed)) {
+        this.secureChannel.processIncoming(parsed).then(function (res) {
+          if (!res || res.handled) return;
+          var out = (res.plaintext !== undefined) ? res.plaintext : parsed;
+          _this.emit("message", { data: JSON.stringify(out) });
+        }).catch(function () {});
+        return;
+      }
+    }
+
     var message;
     this.emit("message", wsMsg);
-  
+
     try {
       message = JSON.parse(wsMsg);
     } catch (err) {
       return;
     }
-  
+
     if (contains(RTM_CLIENT_INTERNAL_EVENT_TYPES, message.type)) {
       this._handleWsMessageInternal(message.type, message);
     } else {
@@ -1801,8 +1828,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   KoreRTMClient.prototype.handleWsClose = function handleWsClose(code, reason) {
     this.connected = false;
+    if (this.secureChannel) { this.secureChannel.reset('ws_close'); }
     this.emit(CLIENT_EVENTS.WS_CLOSE, code, reason);
-  
+
     if (this.autoReconnect) {
       if (!this._connecting) {
         this.reconnect();
@@ -1827,22 +1855,36 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   KoreRTMClient.prototype.sendMessage = function sendMessage(message, optCb) {
     this.send(message, optCb);
   };
-  
+
   KoreRTMClient.prototype.send = function send(message, optCb) {
+    var _this = this;
+    if (this.secureChannel) {
+      Promise.resolve(this.secureChannel.processOutgoing(message)).then(function (frameToSend) {
+        _this.rawSend(frameToSend, optCb);
+      }, function (sendErr) {
+        if (!isUndefined(optCb)) {
+          optCb(sendErr instanceof Error ? sendErr : new Error(String((sendErr && sendErr.message) || sendErr)));
+        }
+      });
+      return;
+    }
+    this.rawSend(message, optCb);
+  };
+
+  KoreRTMClient.prototype.rawSend = function rawSend(message, optCb) {
     var wsMsg = cloneDeep(message);
     var jsonMessage;
     var err;
-    var _this = this;
-  
+
     if (this.connected && !this._reconnecting) {
       wsMsg.id = wsMsg.clientMessageId || this.nextMessageId();
       jsonMessage = JSON.stringify(wsMsg);
-  
+
       this._pendingMessages[wsMsg.id] = wsMsg;
       this.ws.send(jsonMessage, undefined, function handleWsMsgResponse(wsRespErr) {
         if (!isUndefined(wsRespErr)) {
         }
-  
+
         if (!isUndefined(optCb)) {
           optCb(wsRespErr);
         }
