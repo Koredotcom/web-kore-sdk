@@ -10,6 +10,8 @@ import './sass/chatWindow.scss';
 import './sass/fonts.scss';
 //import './../../libs/emojione.sprites.css';
 import chatConfig from './config/kore-config';
+// @ts-ignore — plain JS module
+import SecureChannelController from '../secureChannel/secureChannelController.js';
 //import GreeetingsPlugin from '../../plugins/greetings/greetings-plugin'
 
 // import welcomeScreeContainer from '../../preact/templates/base/welcomeScreeContainer/welcomeScreeContainer';
@@ -286,9 +288,12 @@ initShow  (config:any) {
   }
   me.config.ttsInterface = me.config.ttsInterface || 'webapi';
   me.setConfig();
+  if (me.config.botOptions?.secureChannel?.pinnedPublicKeyPem) {
+    me.config.botOptions.secureChannelFactory = (opts: any) => new SecureChannelController(opts);
+  }
   if(!me.config?.mockMode?.enable && me.config.UI.version == 'v3'){
   me.bot.init(me.config.botOptions, me.config.messageHistoryLimit);
-  }  
+  }
   me.bot.on('jwtgrantsuccess', (response: { jwtgrantsuccess: any; }) => {
     me.config.jwtGrantSuccessInformation = response.jwtgrantsuccess;
     if (!me.config?.autoConnect && !me.isUIInitialized) {
@@ -1343,7 +1348,6 @@ bindSDKEvents  () {
   });
 
   me.bot.on('message', (response: { data: string; }) => {
-    // actual implementation starts here
     if (me.popupOpened === true) {
       $('.kore-auth-popup .close-popup').trigger('click');
     }

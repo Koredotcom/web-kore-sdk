@@ -75,6 +75,17 @@ botOptions.webhookConfig = {
 
 **Note:** Polling must be enabled for webhook version 2. Refer to the [documentation](https://docs.kore.ai/xo/channels/add-webhook-channel/#step-1-associate-an-app) for polling setup.
 
+### Secure duplex communication
+Secure Duplex Channel using Ephemeral ECDH + AES-GCM (4-Step Handshake Protocol) for secure communication
+```typescript
+botOptions.secureChannel = {
+    pinnedPublicKeyPem: '-----BEGIN PUBLIC KEY-----xxxxxxxxxxxxxxxxxxxxx-----END PUBLIC KEY-----',
+    expectedSigningKeyId: 'kid-default'
+};
+```
+
+For secure duplex communication we must pass public key and signing key. Need to enable Advanced Duplex Encryption in the Web/Mobile channel in the Platform.
+
 ## UI and Interaction Settings
 
 ### Chat Window Configuration

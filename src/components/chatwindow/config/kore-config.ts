@@ -51,6 +51,8 @@ botOptions.webSocketConfig = {
 //     port: 'PORT_TO_BE_REWRITTEN'
 // };
 
+botOptions.secureChannel = ''; // add public key and signing key for secure duplex communication. Please refer docs for more info
+
 chatConfig = {
     mockMode:{
         enable:false
