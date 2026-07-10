@@ -27398,7 +27398,7 @@ class AudioCodesUA {
             (this.networkPriority = void 0),
             (AudioCodesUA.ac_log = console.log),
             (AudioCodesUA.js_log = null),
-            void 0 === AudioCodesUA.instance && (AudioCodesUA.instance = this),
+            (AudioCodesUA.instance = this),
             this._detectBrowser(),
             this._detectOS(),
             (this.webrtcapi = AudioCodesWebRTCWrapper),
