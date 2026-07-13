@@ -1,3 +1,10 @@
+### 11.26.1
+* Release July 11, 2026
+* Features
+  * added Advanced Duplex Encryption for secure communication in the web socket. For configuration please refer [here](./docs/configurations/koreconfig/README.md#secure-duplex-communication)
+* Bug fixes
+  * search results link re-direction issues fix in answers plugin
+  
 ### 11.26.0
 * Release June 27, 2026
 * Bug fixes
