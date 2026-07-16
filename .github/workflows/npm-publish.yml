@@ -9,7 +9,6 @@ on:
       - v2/dev 
       - v2/dev-rc1
       - v3/dev
-      - bugfix/PLAT-68935
 jobs:
   build:
     runs-on: ubuntu-latest
