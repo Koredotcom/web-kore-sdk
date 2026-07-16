@@ -641,7 +641,7 @@ AgentDesktop = function (uuId, aResponse) {
                             "right": "15px",
                             "left": "",
                         });
-                        koreJquery('#agentcontainer').toggleClass('full-screen-video')
+                        koreJquery('#agentcontainer').addClass('full-screen-video');
                         // koreJquery("#selfvideocontainer").draggable({
                         //     containment: "document"
                         // });
@@ -655,7 +655,11 @@ AgentDesktop = function (uuId, aResponse) {
                         // }
                     } else {
                         _self.fullScreen = false;
-                        document.exitFullscreen();
+                        if(document.fullscreenElement){
+                            document.exitFullscreen().catch(console.error);
+                        }
+                        koreJquery("#agentcontainer").removeClass("full-screen-video");
+
                         // koreJquery("#selfvideocontainer").draggable({
                         //     containment: ".video-audio-chat-container"
                         // });
