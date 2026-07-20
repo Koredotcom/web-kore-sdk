@@ -737,6 +737,7 @@ initi18n  () {
         sent: 'Sent',
         you: 'You',
         uploaded: 'uploaded',
+        uploadSuccess: 'Uploaded - tap send or hit enter to send',
         uploadFailed: 'Upload failed',
         download: 'Download'
       },

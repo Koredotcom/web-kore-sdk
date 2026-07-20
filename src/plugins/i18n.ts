@@ -44,6 +44,7 @@ class Korei18nPlugin {
                 sent: "مرسلة",
                 you: "أنت",
                 uploaded: "تم الرفع",
+                uploadSuccess: "تم الرفع - اضغط على إرسال أو اضغط Enter للإرسال",
                 uploadFailed: "فشل التحميل",
                 download: "تحميل"
             },
@@ -87,6 +88,7 @@ class Korei18nPlugin {
                 sent: "送信",
                 you: "あなた",
                 uploaded: "アップロード",
+                uploadSuccess: "アップロード完了 - 送信をタップするかEnterキーを押して送信",
                 uploadFailed: "アップロード失敗",
                 download: "ダウンロード"
             },
@@ -130,6 +132,7 @@ class Korei18nPlugin {
                 sent: "전송",
                 you: "당신",
                 uploaded: "업로드",
+                uploadSuccess: "업로드됨 - 전송을 누르거나 Enter를 눌러 보내기",
                 uploadFailed: "업로드 실패",
                 download: "다운로드"
             },
@@ -173,6 +176,7 @@ class Korei18nPlugin {
                 sent: "已发送",
                 you: "你",
                 uploaded: "已上传",
+                uploadSuccess: "已上传 - 点击发送或按回车键发送",
                 uploadFailed: "上传失败",
                 download: "下载"
             },
@@ -216,6 +220,7 @@ class Korei18nPlugin {
                 sent: "Gesendet",
                 you: "Sie",
                 uploaded: "Hochgeladen",
+                uploadSuccess: "Hochgeladen – Auf Senden tippen oder Enter drücken zum Senden",
                 uploadFailed: "Hochladen fehlgeschlagen",
                 download: "Herunterladen"
             }

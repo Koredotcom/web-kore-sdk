@@ -485,6 +485,7 @@
         align-items: center;
         padding: 8px 0;
         width: 100%;
+        word-break: break-word;
         .img-block{
             width: 56px;
             height: 56px;
@@ -601,6 +602,20 @@
             background: transparent;
             figure{
                 line-height: 0;
+            }
+        }
+        &.upload-success{
+            .progress-percentage{
+                display: none;
+            }
+            .size-completion{
+                .file-size{
+                    display: none;
+                }
+                p{
+                    color: #008000;
+                    font-weight: 500;
+                }
             }
         }
     }

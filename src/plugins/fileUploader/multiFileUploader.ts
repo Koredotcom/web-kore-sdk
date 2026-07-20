@@ -569,18 +569,24 @@ class KoreMultiFileUploaderPlugin {
     me.multipartTimeIntervalCount = null;
     const scope = (evt && evt.currentTarget && (evt.currentTarget as any).__kmfu) || {};
     if ($(evt.currentTarget).find('.percentage')) {
-      var progressbar = $(evt.currentTarget).find('.percentage');
+      const $item = $(evt.currentTarget);
+      var progressbar = $item.find('.percentage');
       $(progressbar).css({ 'width': 100 + '%' });
-      var progressCount = $(evt.currentTarget).find('.percentage-complete');
+      var progressCount = $item.find('.percentage-complete');
       $(progressCount).text('100% ' + me.hostInstance.config.botMessages.uploaded);
-      $(evt.currentTarget).attr('data-value', _recState.fileToken);
-      $(evt.currentTarget).attr('data-name', _recState.name);
-      $(evt.currentTarget).attr('file-size', _recState.sizeInMb);
+      $item.attr('data-value', _recState.fileToken);
+      $item.attr('data-name', _recState.name);
+      $item.attr('file-size', _recState.sizeInMb);
       if (_recState.type.includes('image')) {
-        $(evt.currentTarget).attr('data-type', 'image');
+        $item.attr('data-type', 'image');
       } else {
-        $(evt.currentTarget).attr('data-type', 'attachment');
+        $item.attr('data-type', 'attachment');
       }
+      setTimeout(() => {
+        $item.addClass('upload-success');
+        $item.find('.img-block').html(me.getSuccessIcon());
+        $item.find('.percentage-complete').text(me.hostInstance.config.botMessages.uploadSuccess);
+      }, 100);
     }
     if ($(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').hasClass('hide')) {
       $(evt.currentTarget).closest('.attachment-wrapper-data').find('.proceed-upload').removeClass('hide')
@@ -676,6 +682,7 @@ class KoreMultiFileUploaderPlugin {
     me.activeUploads = (me.activeUploads || 0) + 1;
     me.uploadingInProgress = me.activeUploads > 0;
     if (element) {
+      element.classList.remove('upload-success');
       const progressbar = element.querySelector('.percentage');
       const progressCount = element.querySelector('.percentage-complete');
       if (progressbar) progressbar.style.width = '0%';
@@ -1064,6 +1071,12 @@ class KoreMultiFileUploaderPlugin {
   setOptions(_this: { options: any; }, opts: any) {
     _this.options = opts;
     return _this;
+  }
+
+  getSuccessIcon() {
+    return `<svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12.5L10 17.5L19 7.5" stroke="#008000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
   }
 
   createElement(selectedFile: any) {
