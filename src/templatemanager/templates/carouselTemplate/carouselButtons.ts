@@ -20,7 +20,10 @@ class CarouselButtons {
         const btnsParentDiv: any = this.hostInstance.chatEle.querySelector(`[c-parent-id='${this.id}']`);
         const leftScrollBtn = this.hostInstance.chatEle.querySelector(`[c-left-button-id='${this.id}']`);
         const rightScrollBtn = this.hostInstance.chatEle.querySelector(`[c-right-button-id='${this.id}']`);
-    
+
+        const getDirSign = () => getComputedStyle(btnsParentDiv).direction === 'rtl' ? -1 : 1;
+        const getScrolledDistance = () => Math.abs(btnsParentDiv.scrollLeft);
+
         const updateButtons = () => {
             const isVisible = btnsParentDiv?.offsetWidth && btnsParentDiv?.scrollWidth;
             if (!isVisible) {
@@ -38,7 +41,7 @@ class CarouselButtons {
             }
             if (btnsParentDiv && btnsParentDiv.hasChildNodes()) {
                 if (leftScrollBtn) {
-                    if (btnsParentDiv.scrollLeft > 0) {
+                    if (getScrolledDistance() > 0) {
                         leftScrollBtn.classList.remove(this.classToHideDisable);
                     } else {
                         leftScrollBtn.classList.add(this.classToHideDisable);
@@ -57,19 +60,20 @@ class CarouselButtons {
         updateButtons();
     
         leftScrollBtn?.addEventListener('click', () => {
-            const btnsParentDivWidth = btnsParentDiv.scrollLeft;
+            const dirSign = getDirSign();
+            const scrolledDistance = getScrolledDistance();
             const qButtons = btnsParentDiv.querySelectorAll(`[c-items-id='${this.id}']`);
             let curWidth = 0;
             if (qButtons.length > 0) {
                 qButtons.forEach((ele: any) => {
                     curWidth = curWidth + ele.offsetWidth + 10;
-                    if (curWidth > btnsParentDivWidth) {
+                    if (curWidth > scrolledDistance) {
                         btnsParentDiv.scrollTo({
-                            left: btnsParentDiv.scrollLeft - ele.offsetWidth - this.leftSlideWidth,
+                            left: btnsParentDiv.scrollLeft - dirSign * (ele.offsetWidth + this.leftSlideWidth),
                             behavior: 'smooth'
                         });
                         rightScrollBtn.classList.remove(this.classToHideDisable);
-                        if (btnsParentDiv.scrollLeft <= 0) {
+                        if (getScrolledDistance() <= 0) {
                             leftScrollBtn.classList.add(this.classToHideDisable);
                         }
                     }
@@ -78,6 +82,7 @@ class CarouselButtons {
             }
         })
         rightScrollBtn?.addEventListener('click', () => {
+            const dirSign = getDirSign();
             const btnsParentDivWidth = btnsParentDiv.offsetWidth;
             const qButtons = btnsParentDiv.querySelectorAll(`[c-items-id='${this.id}']`);
             let curWidth = 0;
@@ -86,11 +91,11 @@ class CarouselButtons {
                     curWidth = curWidth + ele.offsetWidth + 10;
                     if (curWidth > btnsParentDivWidth) {
                         btnsParentDiv.scrollTo({
-                            left: btnsParentDiv.scrollLeft + ele.offsetWidth + this.rightSlideWidth,
+                            left: btnsParentDiv.scrollLeft + dirSign * (ele.offsetWidth + this.rightSlideWidth),
                             behavior: 'smooth'
                         });
-                        leftScrollBtn.classList.remove(this.classToHideDisable);;
-                        if (btnsParentDiv.scrollLeft + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
+                        leftScrollBtn.classList.remove(this.classToHideDisable);
+                        if (getScrolledDistance() + btnsParentDivWidth + 10 >= btnsParentDiv.scrollWidth) {
                             rightScrollBtn.classList.add(this.classToHideDisable);
                         }
                     }
