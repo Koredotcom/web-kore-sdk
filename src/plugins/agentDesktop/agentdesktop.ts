@@ -79,6 +79,10 @@ class AgentDesktopPlugin {
             me.onInit();
             if (me.hostInstance.chatEle.querySelectorAll('.btn-action-close') && me.hostInstance.chatEle.querySelectorAll('.btn-action-close').length > 0) {
                 me.hostInstance.chatEle.querySelector('.btn-action-close').addEventListener('click', () => {
+
+                    // End the active audio/video call before the widget is destroyed.
+                    this.agentDesktopInfo?.terminateActiveCall();
+
                     const messageToBot: any = {};
                     messageToBot["clientMessageId"] = new Date().getTime();
                     messageToBot["event"] = "close_agent_chat";
