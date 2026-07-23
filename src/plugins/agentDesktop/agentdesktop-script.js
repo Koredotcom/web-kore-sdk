@@ -1031,9 +1031,7 @@ AgentDesktop = function (uuId, aResponse) {
             }
             _self.activeCall?.terminate();
             sendCallTerminateEvent();
-        } catch (error) {
-            console.error('Failed to terminate the active call:', error);
-        }
+        } catch (error) {}
     };
 
     console.log("window.KoreSDK", window.KoreSDK, uuId)
