@@ -1,3 +1,15 @@
+### 11.27.0
+* Release July 25, 2026
+* Breaking Changes
+  * Button Color Mapping: Button colors are now mapped to the branding button color settings. As a result, some templates (List, Advanced List, Advanced Multi List, and List Widget) and attachment download buttons may require color reconfiguration in the Theme Editor after upgrading.
+* Features
+  * added instructional text for successful file uploads
+* Bug fixes
+  * quick replies template horizontal scroll issue fix for arabic language
+  * file attachment name rendering issue fix
+  * video call full screen error fixed on minimizing the window in agent desktop plugin
+  * audiocodes reference issue fix in agent desktop plugin
+
 ### 11.26.1
 * Release July 11, 2026
 * Features
