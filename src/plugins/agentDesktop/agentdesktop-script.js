@@ -469,8 +469,7 @@ AgentDesktop = function (uuId, aResponse) {
         var closecallbutton = koreJquery("#closecall");
         closecallbutton.off('click').on('click', function (event) {
             if (callConnected) {
-                _self.activeCall.terminate();
-                sendCallTerminateEvent();
+                _self.terminateActiveCall();
             }
         });
         var sendSelfVideo = true;
@@ -1017,14 +1016,23 @@ AgentDesktop = function (uuId, aResponse) {
             koreJquery(".close-btn").off('click').on('click', function (event) {
                 koreJquery("#smartassist-menu").show();
                 if(_self.activeCall && _self.activeCall.isEstablished()){
-                    _self.activeCall.terminate();
-                    sendCallTerminateEvent();
+                    _self.terminateActiveCall();
                 }
             })
             overrideFlag = true;
         }
 
     }
+
+    this.terminateActiveCall = function () {
+        try {
+            if (!_self.activeCall) {
+                return;
+            }
+            _self.activeCall?.terminate();
+            sendCallTerminateEvent();
+        } catch (error) {}
+    };
 
     console.log("window.KoreSDK", window.KoreSDK, uuId)
     var events = requireKr('/KoreBot.js').instance();
