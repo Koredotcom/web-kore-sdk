@@ -1495,6 +1495,25 @@ AgentDesktop = function (uuId, aResponse) {
             } else {
                 this.activeCall = this.phone.call(this.phone.AUDIO, sipUser);
             }
+        }).catch(error => {
+            let message;
+            switch (error.name) {
+                case 'NotAllowedError':
+                    message = 'Camera or microphone access was denied. Please allow camera and microphone permissions in your browser settings and try again.';
+                    break;
+
+                case 'NotFoundError':
+                    message = 'No camera or microphone was found.';
+                    break;
+
+                case 'NotReadableError':
+                    message = 'The camera or microphone is currently unavailable or being used by another application.';
+                    break;
+
+                default:
+                    message = 'Unable to access your camera or microphone. Please check your device and browser settings.';
+            }
+            alert(message);
         });
     }
     this.toggleButtons = function () {
