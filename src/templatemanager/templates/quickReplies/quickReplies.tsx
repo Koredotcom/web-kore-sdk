@@ -38,12 +38,14 @@ export function QuickReply(props: any) {
         }, 50);
     }
 
-    setTimeout(() => {
-        hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
-            top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
-            behavior: 'smooth'
-        });
-    }, 100);
+    if (!msgData?.fromHistory && !msgData?.fromHistorySync) {
+        setTimeout(() => {
+            hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollTo({
+                top: hostInstance.chatEle.querySelector('.chat-widget-body-wrapper').scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 100);
+    }
 
     let quickReplyStyle = 'quick-replies';
     const quickreplyVariations: any = {
