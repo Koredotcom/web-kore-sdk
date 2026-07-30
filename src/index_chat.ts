@@ -34,6 +34,7 @@
 //import '../UI/libs/kore-no-conflict-start';
 import chatWindow from './components/chatwindow/chatWindow';
 import chatConfig from './components/chatwindow/config/kore-config';
+import { createBotInstance } from './components/base-sdk/kore-bot-sdk-client';
 // import Korei18nPlugin from './plugins/i18n';
 // import KoreFileUploaderPlugin from './plugins/fileUploader';
 
@@ -48,5 +49,6 @@ import chatConfig from './components/chatwindow/config/kore-config';
 
 export {
   chatConfig,
-  chatWindow
+  chatWindow,
+  createBotInstance
 };

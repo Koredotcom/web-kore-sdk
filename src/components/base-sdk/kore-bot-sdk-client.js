@@ -5238,4 +5238,10 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
   
   },{}]},{},[]);
   
+  
+  // For creating the bot client instance to connect to the Kore.ai Platform witout chat window UI.
+  export const createBotInstance = function () {
+    return requireKr('/KoreBot.js').instance();
+  };
+
   export default requireKr;
