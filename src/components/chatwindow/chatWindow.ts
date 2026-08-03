@@ -2278,7 +2278,14 @@ getChatTranscriptText() {
   const botName = config.branding?.header?.title?.name ? config.branding.header.title.name : me._botInfo.name;
   const userName = config?.botMessages?.you || 'You';
   const chatWrapper = me.chatEle?.querySelector('.chat-widget-body-wrapper');
-  const messageEles = chatWrapper ? Array.prototype.slice.call(chatWrapper.querySelectorAll('[data-cw-msg-id]')).filter((messageEle: any) => !messageEle.parentElement?.closest?.('[data-cw-msg-id]')) : [];
+  const messageEles = chatWrapper ? Array.from(chatWrapper.querySelectorAll('[data-cw-msg-id]')).filter((messageEle: any) => !messageEle.parentElement?.closest?.('[data-cw-msg-id]')) : [];
+  const getAnswerTemplateText = (messageEle: any) => {
+    return Array.from(messageEle?.querySelectorAll?.('.sa-answer-result-heading, .sa-answer-result-desc') || []).map((answerEle: any) => {
+      const answerEleClone = answerEle.cloneNode(true);
+      Array.from(answerEleClone.querySelectorAll('.sa-tooltip-container')).forEach((ele: any) => ele.remove());
+      return cleanText(answerEleClone.textContent);
+    }).filter((text: any) => text).join('\n');
+  }
   const downloadedTime = me.helpers.formatAMPMDay(new Date(), config?.branding?.body?.time_stamp?.date_format, config?.branding?.body?.time_stamp?.time_format, config, true);
   const transcript = ['Chat Transcript - ' + botName, 'Downloaded: ' + downloadedTime, ''];
   let previousSessionId = '';
@@ -2286,11 +2293,13 @@ getChatTranscriptText() {
   messageEles.forEach((messageEle: any) => {
     const templateType = cleanText(messageEle.getAttribute('data-template-type'));
     const isSystemTemplate = messageEle.classList?.contains('agent-joined-banner');
-    let message = isSystemTemplate ? cleanText(messageEle.querySelector('.agent-name')?.textContent) : templateType;
-    if (!message && !isSystemTemplate) {
-      const bubbleMessages = Array.prototype.slice.call(messageEle.querySelectorAll('.bubble-msg')).map((bubbleMsg: any) => {
+    const isAnswerTemplate = messageEle.classList?.contains('sa-answer-block');
+    const answerTemplateText = isAnswerTemplate ? getAnswerTemplateText(messageEle) : '';
+    let message = isSystemTemplate ? cleanText(messageEle.querySelector('.agent-name')?.textContent) : isAnswerTemplate ? answerTemplateText : templateType;
+    if (!message && !isSystemTemplate && !isAnswerTemplate) {
+      const bubbleMessages = Array.from(messageEle.querySelectorAll('.bubble-msg')).map((bubbleMsg: any) => {
         const bubbleMsgClone = bubbleMsg.cloneNode(true);
-        Array.prototype.slice.call(bubbleMsgClone.querySelectorAll('a[href]')).forEach((linkEle: any) => {
+        Array.from(bubbleMsgClone.querySelectorAll('a[href]')).forEach((linkEle: any) => {
           const href = cleanText(linkEle.getAttribute('href'));
           const label = cleanText(linkEle.textContent);
           if (href && label && label !== href) {
@@ -2299,7 +2308,7 @@ getChatTranscriptText() {
         });
         return cleanText(bubbleMsgClone.textContent);
       }).filter((text: any) => text);
-      const attachmentLabels = Array.prototype.slice.call(messageEle.querySelectorAll('[data-template-type]')).map((attachmentEle: any) => cleanText(attachmentEle.getAttribute('data-template-type'))).filter((text: any) => text);
+      const attachmentLabels = Array.from(messageEle.querySelectorAll('[data-template-type]')).map((attachmentEle: any) => cleanText(attachmentEle.getAttribute('data-template-type'))).filter((text: any) => text);
       message = bubbleMessages.concat(attachmentLabels).join('\n') || cleanText(messageEle.textContent);
     }
     if (!message) {
@@ -2344,22 +2353,23 @@ getChatTranscriptText() {
 
 downloadChatTranscript() {
   let url: any;
+  let link: any;
   const urlFactory = window.URL || window.webkitURL;
   try {
     const pad = (value: any) => value.toString().length < 2 ? '0' + value : value.toString();
     const date = new Date();
-    if (!urlFactory?.createObjectURL) {
-      throw new Error('Download Transcript is not supported');
-    }
     url = urlFactory.createObjectURL(new Blob([this.getChatTranscriptText()], { type: 'text/plain;charset=utf-8' }));
-    const link = document.createElement('a');
+    link = document.createElement('a');
     link.href = url;
     link.download = 'chat-transcript-' + date.getFullYear() + pad(date.getMonth() + 1) + pad(date.getDate()) + '-' + pad(date.getHours()) + pad(date.getMinutes()) + pad(date.getSeconds()) + '.txt';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    setTimeout(() => urlFactory.revokeObjectURL(url));
+    setTimeout(() => urlFactory?.revokeObjectURL?.(url));
   } catch (error) {
+    if (link?.parentElement) {
+      link.parentElement.removeChild(link);
+    }
     if (url && urlFactory?.revokeObjectURL) {
       urlFactory.revokeObjectURL(url);
     }
