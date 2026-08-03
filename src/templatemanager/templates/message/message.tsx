@@ -115,7 +115,7 @@ export function Message(props: any) {
             <Fragment>
                 {
                     msgData.message.map((msgItem: any) => (
-                        <div className="message-bubble" data-cw-msg-id={msgData.messageId || msgItem.clientMessageId} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData, msgItem?.cInfo?.body || msgItem?.component?.payload?.text || '') ? 'rtl' : 'ltr'}>
+                        <div className="message-bubble" data-cw-msg-id={msgData.messageId || msgItem.clientMessageId} data-time-stamp={msgData.createdOnTimemillis} id={msgData.messageId || msgItem.clientMessageId} data-session-id={msgData?.sessionId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData, msgItem?.cInfo?.body || msgItem?.component?.payload?.text || '') ? 'rtl' : 'ltr'}>
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.type == 'error' && msgItem.component.payload.text && <div className="bot-bubble-comp if-animation-bubble">
                                     <div className={botStyle}>
                                         {brandingInfo.body.time_stamp.show && brandingInfo.body.time_stamp.position == 'top' && <div className="top-info" aria-hidden="true">
@@ -217,7 +217,7 @@ export function Message(props: any) {
                                 </div> }
                             { msgData.type == 'currentUser' && msgItem.cInfo && msgItem.cInfo.attachments && msgItem.cInfo.attachments.length > 0 && msgItem.cInfo.attachments.some((att: any) => att.fileType == 'image') &&
                                 msgItem.cInfo.attachments.filter((att: any) => att.fileType == 'image').map((attachment: any) => (
-                                    <section className="attachment-sended-temp-wrapper">
+                                    <section className="attachment-sended-temp-wrapper kr-user-attachment" data-template-type="Image Attachment">
                                         <div className="multiple-attchments">
                                             <div className="attchments-wrap">
                                                 <div className="img-attch">
@@ -239,7 +239,7 @@ export function Message(props: any) {
                             ))}
                             { msgData.type == 'currentUser' && msgItem.cInfo && msgItem.cInfo.attachments && msgItem.cInfo.attachments.length > 0 && msgItem.cInfo.attachments.some((att: any) => att.fileType != 'image') &&
                                 msgItem.cInfo.attachments.filter((att: any) => att.fileType != 'image').map((attachment: any) => (
-                                    <div className="thumbnails-wrapper attachment-document">
+                                    <div className="thumbnails-wrapper attachment-document kr-user-attachment" data-template-type={attachment.fileType == 'audio' ? 'Audio Attachment' : attachment.fileType == 'video' ? 'Video Attachment' : 'Document Attachment'}>
                                         <div className="thumbnail-data-content">
                                             { attachment.fileType == 'attachment' && <div className="icon-block">
                                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -271,7 +271,7 @@ export function Message(props: any) {
                                     </div>
                                 )) }
                             { msgData.type == 'bot_response' && msgItem.component && msgItem.component.payload && (msgItem.component.payload.audioUrl || msgItem.component.payload.videoUrl) &&
-                                <section className="attachment-sended-temp-wrapper attachment-wrap">
+                                <section className="attachment-sended-temp-wrapper attachment-wrap" data-template-type={msgItem.component.payload.audioUrl && msgItem.component.payload.videoUrl ? 'Media Attachment' : msgItem.component.payload.audioUrl ? 'Audio Attachment' : 'Video Attachment'}>
                                 <div className="multiple-attchments">
                                     <div className="attchments-wrap">
                                         {msgItem.component.payload.audioUrl && <div className="img-attch">

@@ -123,6 +123,12 @@ export function ChatWidgetHeader(props: any) {
                 </div>
             </div>
             <div className="actions-info">
+               { brandingInfo.header.buttons.download_transcript.show && <button title={hostInstance.config.botMessages.download_transcript || 'Download Transcript'} className="btn-action btn-download-chat" type="button" onClick={() => hostInstance.downloadChatTranscript()}>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2.5C10.3452 2.5 10.625 2.77982 10.625 3.125V10.8661L13.3081 8.18306C13.5521 7.93898 13.9479 7.93898 14.1919 8.18306C14.436 8.42714 14.436 8.82286 14.1919 9.06694L10.4419 12.8169C10.1979 13.061 9.80214 13.061 9.55806 12.8169L5.80806 9.06694C5.56398 8.82286 5.56398 8.42714 5.80806 8.18306C6.05214 7.93898 6.44786 7.93898 6.69194 8.18306L9.375 10.8661V3.125C9.375 2.77982 9.65482 2.5 10 2.5Z" fill="#697586"/>
+                        <path d="M4.375 13.125C4.72018 13.125 5 13.4048 5 13.75V15C5 15.3452 5.27982 15.625 5.625 15.625H14.375C14.7202 15.625 15 15.3452 15 15V13.75C15 13.4048 15.2798 13.125 15.625 13.125C15.9702 13.125 16.25 13.4048 16.25 13.75V15C16.25 16.0355 15.4105 16.875 14.375 16.875H5.625C4.58947 16.875 3.75 16.0355 3.75 15V13.75C3.75 13.4048 4.02982 13.125 4.375 13.125Z" fill="#697586"/>
+                    </svg>
+                </button> }
                { brandingInfo.header.buttons.help.show && <a title={hostInstance.config.botMessages.help} href={brandingInfo.header.buttons.help.action.value} target="_blank" className="btn-action link-url">
                     {/* <figure>
                         <img src={iconHelper.getIcon('help')} alt="back button" />

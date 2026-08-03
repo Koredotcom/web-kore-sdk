@@ -260,6 +260,10 @@ const BrandingJSON = {
         "show": true,
         "icon": ""
       },
+      "download_transcript": {
+        "show": false,
+        "icon": ""
+      },
       "help": {
         "show": true,
         "action": {

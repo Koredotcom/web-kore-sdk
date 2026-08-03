@@ -430,6 +430,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         if (data.messages[i]?.lang) {
           _msg.botLanguage = data.messages[i]?.lang;
         }
+        if (data.messages[i]?.sessionId) {
+          _msg.sessionId = data.messages[i].sessionId;
+        }
         clientresp.messages[i] = _msg;
   
       }
@@ -494,6 +497,9 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
         }
         if (data.messages[i]?.lang) {
           _msg.botLanguage = data.messages[i]?.lang;
+        }
+        if (data.messages[i]?.sessionId) {
+          _msg.sessionId = data.messages[i].sessionId;
         }
         clientresp.messages[i] = _msg;
   
