@@ -46,6 +46,7 @@ class chatWindow extends EventEmitter{
   config: {};
   bot: any;
   streamingMessages: Map<string, { text: string; msgData: any }> = new Map();
+  templateLabels: any = {};
 
 
    /**
@@ -739,7 +740,8 @@ initi18n  () {
         uploaded: 'uploaded',
         uploadSuccess: 'Uploaded - tap send or hit enter to send',
         uploadFailed: 'Upload failed',
-        download: 'Download'
+        download: 'Download',
+        download_transcript: 'Download Transcript'
       },
     },
   };
@@ -780,6 +782,9 @@ seti18n (lang:any) {
       chatEle.querySelector('.actions-info .btn-reconnect')?.setAttribute('title', botMessages.reconnect);
       chatEle.querySelector('.actions-info .agent-chat')?.setAttribute('title', botMessages.agent);
       chatEle.querySelector('.actions-info .btn-action-close')?.setAttribute('title', botMessages.close);
+      if (chatEle.querySelector('.actions-info .btn-download-chat')){
+        chatEle.querySelector('.actions-info .btn-download-chat')?.setAttribute('title', botMessages.download_transcript || 'Download Transcript');
+      }
       chatEle.querySelector('.compose-bar-wrapper .hamberger-menu')?.setAttribute('title', botMessages.menu);
       chatEle.querySelector('.compose-bar-wrapper .attachmentUpload')?.setAttribute('title', botMessages.attachments);
       chatEle.querySelector('.compose-bar-wrapper .key-board')?.setAttribute('title', botMessages.attachments);
@@ -2198,6 +2203,180 @@ debounceScrollingHide(func: any, delay: any) {
     }, delay);
   };
 }
+
+setTemplateLabels(templateLabels: any = {}) {
+  this.templateLabels = templateLabels || {};
+}
+
+getTemplateLabel(msgData: any) {
+  const msgItem = msgData?.message?.[0];
+  const templateType = msgItem?.component?.payload?.template_type === 'button' && msgItem?.component?.formData ? 'digitalForm' : msgItem?.component?.payload?.template_type || msgItem?.component?.type;
+  const defaultTemplateLabels: any = {
+    quick_replies: 'Quick Replies Template',
+    button: 'Button Template',
+    cardTemplate: 'Card Template',
+    carousel: 'Carousel Template',
+    table: 'Table Template',
+    custom_table: 'Custom Table Template',
+    tableList: 'Table List Template',
+    radioOptionTemplate: 'Radio Options Template',
+    mini_table: 'Mini Table Template',
+    listView: 'List View Template',
+    list: 'List Template',
+    dropdown_template: 'Dropdown Template',
+    multi_select: 'Multi Select Template',
+    advanced_multi_select: 'Advanced Multi Select Template',
+    advancedListTemplate: 'Advanced List Template',
+    advancedMultiListTemplate: 'Advanced Multi List Template',
+    form_template: 'Form Template',
+    dateTemplate: 'Date Picker Template',
+    piechart: 'Pie Chart Template',
+    barchart: 'Bar Chart Template',
+    linechart: 'Line Chart Template',
+    like_dislike: 'Like Dislike Template',
+    feedbackTemplate: 'Feedback Template',
+    daterange: 'Date Range Template',
+    clockTemplate: 'Clock Picker Template',
+    SYSTEM: 'System Template',
+    listWidget: 'List Widget Template',
+    articleTemplate: 'Article Template',
+    otpValidationTemplate: 'OTP Template',
+    resetPinTemplate: 'Reset Pin Template',
+    checkListTemplate: 'Checklist Template',
+    answerTemplate: 'Answer Template',
+    digitalForm: 'Digital Form Template',
+    image: 'Image Attachment',
+    audio: 'Audio Attachment',
+    video: 'Video Attachment',
+    link: 'Link Attachment',
+    document: 'Document Attachment'
+  };
+  return templateType ? (this.templateLabels[templateType] || defaultTemplateLabels[templateType] || 'Custom Template') : 'Custom Template';
+}
+
+setAttributes(messageHtml: any, msgData: any) {
+  if (!messageHtml?.setAttribute) {
+    return messageHtml;
+  }
+  if (msgData?.createdOnTimemillis) {
+    messageHtml.setAttribute('data-time-stamp', msgData.createdOnTimemillis)
+  }
+  if (msgData?.sessionId) {
+    messageHtml.setAttribute('data-session-id', msgData.sessionId);
+  }
+  const templateLabel = this.getTemplateLabel(msgData);
+  if (templateLabel) {
+    messageHtml.setAttribute('data-template-type', templateLabel);
+  }
+  return messageHtml;
+}
+
+getChatTranscriptText() {
+  const me: any = this;
+  const config: any = me.config;
+  const cleanText = (text: any) => (text || '').toString().replace(/\u00a0/g, ' ').replace(/[ \t]+\n/g, '\n').replace(/\n[ \t]+/g, '\n').replace(/[ \t]{2,}/g, ' ').trim();
+  const botName = config.branding?.header?.title?.name ? config.branding.header.title.name : me._botInfo.name;
+  const userName = config?.botMessages?.you || 'You';
+  const chatWrapper = me.chatEle?.querySelector('.chat-widget-body-wrapper');
+  const messageEles = chatWrapper ? Array.from(chatWrapper.querySelectorAll('[data-cw-msg-id]')).filter((messageEle: any) => !messageEle.parentElement?.closest?.('[data-cw-msg-id]')) : [];
+  const getAnswerTemplateText = (messageEle: any) => {
+    return Array.from(messageEle?.querySelectorAll?.('.sa-answer-result-heading, .sa-answer-result-desc') || []).map((answerEle: any) => {
+      const answerEleClone = answerEle.cloneNode(true);
+      Array.from(answerEleClone.querySelectorAll('.sa-tooltip-container')).forEach((ele: any) => ele.remove());
+      return cleanText(answerEleClone.textContent);
+    }).filter((text: any) => text).join('\n');
+  }
+  const downloadedTime = me.helpers.formatAMPMDay(new Date(), config?.branding?.body?.time_stamp?.date_format, config?.branding?.body?.time_stamp?.time_format, config, true);
+  const transcript = ['Chat Transcript - ' + botName, 'Downloaded: ' + downloadedTime, ''];
+  let previousSessionId = '';
+
+  messageEles.forEach((messageEle: any) => {
+    const templateType = cleanText(messageEle.getAttribute('data-template-type'));
+    const isSystemTemplate = messageEle.classList?.contains('agent-joined-banner');
+    const isAnswerTemplate = messageEle.classList?.contains('sa-answer-block');
+    const answerTemplateText = isAnswerTemplate ? getAnswerTemplateText(messageEle) : '';
+    let message = isSystemTemplate ? cleanText(messageEle.querySelector('.agent-name')?.textContent) : isAnswerTemplate ? answerTemplateText : templateType;
+    if (!message && !isSystemTemplate && !isAnswerTemplate) {
+      const bubbleMessages = Array.from(messageEle.querySelectorAll('.bubble-msg')).map((bubbleMsg: any) => {
+        const bubbleMsgClone = bubbleMsg.cloneNode(true);
+        Array.from(bubbleMsgClone.querySelectorAll('a[href]')).forEach((linkEle: any) => {
+          const href = cleanText(linkEle.getAttribute('href'));
+          const label = cleanText(linkEle.textContent);
+          if (href && label && label !== href) {
+            linkEle.textContent = label + '(' + href + ')';
+          }
+        });
+        return cleanText(bubbleMsgClone.textContent);
+      }).filter((text: any) => text);
+      const attachmentLabels = Array.from(messageEle.querySelectorAll('[data-template-type]')).map((attachmentEle: any) => cleanText(attachmentEle.getAttribute('data-template-type'))).filter((text: any) => text);
+      message = bubbleMessages.concat(attachmentLabels).join('\n') || cleanText(messageEle.textContent);
+    }
+    if (!message) {
+      return;
+    }
+
+    const msgTime = messageEle.getAttribute('data-time-stamp');
+    let timestamp = '';
+    if (msgTime && !isNaN(Number(msgTime))) {
+      timestamp = me.helpers.formatAMPMDay(new Date(Number(msgTime)), config?.branding?.body?.time_stamp?.date_format, config?.branding?.body?.time_stamp?.time_format, config, true);
+    }
+
+    const senderEle = messageEle.querySelector('.you-text');
+    let messageSender = botName;
+    if (senderEle?.closest('.agent-bubble-content') || messageEle.querySelector('.kr-user-attachment')) {
+      messageSender = userName;
+    } else if (senderEle?.closest('.bot-bubble-content')) {
+      messageSender = senderEle?.getAttribute('title') || senderEle?.textContent || botName;
+    }
+
+    const prefix = [];
+    const sessionId = messageEle.getAttribute('data-session-id');
+    if (sessionId && sessionId !== previousSessionId) {
+      transcript.push('=============================== Session Id: ' + sessionId + ' =================================');
+      previousSessionId = sessionId;
+    }
+    if (timestamp) {
+      prefix.push('[' + timestamp + ']');
+    }
+    if (messageSender) {
+      prefix.push(messageSender + ':');
+    }
+    transcript.push((prefix.length ? prefix.join(' ') + ' ' : '') + message);
+    transcript.push('');
+  });
+
+  if (!messageEles.length) {
+    transcript.push('No chat messages available.');
+  }
+  return transcript.join('\n') + '\n';
+}
+
+downloadChatTranscript() {
+  let url: any;
+  let link: any;
+  const urlFactory = window.URL || window.webkitURL;
+  try {
+    const pad = (value: any) => value.toString().length < 2 ? '0' + value : value.toString();
+    const date = new Date();
+    url = urlFactory.createObjectURL(new Blob([this.getChatTranscriptText()], { type: 'text/plain;charset=utf-8' }));
+    link = document.createElement('a');
+    link.href = url;
+    link.download = 'chat-transcript-' + date.getFullYear() + pad(date.getMonth() + 1) + pad(date.getDate()) + '-' + pad(date.getHours()) + pad(date.getMinutes()) + pad(date.getSeconds()) + '.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => urlFactory?.revokeObjectURL?.(url));
+  } catch (error) {
+    if (link?.parentElement) {
+      link.parentElement.removeChild(link);
+    }
+    if (url && urlFactory?.revokeObjectURL) {
+      urlFactory.revokeObjectURL(url);
+    }
+    throw new Error('Failed to download transcript');
+  }
+}
+
 generateMessageDOM(msgData?:any){
   const me:any = this; 
   let messageHtml;
@@ -2214,6 +2393,7 @@ generateMessageDOM(msgData?:any){
     if(messageHtml==='_ignore_message_render_'){
       return "";
     }
+    me.setAttributes(messageHtml, msgData);
     if (!messageHtml && msgData && msgData.message && msgData.message[0]) {
       messageHtml = getHTML(Message, msgData, me); 
       // messageHtml = me.templateManager.renderMessage(msgData);
@@ -3284,6 +3464,12 @@ applyVariableValue (key:any,value:any,type:any){
       }
       if (!(theme.v3?.footer?.buttons?.hasOwnProperty('click_to_call'))) {
         theme.v3.footer.buttons['click_to_call'] = {
+          "show": false,
+          "icon": ""
+        }
+      }
+      if (!(theme.v3?.header?.buttons?.hasOwnProperty('download_transcript'))) {
+        theme.v3.header.buttons['download_transcript'] = {
           "show": false,
           "icon": ""
         }

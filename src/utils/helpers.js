@@ -26,7 +26,7 @@ class KoreHelpers{
             var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
             return strTime;
         },
-        'formatAMPMDay': function (date, df, tf, config) {
+        'formatAMPMDay': function (date, df, tf, config, ignoreRelativeDate) {
             var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
             date = new Date(date);
             var hours = date.getHours();
@@ -34,7 +34,7 @@ class KoreHelpers{
             var minutes = date.getMinutes();
             // var seconds = date.getSeconds();
             var dateCheck = date.getDate();
-            var day = (new Date().getDate() == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Today' : (new Date().getDate() - 1 == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Yesterday' : dateCheck ;
+            var day = (!ignoreRelativeDate && new Date().getDate() == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Today' : (!ignoreRelativeDate && new Date().getDate() - 1 == dateCheck && date.getMonth() == new Date().getMonth()) ? 'Yesterday' : dateCheck ;
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
