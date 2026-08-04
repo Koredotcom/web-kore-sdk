@@ -230,3 +230,4 @@ bot.destroy(); // closes the connection and removes all event listeners
 Related documentation links:
 1. [JWT generation and usage](../configurations/jwtgenerationandusage/README.md)
 2. [How Web SDK works](https://docs.kore.ai/xo/sdk/how-web-sdk-works/)
+3. [WebSocket Connect and RTM](https://docs.kore.ai/ai-for-service/sdk/web-socket-connect-and-rtm)
