@@ -69,16 +69,26 @@ function assertionFn(options, callback) {
 
 > [!NOTE]
 > Assertion function is called again on reconnection. Always provide a fresh token, do not reuse an expired token.
-> Refer [JWT generation and usage](../configurations/jwtgenerationandusage/README.md) for setting up the JWT service.
+> Refer [JWT generation and usage](../../configurations/jwtgenerationandusage/README.md) for setting up the JWT service.
 
 ## Initialize the bot
 
 ```js
+var botInfo = {
+  name: "PLEASE_ENTER_BOT_NAME",
+  _id: "PLEASE_ENTER_BOT_ID"
+};
+
 var botOptions = {};
-botOptions.koreAPIUrl = 'https://platform.kore.ai/api/';
-botOptions.userIdentity = 'USER_IDENTITY'; // Provide user id
-botOptions.botInfo = { name: 'PLEASE_ENTER_BOT_NAME', "_id": 'PLEASE_ENTER_BOT_ID' }; // bot name is case sensitive
+botOptions.koreAPIUrl = "https://platform.kore.ai/api/";
+botOptions.userIdentity = "USER_IDENTITY"; // Provide user id
+botOptions.botInfo = {
+  chatBot: botInfo.name,
+  taskBotId: botInfo._id,
+  uiVersion: "v3"
+}; // bot name is case sensitive
 botOptions.assertionFn = assertionFn;
+botOptions.resetWindow = function () {};
 botOptions.loadHistory = true; // set true to fetch recent history once the connection is open
 botOptions.openSocket = true; // true always
 
@@ -178,12 +188,22 @@ bot.destroy(); // closes the connection and removes all event listeners
 ```html
 <script src="PATH_TO_FILE/kore-web-sdk-umd-chat.min.js"></script>
 <script>
+  var botInfo = {
+    name: "PLEASE_ENTER_BOT_NAME",
+    _id: "PLEASE_ENTER_BOT_ID"
+  };
+
   var botOptions = {
     koreAPIUrl: 'https://platform.kore.ai/api/',
     userIdentity: 'USER_IDENTITY',
-    botInfo: { name: 'PLEASE_ENTER_BOT_NAME', "_id": 'PLEASE_ENTER_BOT_ID' },
+    botInfo: {
+      chatBot: botInfo.name,
+      taskBotId: botInfo._id,
+      uiVersion: "v3"
+    },
     loadHistory: false,
     openSocket: true,
+    resetWindow: function () {},
     assertionFn: function (options, callback) {
       fetch('YOUR_JWT_SERVICE_URL', {
         method: 'POST',
@@ -228,6 +248,6 @@ bot.destroy(); // closes the connection and removes all event listeners
 ```
 
 Related documentation links:
-1. [JWT generation and usage](../configurations/jwtgenerationandusage/README.md)
+1. [JWT generation and usage](../../configurations/jwtgenerationandusage/README.md)
 2. [How Web SDK works](https://docs.kore.ai/xo/sdk/how-web-sdk-works/)
 3. [WebSocket Connect and RTM](https://docs.kore.ai/ai-for-service/sdk/web-socket-connect-and-rtm)

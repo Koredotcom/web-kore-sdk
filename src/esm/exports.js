@@ -1,5 +1,6 @@
 export {chatWindow} from './kore-web-sdk-chat.min.js';
 export {chatConfig} from './kore-web-sdk-chat.min.js';
+export {createBotInstance} from './kore-web-sdk-chat.min.js';
 export {KoreWidgetSDK} from './kore-web-sdk-widgets.js';
 export {widgetsConfig} from './kore-web-sdk-widgets.js';
 export {KorePickersPlugin} from './plugins/kore-picker-plugin.js';
