@@ -56,7 +56,9 @@ chatWindowInstance.installPlugin(new KoreMultiFileUploaderPlugin());
 // ));
 // chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
-chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+chatWindowInstance.installPlugin(new AgentDesktopPlugin({
+    enableFullScreenVideoCall: false
+}));
 // chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
 // chatWindowInstance.installPlugin(new SolutionsTemplatesPlugin());
 

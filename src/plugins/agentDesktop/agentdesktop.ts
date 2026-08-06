@@ -20,11 +20,16 @@ class AgentDesktopPlugin {
     authInfo: any;
     cobrowseSession: any;
     clickToCallEnabled: boolean = false;
+    enableFullScreenVideoCall = false;
 
     constructor(config?: any) {
+        // Only a literal boolean true enables native full-window expansion.
+        // Missing and invalid values retain the existing widget-bound behavior.
+        this.enableFullScreenVideoCall = config?.enableFullScreenVideoCall === true;
         this.config = {
             ...this.config,
-            ...config
+            ...config,
+            enableFullScreenVideoCall: this.enableFullScreenVideoCall
         }
 
     }
