@@ -183,7 +183,9 @@ bot.close(); // closes the web socket connection
 bot.destroy(); // closes the connection and removes all event listeners
 ```
 
-Run it with:
+## How to run
+
+Ensure you take the latest kore-web-sdk package and run it with:
 
 ```bash
 npm install
