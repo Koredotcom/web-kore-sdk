@@ -1371,6 +1371,13 @@ bindSDKEvents  () {
     let msgData=me.parseSocketMessage(JSON.stringify(tempData));
     
     if (msgData && msgData?.sM && me.config.UI.version == 'v3') {
+      if (me.config.supportDelayedMessages && me.renderMessagesQueue?.length && !me.msgRenderingProgress) {
+        me.msgRenderingProgress = true;
+        while (me.renderMessagesQueue?.length) {
+          me.renderMessage(me.renderMessagesQueue.shift());
+        }
+        me.msgRenderingProgress = false;
+      }
       me.handleStreamingMessage(msgData);
       return;
     }
