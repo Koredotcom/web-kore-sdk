@@ -1,3 +1,13 @@
+### 11.27.1
+* Release August 08, 2026
+* Features
+  * added support to connect to platform without chat window UI. Please refer [documentation](./docs/customizations/headless/) for more details. React code example is available in the branch [v3headless](https://github.com/Koredotcom/web-kore-sdk/tree/v3headless)
+  * added chat transcript download(text file) feature. To enable the feature please use theme editor in the platform builder
+* Bug fixes
+  * scroll issue fix in paginated history rendering
+  * call terminate issue fix on chat window close in agent desktop plugin
+  * added alert for media permission denied in agent desktop plugin for video call
+
 ### 11.27.0
 * Release July 25, 2026
 * Breaking Changes
