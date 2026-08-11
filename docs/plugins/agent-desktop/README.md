@@ -48,9 +48,7 @@ Features supported:
 
 import { AgentDesktopPlugin } from 'kore-web-sdk';
 
-chatWindowInstance.installPlugin(new AgentDesktopPlugin({
-    enableFullScreenVideoCall: false
-}));
+chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 
 ```
 
