@@ -81,9 +81,7 @@ var AgentDeskTopPlugin = AgentDeskTopPluginSDK.AgentDesktopPlugin;
 3. Install plugin
 
 ```js
-chatWindowInstance.installPlugin(new AgentDeskTopPlugin({
-    enableFullScreenVideoCall: false
-}))
+chatWindowInstance.installPlugin(new AgentDeskTopPlugin())
 ```
 	
 </details>
