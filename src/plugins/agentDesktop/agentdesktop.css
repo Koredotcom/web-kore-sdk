@@ -800,6 +800,26 @@
     height: auto !important;
 }
 
+/*
+ * Native fullscreen is requested on the chat window so call controls,
+ * recording consent UI, and notifications remain in the fullscreen subtree.
+ */
+.kore-chat-window:fullscreen {
+    width: 100%;
+    min-width: 0;
+    max-height: none;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    border: 0;
+    border-radius: 0;
+}
+
+.kore-chat-window:fullscreen #agentcontainer.full-screen-video {
+    top: 0;
+    left: 0;
+}
+
 #agentcontainer.full-screen-video {
     position: absolute;
     width: 100%;

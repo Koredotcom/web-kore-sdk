@@ -51,6 +51,16 @@ import { AgentDesktopPlugin } from 'kore-web-sdk';
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 
 ```
+
+### Video call expansion
+
+`enableFullScreenVideoCall` controls how the video call panel expands:
+
+- `true`: Uses the browser Fullscreen API to expand the video call to the full window. Call controls, recording UI, and call notifications remain available.
+- `false`: Expands the video call only within the chat widget. This is the default when the option is missing or is not a Boolean.
+
+Native fullscreen requires browser support and a user action. When the SDK is embedded in an iframe, the iframe must allow fullscreen, for example `allow="fullscreen"`.
+
 ## For UMD Installations
 <details>
 

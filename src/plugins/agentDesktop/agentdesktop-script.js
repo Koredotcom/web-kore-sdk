@@ -296,6 +296,52 @@ AgentDesktop = function (uuId, aResponse) {
     this.maskPatternList = null;
     this.isVideoCallRecording = false;
     this.isVideoCallRecordingPaused = false;
+    this.fullScreen = false;
+
+    this.getVideoFullscreenTarget = function () {
+        // The chat window is the common parent for the video panel, call controls,
+        // recording consent UI, and call-related notifications.
+        return _self.config.hostInstance?.chatEle || null;
+    };
+
+    this.resetVideoPanelExpansion = function () {
+        _self.fullScreen = false;
+        koreJquery('#agentcontainer').removeClass('full-screen-video');
+        koreJquery('#selfvideocontainer').css({
+            "top": "65px",
+            "right": "15px",
+            "left": "",
+        });
+    };
+
+    this.exitVideoPanelExpansion = function () {
+        const fullscreenTarget = _self.getVideoFullscreenTarget();
+        const ownsNativeFullscreen = document.fullscreenElement === fullscreenTarget;
+
+        _self.resetVideoPanelExpansion();
+
+        if (ownsNativeFullscreen && typeof document.exitFullscreen === 'function') {
+            document.exitFullscreen().catch((error) => {
+                console.error('Failed to exit video call fullscreen', error);
+            });
+        }
+    };
+
+    this.fullscreenChangeHandler = function () {
+        if (_self.config.enableFullScreenVideoCall !== true) {
+            return;
+        }
+
+        const fullscreenTarget = _self.getVideoFullscreenTarget();
+        if (document.fullscreenElement !== fullscreenTarget) {
+            // The user may leave fullscreen with Escape or browser controls.
+            _self.resetVideoPanelExpansion();
+        }
+    };
+
+    if (!this.config.isVoiceCobrowseSession) {
+        document.addEventListener('fullscreenchange', this.fullscreenChangeHandler);
+    }
 
     this.updateVideoCallRecordingUI = function () {
         try {
@@ -500,7 +546,6 @@ AgentDesktop = function (uuId, aResponse) {
             });
         }
     }
-    this.fullScreen = false;
     this.callConnected = function (videoCall, agentName) {
         var videoAudoStr = videoCall ? 'video' : 'audio';
         var callConnectedHTML =
@@ -633,7 +678,6 @@ AgentDesktop = function (uuId, aResponse) {
                 });
                 var maximizevideo = koreJquery("#maximizevideo");
                 maximizevideo.off('click').on('click', function (event) {
-                    var elem = document.getElementById("audiovideocallcontainer");
                     if (!_self.fullScreen) {
                         koreJquery("#selfvideocontainer").css({
                             "top": "174px",
@@ -641,33 +685,22 @@ AgentDesktop = function (uuId, aResponse) {
                             "left": "",
                         });
                         koreJquery('#agentcontainer').addClass('full-screen-video');
-                        // koreJquery("#selfvideocontainer").draggable({
-                        //     containment: "document"
-                        // });
                         _self.fullScreen = true;
-                        // if (elem.requestFullscreen) {
-                        //     elem.requestFullscreen();
-                        // } else if (elem.webkitRequestFullscreen) { /* Safari */
-                        //     elem.webkitRequestFullscreen();
-                        // } else if (elem.msRequestFullscreen) { /* IE11 */
-                        //     elem.msRequestFullscreen();
-                        // }
-                    } else {
-                        _self.fullScreen = false;
-                        if(document.fullscreenElement){
-                            document.exitFullscreen().catch(console.error);
+
+                        if (_self.config.enableFullScreenVideoCall === true) {
+                            const fullscreenTarget = _self.getVideoFullscreenTarget();
+                            if (fullscreenTarget && typeof fullscreenTarget.requestFullscreen === 'function') {
+                                fullscreenTarget.requestFullscreen().catch((error) => {
+                                    // Keep the existing widget-bound expansion as a graceful fallback
+                                    // when fullscreen is unavailable or denied by the browser.
+                                    console.error('Failed to expand video call to full window', error);
+                                });
+                            } else {
+                                console.error('Fullscreen API is not supported by this browser');
+                            }
                         }
-                        koreJquery("#agentcontainer").removeClass("full-screen-video");
-
-                        // koreJquery("#selfvideocontainer").draggable({
-                        //     containment: ".video-audio-chat-container"
-                        // });
-                        koreJquery("#selfvideocontainer").css({
-                            "top": "65px",
-                            "right": "15px",
-                            "left": "",
-                        });
-
+                    } else {
+                        _self.exitVideoPanelExpansion();
                     }
                 });
             } else {
@@ -1236,6 +1269,7 @@ AgentDesktop = function (uuId, aResponse) {
     this.removeAudoVideoContainer = function () {
         var koreChatBody = document.getElementsByClassName("chat-widget-body-wrapper");
         var agentcontainer = document.getElementById("agentcontainer");
+        this.exitVideoPanelExpansion();
         document.querySelector(".campaign-calling-audio-static-wrapper")?.remove(); //removing the campaign container when 'terminate_agent_webrtc' event is triggered
         if (agentcontainer) {
             agentcontainer.style.display = 'none';

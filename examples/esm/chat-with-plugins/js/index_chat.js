@@ -57,6 +57,9 @@ chatWindowInstance.installPlugin(new KoreMultiFileUploaderPlugin());
 // chatWindowInstance.installPlugin(new BrowserTTS());
 chatWindowInstance.installPlugin(new WebKitSTT({ lang: 'en-US' }));
 chatWindowInstance.installPlugin(new AgentDesktopPlugin());
+// chatWindowInstance.installPlugin(new AgentDesktopPlugin({  // To enable full-screen video calls, set the enableFullScreenVideoCall flag to true in the configuration as shown below:
+//     enableFullScreenVideoCall: false
+// }));
 // chatWindowInstance.installPlugin(new KoreDesktopNotificationPlugin());
 // chatWindowInstance.installPlugin(new SolutionsTemplatesPlugin());
 
