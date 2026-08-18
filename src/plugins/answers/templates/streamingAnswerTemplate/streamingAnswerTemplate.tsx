@@ -5,13 +5,14 @@ import ImageCarouselSvgIcons from '../imagePreviewTemplate/imageCarouselSvgIcons
 import { CMHelpers } from '../../../../utils/cm-helpers';
 
 export function StreamingAnswersTemplate(props: any) {
+    const hostInstance = props.hostInstance;
     const msgData = props.msgData;
     
     const accumulatedText = msgData?.message?.[0]?.component?.payload?.payload?.answer || msgData?.message?.[0]?.component?.payload?.answer || msgData?.message?.[0]?.cInfo?.body || '';
 
     // Render the accumulated streaming text
     return (
-        <div class="sa-answer-block" data-cw-msg-id={msgData?.messageId}>
+        <div class="sa-answer-block" data-cw-msg-id={msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             <div class="sa-answer-result-block">
                 <div className="sa-answer-header-block">
                     <div className="sa-answer-left">

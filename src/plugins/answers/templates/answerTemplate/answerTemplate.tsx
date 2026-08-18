@@ -215,7 +215,7 @@ export function Answers(props: any) {
       }
     
     return (
-        <div class="sa-answer-block"  data-cw-msg-id={messageObj?.msgData?.messageId}>
+        <div class="sa-answer-block"  data-cw-msg-id={messageObj?.msgData?.messageId} dir={KoreHelpers.isRTLContent(hostInstance.config, msgData) ? 'rtl' : 'ltr'}>
             {
                 (modelType === 'generative_model'  || modelType === 'extractive_model') ? (
                     <Fragment>
