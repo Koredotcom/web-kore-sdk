@@ -1859,6 +1859,9 @@
     cursor: pointer;
     max-width: 242px;
     padding-top: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .kore-chat-window .purejscarousel-btn {
