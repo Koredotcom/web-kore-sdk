@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { createBotInstance } from 'kore-web-sdk'
+import { createBotInstance } from 'kore-web-sdk/headless'
 import './App.css'
 
 const ASSERTION =
