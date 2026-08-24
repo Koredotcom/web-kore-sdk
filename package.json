@@ -94,5 +94,17 @@
     "webpack": "^5.91.0",
     "webpack-cli": "~5.0.0",
     "webpack-dev-server": "^4.2.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/esm/exports.d.ts",
+      "import": "./dist/esm/exports.js",
+      "default": "./dist/esm/exports.js"
+    },
+    "./headless": {
+      "types": "./dist/esm/headless.d.ts",
+      "import": "./dist/esm/kore-web-sdk-headless.min.js",
+      "default": "./dist/esm/kore-web-sdk-headless.min.js"
+    }
   }
 }

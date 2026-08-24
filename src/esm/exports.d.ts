@@ -3,7 +3,7 @@ export{chatWindow}from "./kore-web-sdk-chat.min.js";
 // @ts-ignore
 export{chatConfig}from"./kore-web-sdk-chat.min.js";
 // @ts-ignore
-export{createBotInstance}from"./kore-web-sdk-chat.min.js";
+export{createBotInstance}from"./kore-web-sdk-headless.min.js";
 // @ts-ignore
 export{KoreWidgetSDK}from"./kore-web-sdk-widgets.js";
 // @ts-ignore

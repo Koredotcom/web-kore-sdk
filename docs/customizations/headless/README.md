@@ -2,7 +2,7 @@
 
 The Kore Web SDK can connect to the Kore.ai Platform without rendering the chat window. The bot client handles JWT authentication, web socket connection, sending/receiving messages, history and reconnection on its own. This is useful when you want to build your own UI or integrate bot conversations into an existing application.
 
-Use `createBotInstance` to create the bot client instance.
+Use `createBotInstance` from the `headless` entry to create the bot client instance. This entry does not include the chat window UI bundle.
 
 > [!NOTE]
 > The bot client runs in the browser. It uses `window`, `navigator`, `WebSocket` and `XMLHttpRequest` internally, so it will not work in Node.js directly.
@@ -10,7 +10,7 @@ Use `createBotInstance` to create the bot client instance.
 ## Get the bot instance
 
 ```js
-import { createBotInstance } from 'kore-web-sdk';
+import { createBotInstance } from 'kore-web-sdk/headless';
 
 const bot = createBotInstance();
 ```
@@ -21,15 +21,15 @@ const bot = createBotInstance();
  <summary>Click here</summary>
 	<br>
 
-  1. Include kore-web-sdk-umd-chat.min.js in index.html
+  1. Include kore-web-sdk-umd-headless.min.js in index.html
 
 ```js
-<script src="PATH_TO_FILE/kore-web-sdk-umd-chat.min.js"></script>
+<script src="PATH_TO_FILE/kore-web-sdk-umd-headless.min.js"></script>
 ```
 2. Get the bot instance
 
 ```js
-var bot = KoreChatSDK.createBotInstance();
+var bot = KoreHeadlessSDK.createBotInstance();
 ```
 
  </details>
@@ -186,7 +186,7 @@ bot.destroy(); // closes the connection and removes all event listeners
 ## Complete example
 
 ```html
-<script src="PATH_TO_FILE/kore-web-sdk-umd-chat.min.js"></script>
+<script src="PATH_TO_FILE/kore-web-sdk-umd-headless.min.js"></script>
 <script>
   var botInfo = {
     name: "PLEASE_ENTER_BOT_NAME",
@@ -218,7 +218,7 @@ bot.destroy(); // closes the connection and removes all event listeners
     }
   };
 
-  var bot = KoreChatSDK.createBotInstance();
+  var bot = KoreHeadlessSDK.createBotInstance();
 
   bot.on('open', function () {
     var messageToBot = {
