@@ -1,3 +1,16 @@
+### 11.28.0
+* Release August 29, 2026
+* Breaking Changes(Enhancement)
+  * Added a separate headless SDK entry point and updated the recommended import
+  for headless integrations to `kore-web-sdk/headless`. `createBotInstance` can now be imported from this entry point to connect to the Kore.ai Platform without loading the chat window UI. Refer to the [headless SDK documentation](./docs/customizations/headless/) for setup details. React example is available in the [`v3headless` branch] (https://github.com/Koredotcom/web-kore-sdk/tree/v3headless).
+* Features
+  * added support for full screen video calls in agent desktop plugin. Please refer [plugin docs](./docs/plugins/agent-desktop/README.md#video-call-expansion) for configuration
+  * added support to enable/disable relevant results section for see more result in answers plugin. Please check Search Results page in the Platform.
+  * whitelisted citiglobal:// protocol in helpers(DOMPurify)
+* Bug fixes
+  * render queued delayed messages before streaming issue fix
+  * answers template rtl issue fix in answers plugin
+
 ### 11.27.1
 * Release August 08, 2026
 * Features
