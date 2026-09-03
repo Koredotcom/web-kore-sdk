@@ -1,3 +1,8 @@
+### 11.26.1-1
+* Release Sept 03, 2026
+* Bug fixes
+  * emoji picker disbale issue fix
+
 ### 11.26.1
 * Release July 11, 2026
 * Features
