@@ -107,7 +107,7 @@ export function ChatWidgetComposeBar(props: any) {
                 </button>
                 <div className="voice-msg-bubble" aria-label="entered msg"></div>
             </div>
-            <div className={`emoji-picker-section ${!brandingInfo.footer.buttons.speaker.show && brandingInfo.footer.buttons.emoji.show ? 'emoji-only' : ''}`} style="display: none"><EmojiPicker {...{hostInstance: hostInstance}}/></div>
+            <div className={`emoji-picker-section ${!brandingInfo.footer.buttons.speaker.show && brandingInfo.footer.buttons.emoji.show ? 'emoji-only' : ''}`} style="display: none">{brandingInfo.footer.buttons.emoji.show && <EmojiPicker {...{hostInstance: hostInstance}}/>}</div>
             <div className="attachment-wrapper-data hide-attachment">
                 <div className="select-file-block">
                     <button className="inputfile-btn inputfile-btn-media" type="button" aria-label="Media">
