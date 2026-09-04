@@ -2455,25 +2455,28 @@
                             'helpers': helpers,
                             'extension': extension
                         });
+                        var carouselId = "carousel-" + msgData.messageId;
+                        messageHtml.find(".carousel").attr("id", carouselId);
+                        var isDuplicateMessage = msgData.messageId && _chatContainer.find('[data-kr-msg-id="' + msgData.messageId + '"]').length > 0;
 
                         setTimeout(function () {
-                            $('.carousel:last').addClass("carousel" + carouselTemplateCount);
-                            var count = $(".carousel" + carouselTemplateCount).children().length;
+                            if (isDuplicateMessage) { return; }
+                            var $carousel = $("#" + carouselId);
+                            var count = $carousel.children().length;
                             if (count >= 1) {
                                 var carouselOneByOne = new PureJSCarousel({
-                                    carousel: '.carousel' + carouselTemplateCount,
+                                    carousel: '#' + carouselId,
                                     slide: '.slide',
                                     oneByOne: true
                                 });
-                                $('.carousel' + carouselTemplateCount).parent().show();
-                                $('.carousel' + carouselTemplateCount).attr('style', 'height: 100% !important');
+                                $carousel.parent().show();
+                                $carousel.attr('style', 'height: 100% !important');
                                 carouselEles.push(carouselOneByOne);
                             }
                             //window.dispatchEvent(new Event('resize'));
                             var evt = document.createEvent("HTMLEvents");
                             evt.initEvent('resize', true, false);
                             window.dispatchEvent(evt);
-                            carouselTemplateCount += 1;
                             _chatContainer.animate({
                                 scrollTop: _chatContainer.prop("scrollHeight")
                             }, 0);
@@ -2532,24 +2535,27 @@
                                 'helpers': helpers,
                                 'extension': extension
                             });
+                            var carouselId = "carousel-" + msgData.messageId;
+                            messageHtml.find(".carousel").attr("id", carouselId);
+                            var isDuplicateMessage = msgData.messageId && _chatContainer.find('[data-kr-msg-id="' + msgData.messageId + '"]').length > 0;
                             setTimeout(function () {
-                                $('.carousel:last').addClass("carousel" + carouselTemplateCount);
-                                var count = $(".carousel" + carouselTemplateCount).children().length;
+                                if (isDuplicateMessage) { return; }
+                                var $carousel = $("#" + carouselId);
+                                var count = $carousel.children().length;
                                 if (count > 1) {
                                     var carouselOneByOne = new PureJSCarousel({
-                                        carousel: '.carousel' + carouselTemplateCount,
+                                        carousel: '#' + carouselId,
                                         slide: '.slide',
                                         oneByOne: true
                                     });
-                                    $('.carousel' + carouselTemplateCount).parent().show();
-                                    $('.carousel' + carouselTemplateCount).attr('style', 'height: 100% !important');
+                                    $carousel.parent().show();
+                                    $carousel.attr('style', 'height: 100% !important');
                                     carouselEles.push(carouselOneByOne);
                                 }
                                 //window.dispatchEvent(new Event('resize'));
                                 var evt = document.createEvent("HTMLEvents");
                                 evt.initEvent('resize', true, false);
                                 window.dispatchEvent(evt);
-                                carouselTemplateCount += 1;
                                 _chatContainer.animate({
                                     scrollTop: _chatContainer.prop("scrollHeight")
                                 }, 0);
