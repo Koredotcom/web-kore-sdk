@@ -1847,8 +1847,8 @@
 }
 
 .kore-chat-window .carouselTitleBox .carouselButton {
-    width: 242px;
-    height: 48px;
+    /* width: 242px;
+    height: 48px; */
     background-color: transparent;
     border-top: solid 1px var(--sdk-chat-widow-primary-border-color);
     font-size: 15px;
@@ -1859,6 +1859,7 @@
     cursor: pointer;
     max-width: 242px;
     padding-top: 13px;
+    padding: 10px 0px 10px 11px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
