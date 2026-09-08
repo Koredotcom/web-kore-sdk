@@ -80,8 +80,8 @@
 }
 
 .kore-chat-window .carouselTitleBox .carouselButton {
-    width: 242px;
-    height: 48px;
+    /* width: 242px;
+    height: 48px; */
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -96,6 +96,7 @@
     cursor: pointer;
     max-width: 242px;
     padding-top: 13px;
+    padding: 10px 0px 10px 11px;
 }
 
 .kore-chat-window .purejscarousel-btn {
