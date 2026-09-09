@@ -5,6 +5,11 @@ import 'emoji-picker-element';
 export function EmojiPicker(props: any) {
     const hostInstance = props.hostInstance;
     const ref = useRef(null);
+    const pickerProps: any = { ref };
+    if (hostInstance.config?.useKoreCdn?.emojiData) {
+        const koreAPIUrl = hostInstance.config.botOptions.koreAPIUrl.replace(new RegExp('/api/?' + String.fromCharCode(36)), '');
+        pickerProps['data-source'] = koreAPIUrl + '/static/websdk/emojis/data.json';
+    }
 
     useEffect(() => {
         const emojiPickerElement: any = ref.current;
@@ -29,7 +34,7 @@ export function EmojiPicker(props: any) {
         };
     }, []);
 
-    return h('emoji-picker', { ref });
+    return h('emoji-picker' as any, pickerProps);
 };
 
 

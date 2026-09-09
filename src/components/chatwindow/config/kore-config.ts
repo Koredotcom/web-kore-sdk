@@ -113,6 +113,9 @@ chatConfig = {
         }
     },
     enableEmojiShortcut: true,   // Set false to disable emoji shortcut support. Enabled by default
+    useKoreCdn: {
+        emojiData: false // Set true to load emoji data from the Kore CDN; false uses the picker default(jsdelivr)
+    },
     rtl: {
         enable: true,  // Set false to disable entire RTL support
         applyToMessages: true, // Set false to disable RTL support for messages
