@@ -61,6 +61,28 @@ chatWindowInstance.installPlugin(new AgentDesktopPlugin());
 
 Native fullscreen requires browser support and a user action. When the SDK is embedded in an iframe, the iframe must allow fullscreen, for example `allow="fullscreen"`.
 
+To expand the video call to the full browser window:
+
+```js
+chatWindowInstance.installPlugin(new AgentDesktopPlugin({
+  enableFullScreenVideoCall: true
+}));
+```
+
+To keep the video call expanded within the chat widget:
+
+```js
+chatWindowInstance.installPlugin(new AgentDesktopPlugin({
+  enableFullScreenVideoCall: false
+}));
+```
+
+When the SDK is embedded in an iframe, include the fullscreen permission:
+
+```html
+<iframe src="YOUR_SDK_PAGE_URL" allow="fullscreen"></iframe>
+```
+
 ## For UMD Installations
 <details>
 
