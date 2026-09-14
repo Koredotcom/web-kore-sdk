@@ -220,3 +220,11 @@ Configure rtl settings:
 - `applyToMessages`: Set false to disable RTL support for messages
 - `applyToChatWindow`: Set false to disable RTL support to entire chat window
 - `enableTranslations`: Set true to enable translations support. Please install [Kore i18n plugin](../../plugins/i18n/) when enabled
+
+### CDN Asset Configuration
+```typescript
+chatConfig.useKoreCdn = {
+    emojiData: false
+};
+```
+- `useKoreCdn.emojiData`: Set to `false` (default) for the emoji picker to use jsDelivr, or `true` to load emoji data from the Kore-hosted endpoint.
