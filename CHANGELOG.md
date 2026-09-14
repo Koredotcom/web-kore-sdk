@@ -1,3 +1,8 @@
+### 10.29.1
+- SDK Release Sept 12, 2026
+* Bug fixes
+  * fixed carousel template button title layout issue
+
 ### 10.29.0
 - SDK Release August 29, 2026
 * Bug fixes
