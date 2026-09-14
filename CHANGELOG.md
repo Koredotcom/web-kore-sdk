@@ -1,3 +1,17 @@
+### 11.28.1
+* Release Sept 12, 2026
+* Features
+    * added configurable emoji data source in the emoji picker using
+  `useKoreCdn.emojiData`. Set it to `true` to load emoji data from the Kore-
+  hosted endpoint. Please refer [kore config docs](./docs/configurations/
+  koreconfig/README.md#cdn-asset-configuration) for configuration. For on-prem
+  customers, please include the updated `static-ui` component when upgrading
+  the Web SDK to version 11.28.1 or above.
+* Bug fixes
+  * emoji picker disbale issue fix
+* Documentation
+  * minor doc enhancements
+
 ### 11.28.0
 * Release August 29, 2026
 * Breaking Changes(Enhancement)
