@@ -111,7 +111,7 @@ export function ChatWidgetComposeBar(props: any) {
             <div className="attachment-wrapper-data hide-attachment">
                 <div className="attachment-upload-card">
                     <div className="drag-drop-upload" aria-hidden="true">
-                        <div className="drag-drop-upload-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.3333 13.3333L10 10L6.66667 13.3333M10 10V17.5M16.6667 13.9524C17.6846 13.1117 18.3333 10.4167 13.75 5.83333C12.7551 4.83845 11.4065 4.16667 10 4.16667C8.5935 4.16667 7.24491 4.83845 6.25 5.83333C5.08333 7 4.58333 8.33333 4.58333 9.58333C4.58333 11.4167 5.58333 12.75 6.66667 13.3333" stroke="#344054" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+                        <div className="drag-drop-upload-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.3333 13.3333L10 10L6.66667 13.3333M10 10V17.5M16.6667 13.9524C17.6846 13.1117 18.3333 11.8399 18.3333 10.4167C18.3333 7.88536 16.2813 5.83333 13.75 5.83333C13.5679 5.83333 13.3975 5.73833 13.3051 5.58145C12.2184 3.73736 10.212 2.5 7.91667 2.5C4.46489 2.5 1.66667 5.29822 1.66667 8.75C1.66667 10.4718 2.36287 12.0309 3.48912 13.1613" stroke="#344054" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
                         <p>{hostInstance.config.botMessages.dragAndDropFile}</p>
                     </div>
                         <div className="drag-file-pointer" aria-hidden="true">
