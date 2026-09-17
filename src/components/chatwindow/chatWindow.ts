@@ -715,6 +715,7 @@ initi18n  () {
         agent: 'Agent Chat',
         media: 'Media',
         file: 'File',
+        dragAndDropFile: 'Drag and drop the file here to upload',
         tapToSpeak: 'Tap microphone to speak',
         listenToEnd: 'Listening... Tap to end',
         tapToSend: 'Tap to send',

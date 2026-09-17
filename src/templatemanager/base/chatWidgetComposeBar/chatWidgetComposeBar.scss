@@ -7,6 +7,78 @@
     border-top: 1px solid var(--chat-widget-compose-bar-border);
     border-radius: 0px 0px 4px 4px;
     position: relative;
+    .drag-drop-upload {
+        display: flex;
+        position: relative;
+        z-index: 20;
+        align-items: center;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        padding: 0;
+        color: #101828;
+        pointer-events: none;
+
+        p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 500;
+        }
+
+        .drag-drop-upload-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+        }
+    }
+
+    .attachment-upload-card {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 16px 24px;
+        background: var(--sdk-global-white-bg);
+        border: 1px solid #eaecf0;
+        border-radius: 12px;
+    }
+
+    .attachment-wrapper-data .drag-drop-upload {
+        margin-bottom: 0;
+    }
+
+    .drag-file-pointer {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        width: 20px;
+        height: 20px;
+        pointer-events: none;
+
+        .drag-file-cursor {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+
+    &.is-dragging {
+        .attachment-upload-card {
+            border-color: var(--button-bg-color);
+        }
+
+        .drag-file-pointer {
+            display: block;
+        }
+    }
     .voice-speak-msg-info{
         text-align: right;
         padding: 10px 16px 0px 16px;
@@ -420,18 +492,21 @@
 // Attachment Wrapper
 
 .attachment-wrapper-data{
-    background: rgba(105, 117, 134, 0.1);
+    background: #f0f1f3;
     border-radius: 0px 0px 4px 4px;
-    padding: 16px 16px 0px 16px;
+    padding: 16px;
     .select-file-block{
-        background: var(--sdk-global-white-bg);
-        border-radius: 4px;
-        padding: 16px;
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
         display: flex;
         align-items: center;
         gap: 12px;
+        width: 100%;
         .inputfile-btn{
-            width: 100%;
+            flex: 0 0 calc((100% - 12px) / 2);
+            width: calc((100% - 12px) / 2);
+            min-width: 0;
             position: relative;
             background: var(--button-bg-color);
             border: 1px solid var(--sdk-global-white-bg);
@@ -442,7 +517,7 @@
             font-size: 16px;
             line-height: 24px;
             color: var(--button-text-color);
-            height: 48px;
+            height: 44.72px;
             gap: 8px;
             display: flex;
             align-items: center;
