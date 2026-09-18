@@ -5,8 +5,24 @@
     width: 100%;
     background: var(--chat-widget-footer-bg);
     border-top: 1px solid var(--chat-widget-compose-bar-border);
-    border-radius: 0px 0px 4px 4px;
+    // border-radius: 0px 0px 4px 4px;
     position: relative;
+    .attachment-wrapper-data .drag-drop-upload {
+        margin-bottom: 0;
+    }
+
+    .drag-file-pointer {
+        display: none;
+    }
+
+    &.is-dragging {
+        .attachment-upload-card {
+            border-color: var(--sdk-global-theme-color) !important;
+        }
+        .drag-file-pointer {
+            display: block;
+        }
+    }
     .voice-speak-msg-info{
         text-align: right;
         padding: 10px 16px 0px 16px;
@@ -420,33 +436,21 @@
 // Attachment Wrapper
 
 .attachment-wrapper-data{
-    background: rgba(105, 117, 134, 0.1);
     border-radius: 0px 0px 4px 4px;
-    padding: 16px 16px 0px 16px;
     .select-file-block{
-        background: var(--sdk-global-white-bg);
-        border-radius: 4px;
-        padding: 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
         .inputfile-btn{
-            width: 100%;
-            position: relative;
-            background: var(--button-bg-color);
+            flex: 0 0 calc((100% - 12px) / 2);
+            width: calc((100% - 12px) / 2);
+            min-width: 0;
             border: 1px solid var(--sdk-global-white-bg);
-            border-radius: 4px;
             padding: 12px 20px;
             text-align: center;
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
             color: var(--button-text-color);
-            height: 48px;
+            height: 44.72px;
             gap: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             svg{
                 path{
                     fill: var(--button-text-color);

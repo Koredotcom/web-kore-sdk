@@ -2,7 +2,7 @@
 // All classes use the `kwsdk-` prefix
 
 $kr-prefix: 'kwsdk-' !default;
-// One step = 4px at 16px root; tokens 1–5 → 4, 8, 12, 16, 20px.
+// One step = 4px at 16px root; tokens 1–6 → 4, 8, 12, 16, 20, 24px.
 $kr-spacer: 0.25rem !default;
 $kr-spacers: (
 	0: 0,
@@ -11,6 +11,7 @@ $kr-spacers: (
 	3: $kr-spacer * 3,
 	4: $kr-spacer * 4,
 	5: $kr-spacer * 5,
+	6: $kr-spacer * 6,
 	auto: auto,
 ) !default;
 
@@ -237,6 +238,9 @@ $kr-flex-wrap: (
 .#{$kr-prefix}fw-normal {
 	font-weight: 400 !important;
 }
+.#{$kr-prefix}fw-medium {
+	font-weight: 500 !important;
+}
 .#{$kr-prefix}fw-light {
 	font-weight: 300 !important;
 }
@@ -360,6 +364,16 @@ $kr-positions: top, bottom, start, end;
 	max-height: 100% !important;
 }
 
+@each $size, $value in (
+	20: 20px,
+	40: 40px,
+) {
+	.#{$kr-prefix}size-#{$size} {
+		width: $value !important;
+		height: $value !important;
+	}
+}
+
 
 
 
@@ -392,6 +406,9 @@ $kr-positions: top, bottom, start, end;
 }
 .#{$kr-prefix}rounded-3 {
 	border-radius: 0.5rem !important;
+}
+.#{$kr-prefix}rounded-4 {
+	border-radius: 0.75rem !important;
 }
 .#{$kr-prefix}rounded-circle {
 	border-radius: 50% !important;
@@ -463,4 +480,20 @@ $kr-positions: top, bottom, start, end;
 
 .#{$kr-prefix}bg-transparent{
 	background-color: transparent;
+}
+
+.#{$kr-prefix}bg-secondary {
+	background-color: var(--sdk-gloabl-bg-secondary) !important;
+}
+
+.#{$kr-prefix}text-primary {
+	color: var(--sdk-global-primary-text) !important;
+}
+
+.#{$kr-prefix}text-secondary {
+	color: var(--sdk-global-secondary-text) !important;
+}
+
+.#{$kr-prefix}bg-button {
+	background-color: var(--button-bg-color) !important;
 }

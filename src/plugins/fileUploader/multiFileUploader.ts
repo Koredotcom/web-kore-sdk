@@ -94,6 +94,48 @@ class KoreMultiFileUploaderPlugin {
   bindEvents() {
     let me: any = this;
 
+    const dropTarget = me.hostInstance.chatEle;
+    const hasFiles = (event: any) => event.dataTransfer && Array.from(event.dataTransfer.types || []).indexOf('Files') !== -1;
+    const setDragState = (event: any, active: boolean) => {
+      const composeBar = me.hostInstance.chatEle.querySelector('.chat-widget-composebar');
+      if (!composeBar) return;
+      composeBar.classList.toggle('is-dragging', active);
+      if (active) me.hostInstance.chatEle.querySelector('.attachment-wrapper-data')?.classList.remove('hide-attachment');
+      const pointer = composeBar.querySelector('.drag-file-pointer') as HTMLElement;
+      if (pointer && event && typeof event.clientX === 'number') {
+        pointer.style.left = (event.clientX + 12) + 'px';
+        pointer.style.top = (event.clientY + 12) + 'px';
+      }
+    };
+    const clearDragState = () => {
+      me.dragEnterCount = 0;
+      setDragState(null, false);
+    };
+    dropTarget.addEventListener('dragenter', (event: any) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      me.dragEnterCount = (me.dragEnterCount || 0) + 1;
+      setDragState(event, true);
+    });
+    dropTarget.addEventListener('dragover', (event: any) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+      setDragState(event, true);
+    });
+    dropTarget.addEventListener('dragleave', (event: any) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      me.dragEnterCount = Math.max(0, (me.dragEnterCount || 0) - 1);
+      if (!me.dragEnterCount) setDragState(event, false);
+    });
+    dropTarget.addEventListener('drop', (event: any) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      clearDragState();
+      me.processFiles(event.dataTransfer.files);
+    });
+
     me.hostInstance.eventManager.addEventListener('.attachmentUpload', 'click', () => {
       if (me.hostInstance.chatEle?.querySelector('.emoji-picker-section') && me.hostInstance.chatEle?.querySelector('.emoji-picker-section')?.style?.display != 'none') {
         me.hostInstance.chatEle.querySelector('.emoji-picker-section').style.display = 'none';
@@ -315,6 +357,25 @@ class KoreMultiFileUploaderPlugin {
       }
       return;
     });
+  }
+
+  processFiles(files: any) {
+    const me: any = this;
+    if (!files || !files.length) return;
+    const currentAttachmentsCount = me.hostInstance.attachmentData ? me.hostInstance.attachmentData.length : 0;
+    const maxFilesAllowed = me.config.maxFiles || 10;
+    if (files.length > maxFilesAllowed || currentAttachmentsCount + files.length > maxFilesAllowed) {
+      alert('Maximum ' + maxFilesAllowed + ' files can be uploaded at once. You have ' + currentAttachmentsCount + ' file(s) already selected.');
+      return;
+    }
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file && file.size > me.filetypes.file.limit.size) {
+        alert(me.filetypes.file.limit.msg);
+        continue;
+      }
+      me.convertFiles(file);
+    }
   }
 
   convertFiles(selectedFile: any, customFileName: undefined) {
