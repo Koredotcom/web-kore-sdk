@@ -17,7 +17,7 @@
 
     &.is-dragging {
         .attachment-upload-card {
-            border-color: var(--button-bg-color) !important;
+            border-color: var(--sdk-global-theme-color) !important;
         }
         .drag-file-pointer {
             display: block;
