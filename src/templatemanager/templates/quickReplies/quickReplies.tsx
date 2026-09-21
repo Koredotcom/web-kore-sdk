@@ -114,6 +114,10 @@ export function QuickReplies(props: any) {
         useEffect(() => {
             setTimeout(() => {
                 if ((!msgData.fromHistory && !msgData?.fromHistorySync) && !msgData?.message?.[0]?.component?.payload?.inline) {
+                    const existingQuickReplies = hostInstance.chatEle.querySelector('.chat-widget-composebar .quick-replies');
+                    if (existingQuickReplies) {
+                        existingQuickReplies.remove();
+                    }
                     const quickReply = getHTML(QuickReply, msgData, hostInstance);
                     const composeBar = hostInstance.chatEle.querySelector('.chat-widget-composebar');
                     composeBar.insertBefore(quickReply, composeBar.firstChild);
