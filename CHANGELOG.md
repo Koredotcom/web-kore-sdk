@@ -1,3 +1,10 @@
+### 11.29.0
+* Release Sept 26, 2026
+* Features
+  * added drag-and-drop file upload support
+* Bug fixes
+  * fixed duplicate quick replies template issue
+  
 ### 11.28.1
 * Release Sept 12, 2026
 * Features
