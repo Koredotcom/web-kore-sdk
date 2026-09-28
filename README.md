@@ -343,6 +343,9 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.30.0 [Minor] on 26-Sept-2026: Master branch
+        Stable release
+
 v10.29.1 [Minor] on 12-Sept-2026: Master branch
         Bugfixes
                1.Fixed carousel template button title layout issue
