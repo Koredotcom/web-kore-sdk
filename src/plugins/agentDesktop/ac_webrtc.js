@@ -667,12 +667,6 @@ class AudioCodesUA {
                                             key: 'update',
                                             value: function (e, t) {
                                                 ;(this._state = h.STATUS_CONFIRMED),
-                                                    c.debug(
-                                                        'dialog '.concat(
-                                                            this._id.toString(),
-                                                            '  changed to CONFIRMED state'
-                                                        )
-                                                    ),
                                                     'UAC' === t &&
                                                         (this._route_set = e
                                                             .getHeaders('record-route')
@@ -682,12 +676,6 @@ class AudioCodesUA {
                                         {
                                             key: 'terminate',
                                             value: function () {
-                                                c.debug(
-                                                    'dialog '.concat(
-                                                        this._id.toString(),
-                                                        ' deleted'
-                                                    )
-                                                ),
                                                     this._ua.destroyDialog(this),
                                                     (this._state = h.STATUS_TERMINATED)
                                             },

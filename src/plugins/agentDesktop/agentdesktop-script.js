@@ -1960,7 +1960,6 @@ class AgentDesktopPluginScript  {
         if (this.releasebtnimg) {
             this.releasebtnimg.src = this.noControlImage;
         }
-        console.log("cobrowse >>> cobrowseRequest", cobrowseRequest);
         if (!cobrowseRequest.userId) {
             cobrowseRequest.userId = me.koreGenerateUUID();
         }
@@ -2003,7 +2002,6 @@ class AgentDesktopPluginScript  {
         }
 
         function initialize(me) {
-            console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
             addCobrowseAttribute(me);
             me.socket.emit("start_cobrowse", { "conversationId": cobrowseRequest.conversationId });
             me.socket.on("ice-candidate", handleNewICECandidateMsg);
@@ -2415,7 +2413,6 @@ class AgentDesktopPluginScript  {
         if (this.authResponse && this.authResponse.userInfo) {
             console.log("cobrowse >>> starting cobrowse")
             let cobrowseRequest = localStorage.getItem("cobrowseRequest");
-            console.log(cobrowseRequest);
             if (this.socket && this.socket.connected) {
                 this.socket.disconnect();
                 this.socket = null;
