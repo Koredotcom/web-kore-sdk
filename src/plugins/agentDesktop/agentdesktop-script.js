@@ -2434,7 +2434,6 @@ cobrowseInitialize = (cobrowseRequest) => {
     if (this.releasebtnimg) {
         this.releasebtnimg.src = this.noControlImage;
     }
-    console.log("cobrowse >>> cobrowseRequest", cobrowseRequest);
     if (!cobrowseRequest.userId) {
         cobrowseRequest.userId = me.koreGenerateUUID();
     }
@@ -2477,7 +2476,6 @@ cobrowseInitialize = (cobrowseRequest) => {
     }
 
     function initialize(me) {
-        console.log("cobrowse >>> joining room ", cobrowseRequest.conversationId);
         addCobrowseAttribute(me);
         /* here reapplyMasking method is intended to apply masking during page navigation in middle of cobrowse(regardless of voice/standalone-cobrowse or chat-cobrowse) session for multiple page app or intial masking applied for voice/standalone cobrowse session */
         function reapplyMasking(storageKey) {
@@ -3058,7 +3056,6 @@ autoStartCobrowse = function () {
         }else{
             cobrowseRequest = localStorage.getItem("cobrowseRequest");
         }
-        console.log(cobrowseRequest);
         if (this.socket && this.socket.connected) {
             this.socket.disconnect();
             this.socket = null;
