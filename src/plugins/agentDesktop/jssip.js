@@ -583,8 +583,6 @@
       }, {
         key: "terminate",
         value: function terminate() {
-          logger.debug("dialog ".concat(this._id.toString(), " deleted"));
-    
           this._ua.destroyDialog(this);
         }
       }, {
