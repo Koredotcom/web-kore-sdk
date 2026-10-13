@@ -2,7 +2,7 @@ class Korei18nPlugin {
     name = 'Korei18nPlugin';
     config = {
         rtlLanguages: ['ar'],
-        availableLanguages: ['en', 'ar', 'ja', 'ko', 'zh', 'de'],//shown as list of available languages in chat window header to select
+        availableLanguages: ['en', 'ar', 'ja', 'ko', 'zh', 'de', 'es'],//shown as list of available languages in chat window header to select
         defaultLanguage: "en",//default selection from above list
         languageStrings: {   //any additional language can be added in this object by adding the key in availableLanguages
             ar: {
@@ -228,6 +228,52 @@ class Korei18nPlugin {
                 uploadSuccess: "Hochgeladen – Auf Senden tippen oder Enter drücken zum Senden",
                 uploadFailed: "Hochladen fehlgeschlagen",
                 download: "Herunterladen"
+            },
+            es: {
+                message: 'Mensaje...',
+                connecting: 'Conectando...',
+                reconnecting: 'Reconectando...',
+                entertosend: 'Pulsa Intro para enviar',
+                endofchat: 'Fin del historial del chat',
+                loadinghistory: 'Cargando el historial del chat...',
+                sendText: 'Enviar',
+                closeText: 'Cerrar',
+                expandText: 'Expandir',
+                minimizeText: 'Minimizar',
+                reconnectText: 'Reconectar',
+                attachmentText: 'Archivo adjunto',
+                help: 'Ayuda',
+                agent: 'Chat con un agente',
+                media: 'Multimedia',
+                file: 'Archivo',
+                dragAndDropFile: 'Arrastra y suelta el archivo aquí para subirlo',
+                tapToSpeak: 'Toca el micrófono para hablar',
+                listenToEnd: 'Escuchando... Toca para terminar',
+                tapToSend: 'Toca para enviar',
+                typing: 'Escribiendo',
+                menu: 'Menú',
+                poweredBy: 'Con tecnología de',
+                keyboard: 'Teclado',
+                microphone: 'Micrófono',
+                cancel: 'Cancelar',
+                emojis: 'Emojis',
+                speakerOn: 'Activar altavoz',
+                speakerOff: 'Desactivar altavoz',
+                attachments: 'Archivos adjuntos',
+                close: 'Cerrar chat',
+                reconnect: 'Reconectar el chat',
+                today: 'Hoy',
+                yesterday: 'Ayer',
+                clickToCall: 'Conectar con un agente de voz',
+                read: 'Leído',
+                delivered: 'Entregado',
+                sent: 'Enviado',
+                you: 'Tú',
+                uploaded: 'subido',
+                uploadSuccess: 'Subido. Toca o pulsa Intro para enviar',
+                uploadFailed: 'Error al subir el archivo',
+                download: 'Descargar',
+                download_transcript: 'Descargar la transcripción'
             }
         }
     }
