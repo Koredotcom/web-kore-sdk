@@ -417,6 +417,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             _msg.message[j] = _comp;
           }
         }
+        if (this.options?.attachments?.history?.showUserUploadedFiles && data.messages[i].type === 'incoming') {
+          var attachments = data.messages[i].channels?.[0]?.attachments;
+          if (attachments?.length && _msg.message?.[0]) {
+            _msg.type = 'currentUser';
+            _msg.message[0].cInfo = _msg.message[0].cInfo || { body: '' };
+            _msg.message[0].cInfo.attachments = attachments;
+          }
+        }
         _msg.createdOn = data.messages[i].createdOn;
         if (data.messages[i]?.author) {
           _msg.author = {};
@@ -487,6 +495,14 @@ let requireKr=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeo
             }
   
             _msg.message[j] = _comp;
+          }
+        }
+        if (this.options?.attachments?.history?.showUserUploadedFiles && data.messages[i].type === 'incoming') {
+          var attachments = data.messages[i].channels?.[0]?.attachments;
+          if (attachments?.length && _msg.message?.[0]) {
+            _msg.type = 'currentUser';
+            _msg.message[0].cInfo = _msg.message[0].cInfo || { body: '' };
+            _msg.message[0].cInfo.attachments = attachments;
           }
         }
         _msg.createdOn = data.messages[i].createdOn;

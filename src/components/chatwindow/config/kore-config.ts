@@ -121,6 +121,11 @@ chatConfig = {
         applyToMessages: true, // Set false to disable RTL support for messages
         applyToChatWindow: true, // Set false to disable RTL support to entire chat window
         enableTranslations: false // Set true to enable translations support
+    },
+    attachments: {
+        history: {
+          showUserUploadedFiles: false // Set true to show user uploaded files in history
+        }
     }
 };
 

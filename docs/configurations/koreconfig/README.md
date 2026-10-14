@@ -122,6 +122,16 @@ chatConfig.history = {
 - `recent.batchSize`: Number of messages to load in recent history
 - `paginatedScroll`: Configuration for loading older messages on scroll
 
+### Uploaded File History
+```typescript
+chatConfig.attachments = {
+    history: {
+        showUserUploadedFiles: false
+    }
+};
+```
+- `history.showUserUploadedFiles`: Displays user-uploaded files in chat history when `true`. Defaults to `false`.
+
 ### Message Synchronization
 ```typescript
 chatConfig.syncMessages = {

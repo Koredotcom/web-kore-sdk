@@ -3402,6 +3402,9 @@ applyVariableValue (key:any,value:any,type:any){
     me.config.botOptions.chatHistory = me.config.chatHistory;
     me.config.botOptions.handleError = me.config.handleError;
     me.config.botOptions.googleMapsAPIKey = me.config.googleMapsAPIKey;
+    if (me.config.botOptions && me.config.attachments) {
+      me.config.botOptions.attachments = me.config.attachments;
+    }
   }
 
   setBrandingMissingInfo(theme: any) {
