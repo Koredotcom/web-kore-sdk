@@ -1,3 +1,8 @@
+### 10.30.1
+- SDK Release Oct 17, 2026
+* Bug fixes
+  * removed console logs in Agent Desktop plugin
+
 ### 10.30.0
 - SDK Release Sept 26, 2026
 * Stable release
