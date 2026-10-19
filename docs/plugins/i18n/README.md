@@ -1,6 +1,6 @@
 # Kore i18n Plugin
 
-The Kore i18n Plugin provides i18n support in the Kore Web SDK. Korei18n Plugin supports English(en) by default and Arabic(ar), Japanese(ja), Korean(ko), German(de) and zh as additional lanaguages.
+The Kore i18n Plugin provides i18n support in the Kore Web SDK. Korei18n Plugin supports English(en) by default and Arabic(ar), Japanese(ja), Korean(ko), German(de), Spanish(es) and zh as additional lanaguages.
  
 
 ## Installation
@@ -44,7 +44,7 @@ chatWindowInstance.installPlugin(new Korei18nPlugin());
 Update the config as shown below to use any one of the supported Language
 
 ```js
-chatWindowInstance.plugins.Korei18nPlugin.config.defaultLanguage = 'ar'; //ja', 'ko', 'zh', 'de'
+chatWindowInstance.plugins.Korei18nPlugin.config.defaultLanguage = 'ar'; //ja', 'ko', 'zh', 'de', 'es'
 ```
 
 ## Adding new language support
