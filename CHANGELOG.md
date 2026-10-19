@@ -1,3 +1,11 @@
+### 11.29.1
+* Release Oct 17, 2026
+* Features
+  * added support to show User uploaded files in the chat history. Please use the config `chatConfig.attachments.history.showUserUploadedFiles = true` to enable the flag. 
+  * added i18n support for Spanish language. Please refer [i18n plugin docs](./docs/plugins/i18n/)
+* Bug fixes
+  * removed console logs in the Agent Desktop plugin
+
 ### 11.29.0
 * Release Sept 26, 2026
 * Features
@@ -10,8 +18,7 @@
 * Features
     * added configurable emoji data source in the emoji picker using
   `useKoreCdn.emojiData`. Set it to `true` to load emoji data from the Kore-
-  hosted endpoint. Please refer [kore config docs](./docs/configurations/
-  koreconfig/README.md#cdn-asset-configuration) for configuration. For on-prem
+  hosted endpoint. Please refer [kore config docs](./docs/configurations/koreconfig/README.md#cdn-asset-configuration) for configuration. For on-prem
   customers, please include the updated `static-ui` component when upgrading
   the Web SDK to version 11.28.1 or above.
 * Bug fixes
