@@ -1286,6 +1286,12 @@
 		top: 15px;
 		cursor: pointer;
 		display: none;
+		border: 0;
+		padding: 0;
+		background-color: transparent;
+		font: inherit;
+		-webkit-appearance: none;
+		appearance: none;
 		background-image: var(--sdk-chat-widow-footer-modal-close-icon);
 		background-size: 14px 14px;
 		width: 14px;
