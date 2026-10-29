@@ -3304,7 +3304,7 @@
                          <div id="caption"></div>\
                     </div>\
                     <div id="chatBodyModal" class="chatBodyModal animate-bottom">\
-                    <span class="closeChatBodyModal" aria-label="Close Form" role="button" tabindex="0" aria-atomic="true"></span>\
+                    <button type="button" class="closeChatBodyModal" aria-label="Close Form"></button>\
                     <div id="closeInlineModel" class="loading_form iframeLoader"></div>\
                     <div id="chatBodyModalContent"></div>\
                     </div>\
