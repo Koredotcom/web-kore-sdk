@@ -1,3 +1,8 @@
+### 10.31.0
+- SDK Release Oct 31, 2026
+* Bug fixes
+  * accessibility issue fix for digital form close icon
+
 ### 10.30.1
 - SDK Release Oct 17, 2026
 * Bug fixes
