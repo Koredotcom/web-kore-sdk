@@ -1,3 +1,7 @@
+### 11.30.0
+* Release Oct 31, 2026
+* Stable release
+
 ### 11.29.1
 * Release Oct 17, 2026
 * Features
