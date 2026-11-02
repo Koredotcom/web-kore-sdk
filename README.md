@@ -343,6 +343,10 @@ Note: When integrated into an iFrame, the SDK's functionality will be confined t
 	
 # Release History
 ```
+v10.31.0 [Minor] on 31-Oct-2026: Master branch
+        Bugfixes
+               1.Accessibility issue fix for digital form close icon
+
 v10.30.1 [Minor] on 17-Oct-2026: Master branch
         Stable release
 
