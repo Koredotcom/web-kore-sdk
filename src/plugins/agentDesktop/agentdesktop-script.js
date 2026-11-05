@@ -1297,7 +1297,6 @@ AgentDesktop = function (uuId, aResponse) {
             //_self.activeCall.stopSendingVideo();
             this.sendVideo(false);
         }
-        // this.phone.isScreenSharingSupported()
         return p.then(() => {
             if (this.screenSharingStream === null) {
                 return this.phone.openScreenSharing()
