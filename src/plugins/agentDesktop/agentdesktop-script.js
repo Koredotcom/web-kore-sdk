@@ -907,6 +907,7 @@ AgentDesktop = function (uuId, aResponse) {
             acceptCall.off('click').on('click', function (event) {
                 const payload = _self.callDetails;
                 payload['type'] = "call_agent_webrtc_accepted"
+                payload['isCustomerScreenSharingSupported'] = !!_self.phone?.isScreenSharingSupported?.();
                 const messageToBot = {};
                 messageToBot["event"] = "event";
                 messageToBot["message"] = {
@@ -1296,6 +1297,7 @@ AgentDesktop = function (uuId, aResponse) {
             //_self.activeCall.stopSendingVideo();
             this.sendVideo(false);
         }
+        // this.phone.isScreenSharingSupported()
         return p.then(() => {
             if (this.screenSharingStream === null) {
                 return this.phone.openScreenSharing()
