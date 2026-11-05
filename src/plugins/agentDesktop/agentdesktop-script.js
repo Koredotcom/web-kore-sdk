@@ -907,6 +907,7 @@ AgentDesktop = function (uuId, aResponse) {
             acceptCall.off('click').on('click', function (event) {
                 const payload = _self.callDetails;
                 payload['type'] = "call_agent_webrtc_accepted"
+                payload['isCustomerScreenSharingSupported'] = !!_self.phone?.isScreenSharingSupported?.();
                 const messageToBot = {};
                 messageToBot["event"] = "event";
                 messageToBot["message"] = {
