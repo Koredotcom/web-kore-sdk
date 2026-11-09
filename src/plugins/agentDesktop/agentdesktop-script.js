@@ -907,7 +907,6 @@ AgentDesktop = function (uuId, aResponse) {
             acceptCall.off('click').on('click', function (event) {
                 const payload = _self.callDetails;
                 payload['type'] = "call_agent_webrtc_accepted"
-                payload['isCustomerScreenSharingSupported'] = !!_self.phone?.isScreenSharingSupported?.();
                 const messageToBot = {};
                 messageToBot["event"] = "event";
                 messageToBot["message"] = {
@@ -1143,6 +1142,21 @@ AgentDesktop = function (uuId, aResponse) {
             }  // webrtc_screenshare will be sent, when in video call
             else if (msgJson.type === 'events' && msgJson.message && msgJson.message.type === 'webrtc_screenshare') {
                 _self.isScreenShareCancelled = false;
+                if (!_self.phone?.isScreenSharingSupported?.()) {
+                    const payload = _self.callDetails;
+                    payload['type'] = "webrtc_screenshare_reject";
+                    payload['reason'] = "customer_screen_sharing_not_supported";
+                    const messageToBot = {};
+                    messageToBot["event"] = "event";
+                    messageToBot["message"] = {
+                        "body": _self.callDetails,
+                        "type": ""
+                    };
+                    if (botInstance) {
+                        botInstance.sendMessage(messageToBot, (err) => { });
+                    }
+                    return;
+                }
                 /*if (_self.activeCall) {
                     _self.screenShare(msgJson.message);
                 }*/
