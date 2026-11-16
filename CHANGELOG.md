@@ -1,3 +1,9 @@
+### 11.30.1
+* Release Nov 14, 2026
+* Bug fixes
+  * bot message attachments css issue fix
+  * screen sharing issues fix in agent desktop plugin for video call in mobile browser
+
 ### 11.30.0
 * Release Oct 31, 2026
 * Stable release
